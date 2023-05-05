@@ -9,7 +9,7 @@ export default function Header() {
         display="flex"
         justifyContent="space-around"
         alignItems="center"
-        backgroundColor="#cc3300"
+        backgroundColor="rgba(255, 34, 0, 1)"
         color="white"
         h="70px"
       >
