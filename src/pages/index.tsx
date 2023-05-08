@@ -1,4 +1,4 @@
-import Header from "@/components/header";
+import Header from '@/components/header';
 import {
   Box,
   Button,
@@ -10,23 +10,23 @@ import {
   Image,
   Input,
   VStack,
-} from "@chakra-ui/react";
-import AcampsBeach from "../Assets/AcampsBeach.png";
-import AcampsBeachFooter from "../Assets/AcampsBeachFooter.png";
-import carrossel1 from "../Assets/Carrossel1.jpg";
-import carrossel2 from "../Assets/Carrossel2.jpg";
-import carrossel3 from "../Assets/Carrossel3.jpg";
-import carrossel4 from "../Assets/Carrossel4.jpg";
-import carrossel5 from "../Assets/Carrossel5.jpg";
-import Footer from "../Assets/Footer.png";
-import FormularioDeInscrição from "../Assets/FormularioDeInscrição.png";
-import Lotes from "../Assets/Lotes.png";
-import React, { Component } from "react";
-import "react-responsive-carousel/lib/styles/carousel.min.css";
-import { Carousel } from "react-responsive-carousel";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+} from '@chakra-ui/react';
+import AcampsBeach from '../assets/AcampsBeach.png';
+import AcampsBeachFooter from '../assets/AcampsBeachFooter.png';
+import carrossel1 from '../assets/Carrossel1.jpg';
+import carrossel2 from '../assets/Carrossel2.jpg';
+import carrossel3 from '../assets/Carrossel3.jpg';
+import carrossel4 from '../assets/Carrossel4.jpg';
+import carrossel5 from '../assets/Carrossel5.jpg';
+import Footer from '../assets/Footer.png';
+import FormularioDeInscrição from '../assets/FormularioDeInscrição.png';
+import Lotes from '../assets/Lotes.png';
+import React, { Component } from 'react';
+import 'react-responsive-carousel/lib/styles/carousel.min.css';
+import { Carousel } from 'react-responsive-carousel';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 
 const schema = z.object({
   nomeCompleto: z.string().nonempty(),
@@ -39,7 +39,7 @@ const schema = z.object({
   alergias: z.string().optional(),
   email: z.string().email(),
   senha: z.string().min(8),
-  formaPagamento: z.enum(["dinheiro", "pix", "cartao de credito/debito"]),
+  formaPagamento: z.enum(['dinheiro', 'pix', 'cartao de credito/debito']),
 });
 
 class DemoCarousel extends Component {
@@ -68,7 +68,7 @@ class DemoCarousel extends Component {
 
 const { register, handleSubmit, formState } = useForm({
   resolver: zodResolver(schema),
-  mode: "onBlur",
+  mode: 'onBlur',
 });
 
 const { errors } = formState;
@@ -105,7 +105,7 @@ export default function Home() {
       <form onSubmit={handleSubmit(onsubmit)}>
         <FormControl isInvalid={errors.nomeCompleto}>
           <FormLabel>NOME COMPLETO:</FormLabel>
-          <Input {...register("nomeCompleto")} />
+          <Input {...register('nomeCompleto')} />
           <FormErrorMessage>
             {errors.nomeCompleto && errors.nomeCompleto.message}
           </FormErrorMessage>
@@ -113,7 +113,7 @@ export default function Home() {
 
         <FormControl isInvalid={errors.idade}>
           <FormLabel>SUA IDADE:</FormLabel>
-          <Input type="number" {...register("idade")} />
+          <Input type="number" {...register('idade')} />
           <FormErrorMessage>
             {errors.idade && errors.idade.message}
           </FormErrorMessage>
@@ -121,7 +121,7 @@ export default function Home() {
 
         <FormControl isInvalid={errors.telefone}>
           <FormLabel>TELEFONE PARA CONTATO:</FormLabel>
-          <Input {...register("telefone")} />
+          <Input {...register('telefone')} />
           <FormErrorMessage>
             {errors.telefone && errors.telefone.message}
           </FormErrorMessage>
@@ -129,7 +129,7 @@ export default function Home() {
 
         <FormControl isInvalid={errors.nomeResponsavel}>
           <FormLabel>SE MENOR DE IDADE, NOME DO RESPONSÁVEL:</FormLabel>
-          <Input {...register("nomeResponsavel")} />
+          <Input {...register('nomeResponsavel')} />
           <FormErrorMessage>
             {errors.nomeResponsavel && errors.nomeResponsavel.message}
           </FormErrorMessage>
@@ -137,7 +137,7 @@ export default function Home() {
 
         <FormControl isInvalid={errors.numeroResponsavel}>
           <FormLabel>NÚMERO DO RESPONSÁVEL:</FormLabel>
-          <Input {...register("numeroResponsavel")} />
+          <Input {...register('numeroResponsavel')} />
           <FormErrorMessage>
             {errors.numeroResponsavel && errors.numeroResponsavel.message}
           </FormErrorMessage>
@@ -145,7 +145,7 @@ export default function Home() {
 
         <FormControl>
           <FormLabel>VOCÊ PARTICIPA DA OBRA SHALOM:</FormLabel>
-          <Input {...register("obraShalom")} />
+          <Input {...register('obraShalom')} />
           <FormErrorMessage>
             {errors.obraShalom && errors.obraShalom.message}
           </FormErrorMessage>
@@ -153,7 +153,7 @@ export default function Home() {
 
         <FormControl isInvalid={errors.grupoOração}>
           <FormLabel>SE SIM, QUAL O NOME DO GRUPO DE ORAÇÃO?</FormLabel>
-          <Input {...register("grupoOração")} />
+          <Input {...register('grupoOração')} />
           <FormErrorMessage>
             {errors.grupoOração && errors.grupoOração.message}
           </FormErrorMessage>
@@ -161,7 +161,7 @@ export default function Home() {
 
         <FormControl isInvalid={errors.membroComunidade}>
           <FormLabel>VOCÊ É MEMBRO DA COMUNIDADE DE VIDA OU ALIANÇA?</FormLabel>
-          <Input {...register("aliançaOuVida")} />
+          <Input {...register('aliançaOuVida')} />
           <FormErrorMessage>
             {errors.aliançaOuVida && errors.aliançaOuVida.message}
           </FormErrorMessage>
@@ -169,7 +169,7 @@ export default function Home() {
 
         <FormControl isInvalid={errors.alergias}>
           <FormLabel>VOCÊ É ALÉRGICO A ALGUMA COMIDA OU REMÉDIO?</FormLabel>
-          <Input {...register("alergias")} />
+          <Input {...register('alergias')} />
           <FormErrorMessage>
             {errors.alergias && errors.alergias.message}
           </FormErrorMessage>
@@ -177,7 +177,7 @@ export default function Home() {
 
         <FormControl isInvalid={errors.email}>
           <FormLabel>DIGITE SEU E-MAIL PARA LOGIN:</FormLabel>
-          <Input type="email" {...register("email")} />
+          <Input type="email" {...register('email')} />
           <FormErrorMessage>
             {errors.email && errors.email.message}
           </FormErrorMessage>
@@ -185,7 +185,7 @@ export default function Home() {
 
         <FormControl isInvalid={errors.senha}>
           <FormLabel>CADASTRE UMA SENHA DE 8 DÍGITOS</FormLabel>
-          <Input type="password" {...register("senha")} />
+          <Input type="password" {...register('senha')} />
           <FormErrorMessage>
             {errors.senha && errors.senha.message}
           </FormErrorMessage>
@@ -193,7 +193,7 @@ export default function Home() {
 
         <FormControl isInvalid={errors.formaPagamento}>
           <FormLabel>SELECIONE A FORMA DE PAGAMENTO</FormLabel>
-          <Select {...register("formaPagamento")}>
+          <Select {...register('formaPagamento')}>
             <option value="">Selecione uma opção</option>
             <option value="dinheiro">Dinheiro</option>
             <option value="pix">PIX</option>
