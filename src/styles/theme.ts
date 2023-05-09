@@ -14,6 +14,18 @@ export const theme = extendTheme({
       '100': '#D1D2DC',
       '50': '#EEEEF2',
     },
+    green: {
+      '200': '#008c6e',
+      '500': '#009f00',
+      '700': '#00596a',
+    },
+    orange: {
+      '500': '#ff2a00',
+    },
+    yellow: {
+      '300': '#ffb329',
+      '500': '#ff9b23',
+    },
   },
   fonts: {
     heading: 'Roboto',
@@ -22,8 +34,8 @@ export const theme = extendTheme({
   styles: {
     global: {
       body: {
-        bg: 'gray.900',
-        color: 'gray.50',
+        bg: 'gray.50',
+        color: 'gray.900',
       },
     },
   },
