@@ -17,6 +17,7 @@ const items = [
     src="assets/Carrossel1.jpg"
     onDragStart={handleDragStart}
     role="presentation"
+    width="100%"
   />,
   <img
     alt="image-carousel-02"
@@ -24,6 +25,7 @@ const items = [
     src={carrossel2.src}
     onDragStart={handleDragStart}
     role="presentation"
+    width="100%"
   />,
   <img
     alt="image-carousel-03"
@@ -31,6 +33,7 @@ const items = [
     src={carrossel3.src}
     onDragStart={handleDragStart}
     role="presentation"
+    width="100%"
   />,
   <img
     alt="image-carousel-04"
@@ -38,6 +41,7 @@ const items = [
     src={carrossel4.src}
     onDragStart={handleDragStart}
     role="presentation"
+    width="100%"
   />,
   <img
     alt="image-carousel-05"
@@ -45,6 +49,7 @@ const items = [
     src={carrossel5.src}
     onDragStart={handleDragStart}
     role="presentation"
+    width="100%"
   />,
 ];
 
