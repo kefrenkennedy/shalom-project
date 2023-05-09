@@ -1,6 +1,4 @@
 export interface ICreateRegistrationDTO {
-  user_id: string;
-  event_id: string;
   full_name: string;
   phone_number: string;
   age: number;
