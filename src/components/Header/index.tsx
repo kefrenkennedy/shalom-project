@@ -13,9 +13,9 @@ export default function Header() {
         color="white"
         h="70px"
       >
-        <Box cursor="pointer">Login</Box>
-        <Box cursor="pointer">Sobre o Evento</Box>
-        <Box cursor="pointer">Contatos</Box>
+        <Box>Inscrição ACAMP'S BEACH</Box>
+        {/* <Box cursor="pointer">Sobre o Evento</Box> */}
+        {/* <Box cursor="pointer">Contatos</Box> */}
       </Flex>
     </>
   );
