@@ -1,5 +1,5 @@
 {
-  "name": "04-dashgo",
+  "name": "shalom-eventos-api",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -15,7 +15,6 @@
     "@hookform/resolvers": "^3.1.0",
     "@types/react-dom": "18.0.11",
     "@types/react-input-mask": "^3.0.2",
-    "apexcharts": "^3.37.2",
     "axios": "^1.4.0",
     "eslint": "8.37.0",
     "eslint-config-next": "13.2.4",
@@ -23,7 +22,7 @@
     "next": "13.2.4",
     "nookies": "^2.5.2",
     "react": "18.2.0",
-    "react-apexcharts": "^1.4.0",
+    "react-alice-carousel": "^2.7.1",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.43.9",
     "react-icons": "^4.8.0",
