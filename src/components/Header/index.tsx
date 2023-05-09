@@ -1,6 +1,6 @@
 import { Box, Flex } from '@chakra-ui/react';
 
-export default function Header() {
+export function Header() {
   return (
     <>
       <Flex
