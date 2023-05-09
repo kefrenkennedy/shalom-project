@@ -11,24 +11,11 @@ import { destroyCookie, parseCookies, setCookie } from 'nookies';
 import { ISignInDTO } from '@/dtos';
 import { sessionsServices } from '@/services/sessionsServices';
 
-interface ICustomer {
-  id: string;
-  birthdate: Date;
-  phone_number?: string;
-  is_whatsapp: false;
-  cpf: string;
-}
-
 export interface IUser {
   id: string;
   name: string;
   email: string;
-  avatar?: string;
-  company_id: string;
-  role_id?: string;
-  role?: object;
-  avatar_url?: string;
-  customer: ICustomer;
+  role: string;
 }
 
 interface IAuthContext {
