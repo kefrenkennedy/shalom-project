@@ -10,6 +10,7 @@ import Router from 'next/router';
 import { destroyCookie, parseCookies, setCookie } from 'nookies';
 import { ISignInDTO } from '@/dtos';
 import { sessionsServices } from '@/services/sessionsServices';
+import { api } from '@/services/apiClient';
 
 export interface IUser {
   id: string;
@@ -48,7 +49,7 @@ export function AuthProvider({ children }: IAuthProviderProps) {
     //@ts-ignore
     api.defaults.headers['Authorization'] = `Bearer ${token}`;
 
-    Router.push('/dashboard');
+    // Router.push('/dashboard');
   }, []);
 
   const signOut = useCallback(() => {
@@ -56,7 +57,7 @@ export function AuthProvider({ children }: IAuthProviderProps) {
 
     destroyCookie(undefined, 'shalomeventos.token');
 
-    Router.push('/signin');
+    // Router.push('/signin');
   }, []);
 
   return (
