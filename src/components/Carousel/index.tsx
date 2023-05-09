@@ -2,11 +2,11 @@ import React from 'react';
 import AliceCarousel from 'react-alice-carousel';
 import 'react-alice-carousel/lib/alice-carousel.css';
 
-import carrossel1 from '../../../public/assets/Carrossel1.jpg';
-import carrossel2 from '../../../public/assets/Carrossel2.jpg';
-import carrossel3 from '../../../public/assets/Carrossel3.jpg';
-import carrossel4 from '../../../public/assets/Carrossel4.jpg';
-import carrossel5 from '../../../public/assets/Carrossel5.jpg';
+import carrossel1 from '../../../public/assets/carrossel1.jpg';
+import carrossel2 from '../../../public/assets/carrossel2.jpg';
+import carrossel3 from '../../../public/assets/carrossel3.jpg';
+import carrossel4 from '../../../public/assets/carrossel4.jpg';
+import carrossel5 from '../../../public/assets/carrossel5.jpg';
 
 const handleDragStart = (e: any) => e.preventDefault();
 
