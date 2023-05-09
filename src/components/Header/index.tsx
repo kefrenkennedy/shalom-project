@@ -1,4 +1,4 @@
-import { Box, Flex } from "@chakra-ui/react";
+import { Box, Flex } from '@chakra-ui/react';
 
 export default function Header() {
   return (
@@ -9,7 +9,7 @@ export default function Header() {
         display="flex"
         justifyContent="space-around"
         alignItems="center"
-        backgroundColor="rgba(255, 34, 0, 1)"
+        bgColor="orange.500"
         color="white"
         h="70px"
       >
