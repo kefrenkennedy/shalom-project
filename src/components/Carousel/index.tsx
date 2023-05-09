@@ -13,8 +13,8 @@ const handleDragStart = (e: any) => e.preventDefault();
 const items = [
   <img
     alt="image-carousel-01"
-    key={carrossel1.src}
-    src="assets/Carrossel1.jpg"
+    key="image-carousel-01"
+    src={carrossel1.src}
     onDragStart={handleDragStart}
     role="presentation"
     width="100%"
