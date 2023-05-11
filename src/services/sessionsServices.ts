@@ -1,6 +1,7 @@
-import { ICreateUserDTO, ISignInDTO } from '@/dtos';
-import { api } from './apiClient';
+import { ISignInDTO } from '@/dtos';
 import { IUser } from '@/hooks/auth';
+
+import { api } from './apiClient';
 
 const PATH = '/sessions';
 

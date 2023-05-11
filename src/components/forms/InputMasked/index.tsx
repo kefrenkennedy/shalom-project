@@ -1,13 +1,14 @@
-import {
-  Input as ChakraInput,
-  FormLabel,
-  FormControl,
-  InputProps as ChakraInputProps,
-  FormErrorMessage,
-} from '@chakra-ui/react';
-import React, { ForwardRefRenderFunction, forwardRef } from 'react';
+import React, { forwardRef, ForwardRefRenderFunction } from 'react';
 import { FieldError } from 'react-hook-form';
 import InputMask from 'react-input-mask';
+
+import {
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Input as ChakraInput,
+  InputProps as ChakraInputProps,
+} from '@chakra-ui/react';
 
 interface InputMaskProps extends ChakraInputProps {
   name: string;
@@ -21,7 +22,7 @@ const InputMaskBase: ForwardRefRenderFunction<
   InputMaskProps
 > = (
   { name, label, error, mask, onChange, onBlur, ...rest }: InputMaskProps,
-  ref
+  ref,
 ) => {
   const renderInput = () => (
     <ChakraInput

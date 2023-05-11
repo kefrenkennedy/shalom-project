@@ -1,5 +1,6 @@
-import { api } from './apiClient';
 import { ICreateRegistrationDTO } from '@/dtos/ICreateRegistrationDTO';
+
+import { api } from './apiClient';
 
 const PATH = '/registrations';
 

@@ -1,8 +1,9 @@
-import { Box, Flex, Heading, Image, Link, Text } from "@chakra-ui/react";
-import { BsFacebook, BsInstagram } from "react-icons/bs";
+import { BsFacebook, BsInstagram } from 'react-icons/bs';
 
-import shalomLogo from "../../../public/assets/icone1.png";
-import juventudeJesusLogo from "../../../public/assets/icone2.png";
+import { Box, Flex, Heading, Image, Link, Text } from '@chakra-ui/react';
+
+import shalomLogo from '../../../public/assets/icone1.png';
+import juventudeJesusLogo from '../../../public/assets/icone2.png';
 
 export function Footer() {
   return (
@@ -12,8 +13,8 @@ export function Footer() {
         w="100%"
         display="flex"
         justifyContent="space-between"
-              alignItems="center"
-              px="3rem"
+        alignItems="center"
+        px="3rem"
         bgColor="yellow.400"
         color="white"
         h="70px"

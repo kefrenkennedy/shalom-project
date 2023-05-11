@@ -1,12 +1,13 @@
+import { forwardRef, ForwardRefRenderFunction, RefAttributes } from 'react';
+import { FieldError } from 'react-hook-form';
+
 import {
   Checkbox as ChakraCheckbox,
-  FormLabel,
-  FormControl,
   CheckboxProps as ChakraCheckboxProps,
+  FormControl,
   FormErrorMessage,
+  FormLabel,
 } from '@chakra-ui/react';
-import { ForwardRefRenderFunction, RefAttributes, forwardRef } from 'react';
-import { FieldError } from 'react-hook-form';
 
 interface CheckboxProps extends ChakraCheckboxProps {
   name: string;

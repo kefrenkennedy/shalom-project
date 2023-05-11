@@ -1,14 +1,15 @@
+import { forwardRef, ForwardRefRenderFunction, RefAttributes } from 'react';
+import { FieldError } from 'react-hook-form';
+
 import {
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
   Radio as ChakraRadio,
   RadioGroup,
-  FormLabel,
-  FormControl,
   RadioProps as ChakraRadioProps,
-  FormErrorMessage,
   Stack,
 } from '@chakra-ui/react';
-import { ForwardRefRenderFunction, RefAttributes, forwardRef } from 'react';
-import { FieldError } from 'react-hook-form';
 
 interface RadioProps extends ChakraRadioProps {
   name: string;
@@ -22,7 +23,7 @@ interface RadioProps extends ChakraRadioProps {
 
 const RadioBase: ForwardRefRenderFunction<HTMLInputElement, RadioProps> = (
   { name, label, options, error, ...rest }: RadioProps,
-  ref
+  ref,
 ) => {
   return (
     <FormControl isInvalid={!!error}>

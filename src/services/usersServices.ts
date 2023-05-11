@@ -1,4 +1,5 @@
 import { ICreateUserDTO } from '@/dtos/ICreateUserDTO';
+
 import { api } from './apiClient';
 
 const PATH = '/users';

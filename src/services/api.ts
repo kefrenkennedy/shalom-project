@@ -41,7 +41,7 @@ export function setupAPIClient(ctx = undefined) {
       */
 
       return Promise.reject(error);
-    }
+    },
   );
 
   return api;

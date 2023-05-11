@@ -1,12 +1,13 @@
 import React from 'react';
 import AliceCarousel from 'react-alice-carousel';
-import 'react-alice-carousel/lib/alice-carousel.css';
 
-import carrossel1 from '../../../public/assets/carrossel1.jpg';
-import carrossel2 from '../../../public/assets/carrossel2.jpg';
-import carrossel3 from '../../../public/assets/carrossel3.jpg';
-import carrossel4 from '../../../public/assets/carrossel4.jpg';
-import carrossel5 from '../../../public/assets/carrossel5.jpg';
+import carrosselImage1 from '../../../public/assets/carrossel1.jpg';
+import carrosselImage2 from '../../../public/assets/carrossel2.jpg';
+import carrosselImage3 from '../../../public/assets/carrossel3.jpg';
+import carrosselImage4 from '../../../public/assets/carrossel4.jpg';
+import carrosselImage5 from '../../../public/assets/carrossel5.jpg';
+
+import 'react-alice-carousel/lib/alice-carousel.css';
 
 const handleDragStart = (e: any) => e.preventDefault();
 
@@ -14,7 +15,7 @@ const items = [
   <img
     alt="image-carousel-01"
     key="image-carousel-01"
-    src={carrossel1.src}
+    src={carrosselImage1.src}
     onDragStart={handleDragStart}
     role="presentation"
     width="100%"
@@ -22,7 +23,7 @@ const items = [
   <img
     alt="image-carousel-02"
     key="image-carousel-02"
-    src={carrossel2.src}
+    src={carrosselImage2.src}
     onDragStart={handleDragStart}
     role="presentation"
     width="100%"
@@ -30,7 +31,7 @@ const items = [
   <img
     alt="image-carousel-03"
     key="image-carousel-03"
-    src={carrossel3.src}
+    src={carrosselImage3.src}
     onDragStart={handleDragStart}
     role="presentation"
     width="100%"
@@ -38,7 +39,7 @@ const items = [
   <img
     alt="image-carousel-04"
     key="image-carousel-04"
-    src={carrossel4.src}
+    src={carrosselImage4.src}
     onDragStart={handleDragStart}
     role="presentation"
     width="100%"
@@ -46,7 +47,7 @@ const items = [
   <img
     alt="image-carousel-05"
     key="image-carousel-05"
-    src={carrossel5.src}
+    src={carrosselImage5.src}
     onDragStart={handleDragStart}
     role="presentation"
     width="100%"
