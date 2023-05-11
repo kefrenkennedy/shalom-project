@@ -216,24 +216,26 @@ export default function Home() {
 
       <Image src={lotesImage.src} alt="Acamps Beach Lotes" w="100%" />
 
-      <Image
-        src={formularioImage.src}
-        alt="Acamps Beach Formulario Logo"
-        w="50%"
-        ml="2rem"
-        mt="1rem"
-      />
-
       <Flex
         as="form"
         width="100%"
-        maxWidth={360}
+        // maxWidth={360}
+        justifySelf="center"
+        align="center"
         bg="gray.50"
         p="8"
         borderRadius={8}
         flexDir="column"
         onSubmit={handleSubmit(handleRegister)}
       >
+        <Image
+          src={formularioImage.src}
+          alt="Acamps Beach Formulario Logo"
+          w="50%"
+          mb="2rem"
+          alignSelf="flex-start"
+        />
+
         <Stack spacing="4">
           <Input
             label="NOME COMPLETO"
@@ -278,6 +280,7 @@ export default function Home() {
             error={errors.guardian_phone_number}
             mask="(99) 99999-9999"
           />
+
           <Input
             label="SE PARTICIPA DA OBRA SHALOM, NOME DO GRUPO DE ORAÇÃO"
             {...register('prayer_group')}

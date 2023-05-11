@@ -1,52 +1,58 @@
 import { BsFacebook, BsInstagram } from 'react-icons/bs';
 
-import { Box, Flex, Heading, Image, Link, Text } from '@chakra-ui/react';
-
-import shalomLogo from '../../../public/assets/icone1.png';
-import juventudeJesusLogo from '../../../public/assets/icone2.png';
+import { Flex, Image, Link, Text, useBreakpointValue } from '@chakra-ui/react';
 
 export function Footer() {
+  const showUserName = useBreakpointValue({
+    base: false,
+    md: true,
+  });
+
   return (
-    <>
+    <Flex
+      textDecoration="underline"
+      w="100%"
+      display="flex"
+      justifyContent="space-between"
+      alignItems="center"
+      px="3rem"
+      bgColor="yellow.400"
+      color="white"
+      h="5rem"
+    >
       <Flex
-        textDecoration="underline"
-        w="100%"
-        display="flex"
         justifyContent="space-between"
         alignItems="center"
-        px="3rem"
-        bgColor="yellow.400"
-        color="white"
-        h="70px"
+        w={['3rem', '3rem', '15rem']}
       >
-        <Flex justifyContent="space-between" alignItems="center" w="230px">
-          <Link
-            href="https://www.facebook.com/juventudeshalom.sobral"
-            target="_blank"
-          >
-            <BsFacebook />
-          </Link>
+        <Link
+          href="https://www.facebook.com/juventudeshalom.sobral"
+          target="_blank"
+        >
+          <BsFacebook />
+        </Link>
 
-          <Link
-            href="https://www.instagram.com/juventudeshsobral/"
-            target="_blank"
-          >
-            <BsInstagram />
-          </Link>
+        <Link
+          href="https://www.instagram.com/juventudeshsobral/"
+          target="_blank"
+        >
+          <BsInstagram />
+        </Link>
 
+        {showUserName && (
           <Link
             href="https://www.instagram.com/juventudeshsobral/"
             target="_blank"
           >
             <Text fontWeight="medium">@JUVENTUDESHSOBRAL</Text>
           </Link>
-        </Flex>
-
-        <Flex justifyContent="space-between" alignItems="center" w="190px">
-          <Image src={shalomLogo.src} alt="Logo Shalom" w="80px" />
-          <Image src={juventudeJesusLogo.src} alt="Juventude" w="80px" />
-        </Flex>
+        )}
       </Flex>
-    </>
+
+      <Flex justifyContent="space-between" alignItems="center" w="12rem">
+        <Image src="/assets/icone1.png" alt="Logo Shalom" w="5rem" />
+        <Image src="/assets/icone2.png" alt="Juventude" w="5rem" />
+      </Flex>
+    </Flex>
   );
 }
