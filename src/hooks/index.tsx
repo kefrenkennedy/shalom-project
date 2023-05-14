@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 import { ToastContainer } from 'react-toastify';
 
 import { AuthProvider } from './auth';
+import { SidebarDrawerProvider } from './sidebar';
 
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -12,7 +13,7 @@ interface IAppProviderProps {
 export function AppProvider({ children }: IAppProviderProps) {
   return (
     <AuthProvider>
-      {children}
+      <SidebarDrawerProvider>{children}</SidebarDrawerProvider>
 
       <ToastContainer />
     </AuthProvider>
