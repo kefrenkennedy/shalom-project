@@ -26,26 +26,27 @@ const InputMaskBase: ForwardRefRenderFunction<
 ) => {
   const renderInput = () => (
     <ChakraInput
-      {...rest}
+      ref={ref}
       id={name}
       name={name}
-      borderColor="gray.900"
+      borderColor="gray.200"
       borderRadius="full"
       focusBorderColor="green.200"
-      bgColor="gray.50"
+      borderWidth="1px"
+      bgColor="white"
       variant="filled"
       _hover={{
-        bgColor: 'gray.50',
+        bgColor: 'white',
       }}
       size="lg"
-      ref={ref}
+      // {...rest}
     />
   );
 
   return (
     <FormControl isInvalid={!!error}>
       {!!label && <FormLabel htmlFor={name}>{label}</FormLabel>}
-      <InputMask mask={mask}>
+      <InputMask mask={mask} name={name} onChange={onChange} onBlur={onBlur}>
         {
           //@ts-ignore
           renderInput
