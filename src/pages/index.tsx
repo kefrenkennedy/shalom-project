@@ -14,7 +14,7 @@ import { InputMasked } from '@/components/forms/InputMasked';
 import { Radio } from '@/components/forms/Radio';
 import { Header } from '@/components/Header';
 import { useAuth } from '@/hooks/auth';
-import { registrationsService } from '@/services/registrationsServices';
+import { participantRegistrationsService } from '@/services/participantRegistrationsServices';
 import { usersService } from '@/services/usersServices';
 
 import acampsBeachImage from '../../public/assets/AcampsBeach.png';
@@ -168,7 +168,7 @@ export default function Home() {
     }
 
     // CADASTRAR NO EVENTO
-    registrationsService()
+    participantRegistrationsService()
       .create(
         EVENT_ID, //TODO: PEGAR EVENTO DINAMICAMENTE
         {
@@ -222,7 +222,7 @@ export default function Home() {
         // maxWidth={360}
         justifySelf="center"
         align="center"
-        bg="gray.50"
+        bg="white"
         p="8"
         borderRadius={8}
         flexDir="column"
@@ -243,7 +243,7 @@ export default function Home() {
             error={errors.name}
           />
           <Input
-            type="numer"
+            type="number"
             label="SUA IDADE"
             {...register('age')}
             error={errors.age}
