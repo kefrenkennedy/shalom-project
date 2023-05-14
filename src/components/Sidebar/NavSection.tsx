@@ -1,5 +1,6 @@
-import { Box, Stack, Text } from '@chakra-ui/react';
 import { ReactNode } from 'react';
+
+import { Box, Stack, Text } from '@chakra-ui/react';
 
 interface NavSectionProps {
   title: string;
