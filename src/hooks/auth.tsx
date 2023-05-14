@@ -57,10 +57,40 @@ export function AuthProvider({ children }: IAuthProviderProps) {
   const signOut = useCallback(() => {
     setUser({} as IUser);
 
-    destroyCookie(undefined, 'shalomeventos.token');
+    console.log('começou');
+    destroyCookie(null, 'shalomeventos.token', {
+      path: '/',
+    });
+
+    console.log('terminou');
 
     // Router.push('/signin');
   }, []);
+
+  const updateUser = useCallback(() => {
+    const { 'shalomeventos.token': token } = parseCookies();
+
+    if (token) {
+      api
+        .get('/profile')
+        .then((response) => {
+          const { user } = response.data;
+
+          setUser(user);
+        })
+        .catch((error) => {
+          destroyCookie(undefined, 'shalomeventos.token', {
+            path: '/',
+          });
+
+          Router.push('/');
+        });
+    }
+  }, []);
+
+  useEffect(() => {
+    updateUser();
+  }, [updateUser]);
 
   return (
     <AuthContext.Provider value={{ user, signIn, signOut }}>
