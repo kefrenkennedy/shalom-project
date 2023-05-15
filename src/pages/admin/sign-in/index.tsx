@@ -1,8 +1,10 @@
-import { Input } from '../../../components/forms/Input';
-import { useForm, SubmitHandler } from 'react-hook-form';
-import { Flex, Button, Stack, Text } from '@chakra-ui/react';
-import * as yup from 'yup';
+import { SubmitHandler, useForm } from 'react-hook-form';
+
+import { Button, Flex, Stack, Text } from '@chakra-ui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+
+import { Input } from '../../../components/forms/Input';
 
 type SignInFormData = {
   email: string;
@@ -11,7 +13,7 @@ type SignInFormData = {
 
 const signInFormSchema = yup.object().shape({
   email: yup.string().email('E-mail inválido').required('E-mail obrigatório'),
-  password: yup.string().required('Senha obrigatório'),
+  password: yup.string().required('Senha obrigatória'),
 });
 
 export default function SignIn() {
@@ -27,7 +29,6 @@ export default function SignIn() {
 
   return (
     <Flex bg="white" w="100vw" h="100vh" align="center" justify="center">
-    
       <Flex
         as="form"
         width="100%"
@@ -39,7 +40,9 @@ export default function SignIn() {
         onSubmit={handleSubmit(handleSignIn)}
       >
         <Stack spacing="4">
-        <Text fontWeight="bolder" fontSize="1.5rem">Acesso Administrativo</Text>
+          <Text fontWeight="bolder" fontSize="1.5rem">
+            Acesso Administrativo
+          </Text>
           <Input
             type="email"
             label="E-mail"
