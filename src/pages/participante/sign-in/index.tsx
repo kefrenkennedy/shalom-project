@@ -1,12 +1,12 @@
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 
 import { Button, Flex, Stack, Text } from '@chakra-ui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useRouter } from 'next/router';
 import * as yup from 'yup';
 
-import { Sidebar } from '@/components/Sidebar';
 import { useAuth } from '@/hooks/auth';
 import { withSSRGuest } from '@/utils/withSSRGuest';
 
@@ -23,7 +23,7 @@ const signInFormSchema = yup.object().shape({
 });
 
 export default function SignIn() {
-  const { user, signIn } = useAuth();
+  const { user, signIn, signOut } = useAuth();
   const router = useRouter();
 
   const { register, handleSubmit, formState } = useForm<SignInFormData>({
@@ -33,14 +33,19 @@ export default function SignIn() {
 
   const handleSignIn: SubmitHandler<SignInFormData> = async (data) => {
     const { email, password } = data;
-    signIn({ email, password });
+    await signIn({ email, password });
   };
 
   useEffect(() => {
     if (user.id) {
-      router.push('/participante/inscricoes');
+      if (user.role !== 'PARTICIPANT') {
+        signOut();
+        toast.warn('Você não é um usuário participante');
+      } else {
+        router.push('/participante/inscricoes');
+      }
     }
-  }, [user, router]);
+  }, [user, router, signOut]);
 
   return (
     <Flex bg="gray.50" w="100vw" h="100vh" align="center" justify="center">
