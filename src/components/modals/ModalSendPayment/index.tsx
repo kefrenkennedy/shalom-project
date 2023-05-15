@@ -27,6 +27,8 @@ import { participantPaymentsServices } from '@/services/participantPaymentsServi
 
 interface IProps {
   registrationId: string;
+  disableButton: boolean;
+  onSuccess?: () => void;
 }
 
 interface ISendPaymentFormData {
@@ -47,7 +49,11 @@ const signInFormSchema = Yup.object().shape({
     }),
 });
 
-export function ModalSendPayment({ registrationId }: IProps) {
+export function ModalSendPayment({
+  registrationId,
+  disableButton = false,
+  onSuccess,
+}: IProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const finalRef = useRef(null);
 
@@ -70,7 +76,9 @@ export function ModalSendPayment({ registrationId }: IProps) {
     participantPaymentsServices()
       .create(registrationId, formData)
       .then(() => {
+        onSuccess && onSuccess();
         toast.success('Comprovante enviado com sucesso');
+        onClose();
       })
       .catch(() => {
         toast.warn(
@@ -87,9 +95,10 @@ export function ModalSendPayment({ registrationId }: IProps) {
         fontSize="sm"
         colorScheme="orange"
         leftIcon={<Icon as={RiMoneyDollarCircleLine} fontSize="16" />}
+        isDisabled={disableButton}
         onClick={onOpen}
       >
-        Pagar
+        {disableButton ? 'Enviado' : 'Pagar'}
       </Button>
       <Modal finalFocusRef={finalRef} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
