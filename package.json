@@ -15,10 +15,13 @@
     "@hookform/resolvers": "^3.1.0",
     "@types/react-dom": "18.0.11",
     "@types/react-input-mask": "^3.0.2",
+    "@types/yup": "^0.32.0",
     "axios": "^1.4.0",
+    "dayjs": "^1.11.7",
     "eslint": "8.37.0",
     "eslint-config-next": "13.2.4",
     "framer-motion": "^10.10.0",
+    "git-commit-msg-linter": "^5.0.4",
     "next": "13.2.4",
     "nookies": "^2.5.2",
     "react": "18.2.0",
@@ -29,6 +32,7 @@
     "react-input-mask": "^2.0.4",
     "react-responsive-carousel": "^3.2.23",
     "react-toastify": "^9.1.2",
+    "yup": "^1.1.1",
     "zod": "^3.21.4"
   },
   "devDependencies": {
