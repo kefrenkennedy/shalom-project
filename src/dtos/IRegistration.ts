@@ -1,4 +1,5 @@
 import { IEvent } from './IEvent';
+import { IPayment } from './IPayment';
 
 export interface IRegistration {
   id: string;
@@ -22,5 +23,5 @@ export interface IRegistration {
   created_at: string;
   updated_at: string;
   event?: IEvent;
-  payment?: object;
+  payment?: IPayment;
 }

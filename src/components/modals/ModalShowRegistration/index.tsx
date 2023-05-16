@@ -18,6 +18,7 @@ import {
 } from '@chakra-ui/react';
 
 import { IRegistration } from '@/dtos/IRegistration';
+import { translateRegistrationStatus } from '@/utils/translateRegistrationStatus';
 
 interface IProps {
   registration: IRegistration;
@@ -123,9 +124,9 @@ export function ModalShowRegistration({ registration }: IProps) {
             </Stack>
 
             <Stack direction="row">
-              <Text fontWeight="bold">Status da Inscrição:</Text>
+              <Text fontWeight="bold">Status de pagamento:</Text>
               <Text>
-                {registration.is_approved ? 'APROVADA' : 'AGUARDANDO PAGAMENTO'}
+                {translateRegistrationStatus(registration?.payment?.status)}
               </Text>
             </Stack>
           </ModalBody>

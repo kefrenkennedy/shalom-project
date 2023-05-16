@@ -22,6 +22,7 @@ import { Sidebar } from '@/components/Sidebar';
 import { UserHeader } from '@/components/UserHeader';
 import { IRegistration } from '@/dtos/IRegistration';
 import { participantRegistrationsService } from '@/services/participantRegistrationsServices';
+import { translateRegistrationStatus } from '@/utils/translateRegistrationStatus';
 import { withSSRAuth } from '@/utils/withSSRAuth';
 
 export default function Registrations() {
@@ -32,12 +33,16 @@ export default function Registrations() {
 
   const [registrations, setRegistrations] = useState<IRegistration[]>([]);
 
-  useEffect(() => {
+  async function getRegistrations() {
     participantRegistrationsService()
       .list()
       .then((data) => {
         setRegistrations(data.registrations);
       });
+  }
+
+  useEffect(() => {
+    getRegistrations();
   }, []);
 
   const registrationFormatted = useMemo(() => {
@@ -62,6 +67,7 @@ export default function Registrations() {
           'DD/MM/YYYY',
         ),
         address: addressFormatted,
+        status: translateRegistrationStatus(registration?.payment?.status),
         registration: registration,
       };
     });
@@ -106,6 +112,7 @@ export default function Registrations() {
                 {isWideVersion && <Th>Local</Th>}
                 {isWideVersion && <Th>Início</Th>}
                 {isWideVersion && <Th>Fim</Th>}
+                {isWideVersion && <Th>Pagamento</Th>}
                 <Th>Opções</Th>
               </Tr>
             </Thead>
@@ -120,6 +127,7 @@ export default function Registrations() {
                   {isWideVersion && <Td>{data.address}</Td>}
                   {isWideVersion && <Td>{data.event_start_date}</Td>}
                   {isWideVersion && <Td>{data.event_end_date}</Td>}
+                  {isWideVersion && <Td>{data.status}</Td>}
                   <Td>
                     <Box>
                       <Stack spacing="2">
@@ -127,9 +135,11 @@ export default function Registrations() {
                           registration={data.registration}
                         />
 
-                        {data.registration?.payment && (
-                          <ModalSendPayment registrationId={data.key} />
-                        )}
+                        <ModalSendPayment
+                          registrationId={data.key}
+                          disableButton={!!data.registration?.payment}
+                          onSuccess={getRegistrations}
+                        />
                       </Stack>
                     </Box>
                   </Td>
