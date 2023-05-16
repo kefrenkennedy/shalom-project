@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import {
   Box,
@@ -15,15 +15,16 @@ import {
   Tr,
   useBreakpointValue,
 } from '@chakra-ui/react';
-import dayjs from 'dayjs';
 
 import { ModalSendPayment } from '@/components/modals/ModalSendPayment';
+import { ModalShowPayment } from '@/components/modals/ModalShowPayment';
 import { ModalShowRegistration } from '@/components/modals/ModalShowRegistration';
 import { Sidebar } from '@/components/Sidebar';
 import { UserHeader } from '@/components/UserHeader';
 import { IRegistration } from '@/dtos/IRegistration';
+import { adminPaymentsServices } from '@/services/adminPaymentsServices';
 import { adminRegistrationsService } from '@/services/adminRegistrationsServices';
-import { participantRegistrationsService } from '@/services/participantRegistrationsServices';
+import { translateRegistrationStatus } from '@/utils/translateRegistrationStatus';
 import { withSSRAuth } from '@/utils/withSSRAuth';
 
 export default function Registrations() {
@@ -36,13 +37,17 @@ export default function Registrations() {
 
   const EVENT_ID = String(process.env.NEXT_PUBLIC_EVENT_ID);
 
-  useEffect(() => {
+  const getRegistrations = useCallback(() => {
     adminRegistrationsService()
       .list(EVENT_ID)
       .then((data) => {
         setRegistrations(data.registrations);
       });
-  }, []);
+  }, [EVENT_ID]);
+
+  useEffect(() => {
+    getRegistrations();
+  }, [getRegistrations]);
 
   const registrationFormatted = useMemo(() => {
     return registrations.map((registration) => {
@@ -57,7 +62,8 @@ export default function Registrations() {
           3,
         )} ${registration?.phone_number.slice(3)}`,
         age: registration?.age,
-        status: registration?.is_approved,
+        status: translateRegistrationStatus(registration?.payment?.status),
+        registration: registration,
       };
     });
   }, [registrations]);
@@ -113,13 +119,23 @@ export default function Registrations() {
                   {isWideVersion && <Td>{data.phone_number}</Td>}
                   {isWideVersion && <Td>{data.age}</Td>}
                   {isWideVersion && <Td>{data.status}</Td>}
-                  {isWideVersion && (
-                    <Td>
-                      <Button bg="orange.500" color="white">
-                        Pagamento
-                      </Button>
-                    </Td>
-                  )}
+
+                  <Td>
+                    <Box>
+                      <Stack spacing="2">
+                        <ModalShowRegistration
+                          registration={data.registration}
+                        />
+
+                        {data.registration.payment && (
+                          <ModalShowPayment
+                            payment={data.registration.payment}
+                            onSuccess={getRegistrations}
+                          />
+                        )}
+                      </Stack>
+                    </Box>
+                  </Td>
                 </Tr>
               ))}
             </Tbody>
