@@ -33,7 +33,12 @@ export default function SignIn() {
 
   const handleSignIn: SubmitHandler<SignInFormData> = async (data) => {
     const { email, password } = data;
-    await signIn({ email, password });
+    try {
+      await signIn({ email, password });
+    } catch (err) {
+      toast.warn('Credenciais inválidas');
+    }
+    return;
   };
 
   useEffect(() => {

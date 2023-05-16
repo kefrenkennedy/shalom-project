@@ -183,42 +183,40 @@ export default function Home() {
       }
     }
 
-    if (user.id) {
-      // CADASTRAR NO EVENTO
-      await participantRegistrationsService()
-        .create(
-          EVENT_ID, //TODO: PEGAR EVENTO DINAMICAMENTE
-          {
-            full_name: name,
-            age,
-            phone_number,
-            document_number,
-            document_type,
-            guardian_name,
-            guardian_phone_number,
-            transportation_mode,
-            allergy_description,
-            community_type,
-            prayer_group,
-            event_source,
-            pcd_description,
-            accepted_the_terms,
-          },
-        )
-        .then(() => {
+    // CADASTRAR NO EVENTO
+    await participantRegistrationsService()
+      .create(
+        EVENT_ID, //TODO: PEGAR EVENTO DINAMICAMENTE
+        {
+          full_name: name,
+          age,
+          phone_number,
+          document_number,
+          document_type,
+          guardian_name,
+          guardian_phone_number,
+          transportation_mode,
+          allergy_description,
+          community_type,
+          prayer_group,
+          event_source,
+          pcd_description,
+          accepted_the_terms,
+        },
+      )
+      .then(() => {
+        handleSuccessRegistration();
+      })
+      .catch((err: AxiosError) => {
+        if (err.response?.status === 409) {
+          // Erro de inscrição já foi realizada
           handleSuccessRegistration();
-        })
-        .catch((err: AxiosError) => {
-          if (err.response?.status === 409) {
-            // Erro de inscrição já foi realizada
-            handleSuccessRegistration();
-          } else {
-            toast.warn(
-              'Não foi possível realizar a inscrição, tente novamente mais tarde',
-            );
-          }
-        });
-    }
+        } else {
+          toast.warn(
+            'Não foi possível realizar a inscrição, tente novamente mais tarde',
+          );
+        }
+      });
   };
 
   return (
