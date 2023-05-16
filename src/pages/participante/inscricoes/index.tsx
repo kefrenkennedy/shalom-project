@@ -112,7 +112,7 @@ export default function Registrations() {
                 {isWideVersion && <Th>Local</Th>}
                 {isWideVersion && <Th>Início</Th>}
                 {isWideVersion && <Th>Fim</Th>}
-                <Th>Pagamento</Th>
+                {isWideVersion && <Th>Pagamento</Th>}
                 <Th>Opções</Th>
               </Tr>
             </Thead>
@@ -127,7 +127,7 @@ export default function Registrations() {
                   {isWideVersion && <Td>{data.address}</Td>}
                   {isWideVersion && <Td>{data.event_start_date}</Td>}
                   {isWideVersion && <Td>{data.event_end_date}</Td>}
-                  <Td>{data.status}</Td>
+                  {isWideVersion && <Td>{data.status}</Td>}
                   <Td>
                     <Box>
                       <Stack spacing="2">
