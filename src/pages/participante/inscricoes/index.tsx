@@ -33,7 +33,7 @@ export default function Registrations() {
 
   const [registrations, setRegistrations] = useState<IRegistration[]>([]);
 
-  async function getRegistrations() {
+  function getRegistrations() {
     participantRegistrationsService()
       .list()
       .then((data) => {
