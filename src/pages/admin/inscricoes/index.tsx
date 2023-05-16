@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import {
   Box,
+  Button,
   Flex,
   Heading,
   Stack,
@@ -14,14 +15,15 @@ import {
   Tr,
   useBreakpointValue,
 } from '@chakra-ui/react';
-import dayjs from 'dayjs';
 
 import { ModalSendPayment } from '@/components/modals/ModalSendPayment';
+import { ModalShowPayment } from '@/components/modals/ModalShowPayment';
 import { ModalShowRegistration } from '@/components/modals/ModalShowRegistration';
 import { Sidebar } from '@/components/Sidebar';
 import { UserHeader } from '@/components/UserHeader';
 import { IRegistration } from '@/dtos/IRegistration';
-import { participantRegistrationsService } from '@/services/participantRegistrationsServices';
+import { adminPaymentsServices } from '@/services/adminPaymentsServices';
+import { adminRegistrationsService } from '@/services/adminRegistrationsServices';
 import { translateRegistrationStatus } from '@/utils/translateRegistrationStatus';
 import { withSSRAuth } from '@/utils/withSSRAuth';
 
@@ -33,40 +35,33 @@ export default function Registrations() {
 
   const [registrations, setRegistrations] = useState<IRegistration[]>([]);
 
-  function getRegistrations() {
-    participantRegistrationsService()
-      .list()
+  const EVENT_ID = String(process.env.NEXT_PUBLIC_EVENT_ID);
+
+  const getRegistrations = useCallback(() => {
+    adminRegistrationsService()
+      .list(EVENT_ID)
       .then((data) => {
         setRegistrations(data.registrations);
       });
-  }
+  }, [EVENT_ID]);
 
   useEffect(() => {
     getRegistrations();
-  }, []);
+  }, [getRegistrations]);
 
   const registrationFormatted = useMemo(() => {
     return registrations.map((registration) => {
-      let addressFormatted = '-';
-
-      if (
-        registration?.event?.addresses &&
-        registration.event.addresses.length > 0
-      ) {
-        let address = registration.event.addresses[0];
-        addressFormatted = `${address.street}, nº ${address.street_number}, ${address.city} - ${address.state}`;
-      }
-
       return {
         key: registration.id,
-        event_title: registration?.event?.title,
-        event_start_date: dayjs(registration?.event?.start_date).format(
-          'DD/MM/YYYY',
-        ),
-        event_end_date: dayjs(registration?.event?.end_date).format(
-          'DD/MM/YYYY',
-        ),
-        address: addressFormatted,
+        full_name: registration?.full_name,
+        phone_number: `(${registration?.phone_number.slice(
+          0,
+          2,
+        )}) ${registration?.phone_number.slice(
+          2,
+          3,
+        )} ${registration?.phone_number.slice(3)}`,
+        age: registration?.age,
         status: translateRegistrationStatus(registration?.payment?.status),
         registration: registration,
       };
@@ -78,7 +73,6 @@ export default function Registrations() {
       <UserHeader />
       <Flex w="100%" my="6" maxWidth={1480} mx="auto" px="6">
         <Sidebar />
-
         <Box
           flex="1"
           borderRadius={8}
@@ -108,11 +102,10 @@ export default function Registrations() {
           <Table colorScheme="whiteAlpha">
             <Thead>
               <Tr>
-                <Th>Evento</Th>
-                {isWideVersion && <Th>Local</Th>}
-                {isWideVersion && <Th>Início</Th>}
-                {isWideVersion && <Th>Fim</Th>}
-                {isWideVersion && <Th>Pagamento</Th>}
+                <Th>Participante</Th>
+                {isWideVersion && <Th>Telefone</Th>}
+                {isWideVersion && <Th>Idade</Th>}
+                {isWideVersion && <Th>Status</Th>}
                 <Th>Opções</Th>
               </Tr>
             </Thead>
@@ -121,13 +114,13 @@ export default function Registrations() {
                 <Tr px="6" key={data.key}>
                   <Td>
                     <Box>
-                      <Text fontWeight="medium">{data.event_title}</Text>
+                      <Text fontWeight="medium">{data.full_name}</Text>
                     </Box>
                   </Td>
-                  {isWideVersion && <Td>{data.address}</Td>}
-                  {isWideVersion && <Td>{data.event_start_date}</Td>}
-                  {isWideVersion && <Td>{data.event_end_date}</Td>}
+                  {isWideVersion && <Td>{data.phone_number}</Td>}
+                  {isWideVersion && <Td>{data.age}</Td>}
                   {isWideVersion && <Td>{data.status}</Td>}
+
                   <Td>
                     <Box>
                       <Stack spacing="2">
@@ -135,11 +128,12 @@ export default function Registrations() {
                           registration={data.registration}
                         />
 
-                        <ModalSendPayment
-                          registrationId={data.key}
-                          disableButton={!!data.registration?.payment}
-                          onSuccess={getRegistrations}
-                        />
+                        {data.registration.payment && (
+                          <ModalShowPayment
+                            payment={data.registration.payment}
+                            onSuccess={getRegistrations}
+                          />
+                        )}
                       </Stack>
                     </Box>
                   </Td>

@@ -31,7 +31,6 @@ export function ModalShowRegistration({ registration }: IProps) {
   return (
     <>
       <Button
-        w="100px"
         size="sm"
         fontSize="sm"
         colorScheme="green"
@@ -104,7 +103,7 @@ export function ModalShowRegistration({ registration }: IProps) {
             </Stack>
 
             <Stack direction="row">
-              <Text fontWeight="bold">Pessoa Portadora de deficiêcia:</Text>
+              <Text fontWeight="bold">PCD:</Text>
               <Text>{registration.pcd_description || '-'}</Text>
             </Stack>
 

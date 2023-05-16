@@ -10,7 +10,7 @@ export const adminRegistrationsService = () => ({
     return response.data;
   },
   list: async (event_id: string) => {
-    const response = await api.post(PATH + `/event/${event_id}`);
+    const response = await api.get(PATH + `/event/${event_id}`);
     return response.data;
   },
 });

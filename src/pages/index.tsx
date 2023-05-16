@@ -4,6 +4,8 @@ import { toast } from 'react-toastify';
 
 import { Button, Flex, Image, Stack } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { AxiosError } from 'axios';
+import { useRouter } from 'next/router';
 import { z } from 'zod';
 
 import { Carousel } from '@/components/Carousel';
@@ -48,7 +50,7 @@ type SignInFormData = {
 
 const signInFormSchema = z
   .object({
-    name: z.string().min(3, 'Nome muito curto'),
+    name: z.string().min(5, 'Nome muito curto'),
     email: z.string().email('E-mail inválido'),
     password: z.string().min(8, 'Deve conter no mínimo 8 caracteres'),
     password_confirmation: z.string(),
@@ -114,6 +116,7 @@ const signInFormSchema = z
   });
 
 export default function Home() {
+  const router = useRouter();
   const EVENT_ID = String(process.env.NEXT_PUBLIC_EVENT_ID);
 
   const { signIn, user } = useAuth();
@@ -122,6 +125,12 @@ export default function Home() {
   });
 
   const { errors } = formState;
+
+  function handleSuccessRegistration() {
+    toast.success('Inscrição realizada com sucesso');
+    router.push('/participante/inscricoes');
+    reset();
+  }
 
   const handleRegister: SubmitHandler<SignInFormData> = async (data) => {
     /*
@@ -151,52 +160,65 @@ export default function Home() {
     } = data;
 
     if (!user.id) {
-      // CRIAR CONTA
+      // FAZ LOGIN
       try {
-        await usersService().create({
-          email,
-          name,
-          password,
-          password_confirmation,
-        });
+        await signIn({ email, password });
       } catch (err) {
-        console.log(err);
+        try {
+          await usersService().create({
+            email,
+            name,
+            password,
+            password_confirmation,
+          });
+          await signIn({ email, password });
+          //@ts-ignore
+        } catch (err: AxiosError) {
+          if (err.response?.status === 409) {
+            toast.warn(
+              'Usuário já cadastrado, mas as credencias estão inválidas',
+            );
+          }
+        }
       }
-
-      // FAZER LOGIN
-      await signIn({ email, password });
     }
 
-    // CADASTRAR NO EVENTO
-    participantRegistrationsService()
-      .create(
-        EVENT_ID, //TODO: PEGAR EVENTO DINAMICAMENTE
-        {
-          full_name: name,
-          age,
-          phone_number,
-          document_number,
-          document_type,
-          guardian_name,
-          guardian_phone_number,
-          transportation_mode,
-          allergy_description,
-          community_type,
-          prayer_group,
-          event_source,
-          pcd_description,
-          accepted_the_terms,
-        },
-      )
-      .then(() => {
-        toast.success('Inscrição realizada com sucesso');
-        reset();
-      })
-      .catch(() => {
-        toast.warn(
-          'Não foi possível realizar a inscrição, tente novamente mais tarde',
-        );
-      });
+    if (user.id) {
+      // CADASTRAR NO EVENTO
+      await participantRegistrationsService()
+        .create(
+          EVENT_ID, //TODO: PEGAR EVENTO DINAMICAMENTE
+          {
+            full_name: name,
+            age,
+            phone_number,
+            document_number,
+            document_type,
+            guardian_name,
+            guardian_phone_number,
+            transportation_mode,
+            allergy_description,
+            community_type,
+            prayer_group,
+            event_source,
+            pcd_description,
+            accepted_the_terms,
+          },
+        )
+        .then(() => {
+          handleSuccessRegistration();
+        })
+        .catch((err: AxiosError) => {
+          if (err.response?.status === 409) {
+            // Erro de inscrição já foi realizada
+            handleSuccessRegistration();
+          } else {
+            toast.warn(
+              'Não foi possível realizar a inscrição, tente novamente mais tarde',
+            );
+          }
+        });
+    }
   };
 
   return (

@@ -1,8 +1,14 @@
+import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 
 import { Button, Flex, Stack, Text } from '@chakra-ui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useRouter } from 'next/router';
 import * as yup from 'yup';
+
+import { useAuth } from '@/hooks/auth';
+import { withSSRGuest } from '@/utils/withSSRGuest';
 
 import { Input } from '../../../components/forms/Input';
 
@@ -17,35 +23,52 @@ const signInFormSchema = yup.object().shape({
 });
 
 export default function SignIn() {
+  const { user, signIn, signOut } = useAuth();
+  const router = useRouter();
+
   const { register, handleSubmit, formState } = useForm<SignInFormData>({
     resolver: yupResolver(signInFormSchema),
   });
   const { errors } = formState;
 
-  const handleSignIn: SubmitHandler<SignInFormData> = async (values) => {
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    console.log(values);
+  const handleSignIn: SubmitHandler<SignInFormData> = async (data) => {
+    const { email, password } = data;
+    await signIn({ email, password });
   };
 
+  useEffect(() => {
+    if (user.id) {
+      if (user.role !== 'ADMINISTRATOR') {
+        signOut();
+        toast.warn('Você não é um usuário administrador');
+      } else {
+        router.push('/admin/inscricoes');
+      }
+    }
+  }, [user, router, signOut]);
+
   return (
-    <Flex bg="white" w="100vw" h="100vh" align="center" justify="center">
+    <Flex bg="gray.50" w="100vw" h="100vh" align="center" justify="center">
       <Flex
         as="form"
         width="100%"
         maxWidth={360}
-        bg="green.500"
+        bg="white"
         p="8"
-        borderRadius={8}
+        borderRadius={20}
         flexDir="column"
         onSubmit={handleSubmit(handleSignIn)}
       >
         <Stack spacing="4">
-          <Text fontWeight="bolder" fontSize="1.5rem">
-            Acesso Administrativo
+          <Text fontWeight="bolder" align="center">
+            Portal do Administrador
           </Text>
+
           <Input
             type="email"
             label="E-mail"
+            borderColor="gray.200"
+            bg="white"
             {...register('email')}
             error={errors.email}
           />
@@ -53,6 +76,8 @@ export default function SignIn() {
             type="password"
             label="Senha"
             {...register('password')}
+            borderColor="gray.200"
+            bg="white"
             error={errors.password}
           />
         </Stack>
@@ -60,7 +85,9 @@ export default function SignIn() {
         <Button
           type="submit"
           mt="6"
-          bg="yellow.300"
+          borderRadius="full"
+          colorScheme="yellow"
+          color="white"
           size="lg"
           isLoading={formState.isSubmitting}
         >
@@ -70,3 +97,9 @@ export default function SignIn() {
     </Flex>
   );
 }
+
+export const getServerSideProps = withSSRGuest(async (ctx) => {
+  return {
+    props: {},
+  };
+});
