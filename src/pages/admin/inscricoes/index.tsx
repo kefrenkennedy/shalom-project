@@ -72,6 +72,7 @@ export default function Registrations() {
     <Box h="100vh">
       <UserHeader />
       <Flex w="100%" my="6" maxWidth={1480} mx="auto" px="6">
+        <Sidebar />
         <Box
           flex="1"
           borderRadius={8}
