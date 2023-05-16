@@ -90,7 +90,6 @@ export function ModalSendPayment({
   return (
     <>
       <Button
-        w="100px"
         size="sm"
         fontSize="sm"
         colorScheme="orange"
