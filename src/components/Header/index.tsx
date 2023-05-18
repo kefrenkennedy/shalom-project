@@ -10,8 +10,10 @@ export function Header() {
   const router = useRouter();
   const { user } = useAuth();
 
-  const isUserLogged = useMemo(() => {
-    return !!user.id;
+  const mainButtonText = useMemo(() => {
+    if (user?.id) return `Olá, ${user.name.split(' ')[0]}`;
+
+    return 'Login';
   }, [user]);
 
   function handleActionButton() {
@@ -49,7 +51,7 @@ export function Header() {
           size={['md', 'lg']}
           onClick={handleActionButton}
         >
-          {isUserLogged ? 'Minhas inscrições' : 'Login'}
+          {mainButtonText}
         </Button>
         {/* <Box cursor="pointer">Sobre o Evento</Box> */}
         {/* <Box cursor="pointer">Contatos</Box> */}
