@@ -1,9 +1,12 @@
+import jwt from 'jsonwebtoken';
 import {
   GetServerSideProps,
   GetServerSidePropsContext,
   GetServerSidePropsResult,
 } from 'next';
 import { parseCookies } from 'nookies';
+
+import { ITokenPayload } from '@/dtos/ITokenPayload';
 
 /**
  * Função que garante que uma página pública (login, por exemplo) não pode
@@ -22,10 +25,16 @@ export function withSSRGuest<P>(
   ): Promise<GetServerSidePropsResult<{ [key: string]: any }>> => {
     const cookies = parseCookies(ctx);
 
-    if (cookies['shalomeventos.token']) {
+    const token = cookies['shalomeventos.token'];
+    if (token) {
+      const decoded = jwt.decode(token) as ITokenPayload;
+
+      let rootRoute = 'participante';
+      if (decoded?.role === 'ADMINISTRATOR') rootRoute = 'admin';
+
       return {
         redirect: {
-          destination: '/participante/inscricoes',
+          destination: `/${rootRoute}/inscricoes`,
           permanent: false,
         },
       };

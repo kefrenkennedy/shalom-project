@@ -1,3 +1,4 @@
+import jwt from 'jsonwebtoken';
 import {
   GetServerSideProps,
   GetServerSidePropsContext,
@@ -5,6 +6,7 @@ import {
 } from 'next';
 import { destroyCookie, parseCookies } from 'nookies';
 
+import { ITokenPayload } from '@/dtos/ITokenPayload';
 import { AuthTokenError } from '@/services/errors/AuthTokenError';
 
 /**
@@ -24,10 +26,29 @@ export function withSSRAuth<P>(
   ): Promise<GetServerSidePropsResult<{ [key: string]: any }>> => {
     const cookies = parseCookies(ctx);
 
-    if (!cookies['shalomeventos.token']) {
+    const token = cookies['shalomeventos.token'];
+    if (!token) {
       return {
         redirect: {
           destination: '/participante/sign-in',
+          permanent: false,
+        },
+      };
+    }
+
+    const decoded = jwt.decode(token) as ITokenPayload;
+
+    let rootRoute = 'participante';
+    if (decoded?.role === 'ADMINISTRATOR') rootRoute = 'admin';
+
+    const rootRouteFromCrx = ctx.resolvedUrl.split('/')[1];
+    if (rootRouteFromCrx !== rootRoute) {
+      return {
+        redirect: {
+          destination: `${ctx.resolvedUrl.replace(
+            rootRouteFromCrx,
+            rootRoute,
+          )}`,
           permanent: false,
         },
       };
