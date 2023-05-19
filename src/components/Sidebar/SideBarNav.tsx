@@ -16,6 +16,11 @@ import { NavSection } from './NavSection';
 const adminTabs = [
   {
     icon: RiDashboardLine,
+    href: '/admin/eventos',
+    title: 'Eventos',
+  },
+  {
+    icon: RiDashboardLine,
     href: '/admin/inscricoes',
     title: 'Inscrições',
   },
