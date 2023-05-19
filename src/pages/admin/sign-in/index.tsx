@@ -10,7 +10,7 @@ import * as yup from 'yup';
 import { useAuth } from '@/hooks/auth';
 import { withSSRGuest } from '@/utils/withSSRGuest';
 
-import { Input } from '../../../components/forms/Input';
+import { Input } from '../../../components/forms/atomics/Input';
 
 type SignInFormData = {
   email: string;

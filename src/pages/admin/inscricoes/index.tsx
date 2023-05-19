@@ -2,7 +2,6 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import {
   Box,
-  Button,
   Flex,
   Heading,
   Stack,
@@ -16,13 +15,11 @@ import {
   useBreakpointValue,
 } from '@chakra-ui/react';
 
-import { ModalSendPayment } from '@/components/modals/ModalSendPayment';
 import { ModalShowPayment } from '@/components/modals/ModalShowPayment';
 import { ModalShowRegistration } from '@/components/modals/ModalShowRegistration';
 import { Sidebar } from '@/components/Sidebar';
 import { UserHeader } from '@/components/UserHeader';
 import { IRegistration } from '@/dtos/IRegistration';
-import { adminPaymentsServices } from '@/services/adminPaymentsServices';
 import { adminRegistrationsService } from '@/services/adminRegistrationsServices';
 import { translateRegistrationStatus } from '@/utils/translateRegistrationStatus';
 import { withSSRAuth } from '@/utils/withSSRAuth';
@@ -99,7 +96,7 @@ export default function Registrations() {
             </Link> */}
           </Flex>
 
-          <Table colorScheme="whiteAlpha">
+          <Table colorScheme="gray">
             <Thead>
               <Tr>
                 <Th>Participante</Th>

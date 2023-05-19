@@ -10,10 +10,10 @@ import { z } from 'zod';
 
 import { Carousel } from '@/components/Carousel';
 import { Footer } from '@/components/Footer';
-import { Checkbox } from '@/components/forms/Checkbox';
-import { Input } from '@/components/forms/Input';
-import { InputMasked } from '@/components/forms/InputMasked';
-import { Radio } from '@/components/forms/Radio';
+import { Checkbox } from '@/components/forms/atomics/Checkbox';
+import { Input } from '@/components/forms/atomics/Input';
+import { InputMasked } from '@/components/forms/atomics/InputMasked';
+import { Radio } from '@/components/forms/atomics/Radio';
 import { Header } from '@/components/Header';
 import { useAuth } from '@/hooks/auth';
 import { participantRegistrationsService } from '@/services/participantRegistrationsServices';

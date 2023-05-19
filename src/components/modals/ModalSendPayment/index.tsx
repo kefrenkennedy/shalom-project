@@ -20,9 +20,9 @@ import {
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 
-import { Input } from '@/components/forms/Input';
-import { InputFile } from '@/components/forms/InputFile';
-import { Radio } from '@/components/forms/Radio';
+import { Input } from '@/components/forms/atomics/Input';
+import { InputFile } from '@/components/forms/atomics/InputFile';
+import { Radio } from '@/components/forms/atomics/Radio';
 import { participantPaymentsServices } from '@/services/participantPaymentsServices';
 
 interface IProps {
