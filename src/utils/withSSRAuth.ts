@@ -41,12 +41,12 @@ export function withSSRAuth<P>(
     let rootRoute = 'participante';
     if (decoded?.role === 'ADMINISTRATOR') rootRoute = 'admin';
 
-    const rootRouteFromCrx = ctx.resolvedUrl.split('/')[1];
-    if (rootRouteFromCrx !== rootRoute) {
+    const rootRouteFromCtx = ctx.resolvedUrl.split('/')[1];
+    if (rootRouteFromCtx !== rootRoute) {
       return {
         redirect: {
           destination: `${ctx.resolvedUrl.replace(
-            rootRouteFromCrx,
+            rootRouteFromCtx,
             rootRoute,
           )}`,
           permanent: false,
