@@ -2,9 +2,10 @@ import React from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
-import { Button, Flex, Image, Stack } from '@chakra-ui/react';
+import { Button, Flex, FormLabel, Image, Stack, Text } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AxiosError } from 'axios';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { z } from 'zod';
 
@@ -359,8 +360,40 @@ export default function Home() {
             error={errors.password_confirmation}
           />
 
+          <FormLabel>DOCUMENTOS NECESSÁRIOS:</FormLabel>
+          <Text>
+            ATENÇÃO! Baixe, assine e nos envie esses documentos para validar sua
+            incrição.
+          </Text>
+          <Link
+            target="_blank"
+            href="/documents/autorizacao_imagem_maior_sobral.pdf"
+          >
+            <Text color="blue" textDecoration="underline">
+              Termo de uso de imagem (maior)
+            </Text>
+          </Link>
+
+          <Link
+            target="_blank"
+            href="/documents/autorizacao_imagem_menor_sobral.pdf"
+          >
+            <Text color="blue" textDecoration="underline">
+              Termo de uso de imagem (menor)
+            </Text>
+          </Link>
+
+          <Link
+            target="_blank"
+            href="/documents/termo_de_consentimento_menor_shalom.pdf"
+          >
+            <Text color="blue" textDecoration="underline">
+              Termo de consentimento dos pais (menor)
+            </Text>
+          </Link>
+
           <Checkbox
-            label="LI E ACEITO OS TERMOS E CONDIÇÕES DESCRITOS ACIMA"
+            label="LI E ACEITO OS TERMOS E CONDIÇÕES DESCRITOS NOS DOCUMENTOS ACIMA"
             {...register('accepted_the_terms')}
             error={errors.accepted_the_terms}
           />
