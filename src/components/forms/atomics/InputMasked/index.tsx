@@ -39,7 +39,7 @@ const InputMaskBase: ForwardRefRenderFunction<
         bgColor: 'white',
       }}
       size="lg"
-      // {...rest}
+      {...rest}
     />
   );
 
