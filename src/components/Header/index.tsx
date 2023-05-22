@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { Button, Flex, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, Text } from '@chakra-ui/react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 
@@ -21,16 +21,18 @@ export function Header() {
   }
 
   return (
-    <>
+    <Box bgColor="orange.500">
       <Flex
+        as="header"
         w="100%"
         display="flex"
-        justifyContent="space-around"
-        alignItems="center"
-        bgColor="orange.500"
+        justify="space-around"
+        align="center"
         color="white"
         h="6rem"
         px="1rem"
+        mx="auto"
+        maxWidth="1366px"
       >
         <Flex width={['20', '35', '40']} height={['30', '25', '20']}>
           <Flex width="100%" height="100%" position="relative">
@@ -56,6 +58,6 @@ export function Header() {
         {/* <Box cursor="pointer">Sobre o Evento</Box> */}
         {/* <Box cursor="pointer">Contatos</Box> */}
       </Flex>
-    </>
+    </Box>
   );
 }

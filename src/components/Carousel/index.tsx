@@ -55,5 +55,15 @@ const items = [
 ];
 
 export const Carousel = () => {
-  return <AliceCarousel mouseTracking items={items} disableButtonsControls />;
+  return (
+    <AliceCarousel
+      mouseTracking
+      items={items}
+      disableButtonsControls
+      infinite
+      autoPlay
+      autoPlayInterval={1000}
+      autoWidth
+    />
+  );
 };
