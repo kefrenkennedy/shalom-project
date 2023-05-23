@@ -6,7 +6,7 @@ const PATH = '/registrations';
 
 export const adminRegistrationsService = () => ({
   update: async (id: string) => {
-    const response = await api.patch(PATH + `/${id}/confirm`);
+    const response = await api.patch(PATH + `/${id}/approve`);
     return response.data;
   },
   list: async (event_id: string) => {
