@@ -11,15 +11,9 @@ import Router from 'next/router';
 import { destroyCookie, parseCookies, setCookie } from 'nookies';
 
 import { ISignInDTO } from '@/dtos';
+import { IUser } from '@/dtos/IUser';
 import { api } from '@/services/apiClient';
 import { sessionsServices } from '@/services/sessionsServices';
-
-export interface IUser {
-  id: string;
-  name: string;
-  email: string;
-  role: 'ADMINISTRATOR' | 'PARTICIPANT';
-}
 
 interface IAuthContext {
   user: IUser;
