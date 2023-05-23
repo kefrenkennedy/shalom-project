@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
+import { toast } from 'react-toastify';
 
 import {
   Box,
   Flex,
   Heading,
-  Stack,
+  HStack,
   Table,
   Tbody,
   Td,
@@ -21,6 +22,7 @@ import { ModalShowRegistration } from '@/components/modals/ModalShowRegistration
 import { Sidebar } from '@/components/Sidebar';
 import { UserHeader } from '@/components/UserHeader';
 import { IRegistration } from '@/dtos/IRegistration';
+import { adminRegistrationsService } from '@/services/adminRegistrationsServices';
 import { participantRegistrationsService } from '@/services/participantRegistrationsServices';
 import { translateRegistrationStatus } from '@/utils/translateRegistrationStatus';
 import { withSSRAuth } from '@/utils/withSSRAuth';
@@ -130,7 +132,7 @@ export default function Registrations() {
                   {isWideVersion && <Td>{data.status}</Td>}
                   <Td>
                     <Box>
-                      <Stack spacing="2">
+                      <HStack spacing="2">
                         <ModalShowRegistration
                           registration={data.registration}
                         />
@@ -140,7 +142,7 @@ export default function Registrations() {
                           disableButton={!!data.registration?.payment}
                           onSuccess={getRegistrations}
                         />
-                      </Stack>
+                      </HStack>
                     </Box>
                   </Td>
                 </Tr>
