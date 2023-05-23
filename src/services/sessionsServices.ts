@@ -1,5 +1,5 @@
 import { ISignInDTO } from '@/dtos';
-import { IUser } from '@/hooks/auth';
+import { IUser } from '@/dtos/IUser';
 
 import { api } from './apiClient';
 
