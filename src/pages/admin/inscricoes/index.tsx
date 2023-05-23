@@ -1,9 +1,14 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { RiCheckboxCircleLine, RiCheckLine } from 'react-icons/ri';
+import { toast } from 'react-toastify';
 
 import {
   Box,
+  Button,
   Flex,
   Heading,
+  HStack,
+  Icon,
   Stack,
   Table,
   Tbody,
@@ -11,14 +16,17 @@ import {
   Text,
   Th,
   Thead,
+  Tooltip,
   Tr,
   useBreakpointValue,
 } from '@chakra-ui/react';
+import dayjs from 'dayjs';
 
 import { ModalShowPayment } from '@/components/modals/ModalShowPayment';
 import { ModalShowRegistration } from '@/components/modals/ModalShowRegistration';
 import { Sidebar } from '@/components/Sidebar';
 import { UserHeader } from '@/components/UserHeader';
+import { IParticipant } from '@/dtos/IParticipant';
 import { IRegistration } from '@/dtos/IRegistration';
 import { adminRegistrationsService } from '@/services/adminRegistrationsServices';
 import { translateRegistrationStatus } from '@/utils/translateRegistrationStatus';
@@ -42,25 +50,43 @@ export default function Registrations() {
       });
   }, [EVENT_ID]);
 
+  function handleConfirmRegistration(id: string) {
+    adminRegistrationsService()
+      .update(id)
+      .then(() => {
+        getRegistrations();
+        toast.success('Inscrição aprovada com sucesso');
+      })
+      .catch((err) => {
+        toast.warn('Não foi possível confirmar a inscrição');
+      });
+  }
+
   useEffect(() => {
     getRegistrations();
   }, [getRegistrations]);
 
-  const registrationFormatted = useMemo(() => {
+  const registrationsFormatted = useMemo(() => {
     return registrations.map((registration) => {
+      const participant = registration?.user?.participant as IParticipant;
       return {
         key: registration.id,
-        full_name: registration?.full_name,
-        phone_number: `(${registration?.phone_number.slice(
+        full_name: participant?.full_name,
+        phone_number: `(${participant?.phone_number.slice(
           0,
           2,
-        )}) ${registration?.phone_number.slice(
+        )}) ${participant?.phone_number.slice(
           2,
           3,
-        )} ${registration?.phone_number.slice(3)}`,
-        age: registration?.age,
-        status: translateRegistrationStatus(registration?.payment?.status),
+        )} ${participant?.phone_number.slice(3)}`,
+        age: participant?.birthdate
+          ? dayjs(new Date()).diff(participant?.birthdate, 'years')
+          : '-',
+        status: registration.is_approved
+          ? 'Aprovada'
+          : translateRegistrationStatus(registration?.payment?.status),
         registration: registration,
+        is_approved: registration.is_approved,
       };
     });
   }, [registrations]);
@@ -107,7 +133,7 @@ export default function Registrations() {
               </Tr>
             </Thead>
             <Tbody>
-              {registrationFormatted?.map((data) => (
+              {registrationsFormatted?.map((data) => (
                 <Tr px="6" key={data.key}>
                   <Td>
                     <Box>
@@ -120,7 +146,7 @@ export default function Registrations() {
 
                   <Td>
                     <Box>
-                      <Stack spacing="2">
+                      <HStack spacing="2">
                         <ModalShowRegistration
                           registration={data.registration}
                         />
@@ -128,10 +154,30 @@ export default function Registrations() {
                         {data.registration.payment && (
                           <ModalShowPayment
                             payment={data.registration.payment}
-                            onSuccess={getRegistrations}
+                            onSuccess={() =>
+                              handleConfirmRegistration(data.key)
+                            }
                           />
                         )}
-                      </Stack>
+
+                        <Tooltip
+                          label={data.is_approved ? 'Já aprovada' : 'Aprovar'}
+                          hasArrow
+                        >
+                          <Button
+                            size="sm"
+                            fontSize="sm"
+                            borderRadius="full"
+                            width={10}
+                            height={10}
+                            colorScheme="green"
+                            isDisabled={!!data.is_approved}
+                            onClick={() => handleConfirmRegistration(data.key)}
+                          >
+                            <Icon as={RiCheckboxCircleLine} fontSize="20" />
+                          </Button>
+                        </Tooltip>
+                      </HStack>
                     </Box>
                   </Td>
                 </Tr>
