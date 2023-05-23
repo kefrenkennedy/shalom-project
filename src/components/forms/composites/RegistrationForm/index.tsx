@@ -32,10 +32,8 @@ import { Input } from '@/components/forms/atomics/Input';
 import { InputMasked } from '@/components/forms/atomics/InputMasked';
 import { Radio } from '@/components/forms/atomics/Radio';
 import { useAuth } from '@/hooks/auth';
-import { participantAddressesServices } from '@/services/participantAddressesServices';
 import { participantRegistrationsService } from '@/services/participantRegistrationsServices';
 import { registerUserParticipantsServices } from '@/services/registerUserParticipantsServices';
-import { usersService } from '@/services/usersServices';
 
 type SignInFormData = {
   name: string;
@@ -74,7 +72,7 @@ const FormSchema = z
   .object({
     name: z.string().min(5, 'Nome muito curto'),
     email: z.string().email('E-mail inválido'),
-    password: z.string().min(8, 'Deve conter no mínimo 8 caracteres'),
+    password: z.string().min(8, 'Senha deve conter no mínimo 8 caracteres'),
     password_confirmation: z.string(),
 
     // full_name: z.string().min(5),
@@ -85,11 +83,11 @@ const FormSchema = z
     }),
     document_number: z.string().min(7, 'Documento inválido'),
     document_type: z.enum(['CPF', 'RG'], {
-      invalid_type_error: 'Selecione uma opção',
+      invalid_type_error: 'Selecione um tipo de documento',
       required_error: 'Documento obrigatório',
     }),
     guardian_name: z
-      .string({ required_error: 'Campo obrigatório' })
+      .string()
       .optional()
       .transform((val) => (val === '' ? undefined : val)),
     guardian_phone_number: z
@@ -116,7 +114,10 @@ const FormSchema = z
       .string()
       .optional()
       .transform((val) => (val === '' ? undefined : val)),
-    credential_name: z.string().min(5).max(18),
+    credential_name: z
+      .string()
+      .min(5, 'Nome para credencial muito curto')
+      .max(18, 'Nome para credencial muito grande'),
     transportation_mode: z.enum(['TRANSPORTE PRÓPRIO', 'ÔNIBUS'], {
       required_error: 'Campo obrigatório',
       invalid_type_error: 'Selecione uma opção',
