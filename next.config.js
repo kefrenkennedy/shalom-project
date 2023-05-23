@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['localhost', 'shalomsobral.com', 'api.shalomsobral.com'],
+    domains: ['localhost', 'shalomsobral.com.br', 'api.shalomsobral.com.br'],
   },
 };
 
