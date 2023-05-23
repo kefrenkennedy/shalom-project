@@ -130,6 +130,10 @@ export function ModalSendPayment({
                     <Text fontWeight="medium">
                       Page via PIX e ganhe 10% de desconto
                     </Text>
+                    <Box>
+                      <Text>Participantes: R$ 252,00</Text>
+                      <Text>Servos: R$ 162,00</Text>
+                    </Box>
                     <Text mt="1rem">
                       <Text fontWeight="medium">Chave pix:</Text>{' '}
                       eventossobral@comshalom.org
@@ -138,7 +142,7 @@ export function ModalSendPayment({
                       QR Code:
                     </Text>
                     <QRCode
-                      size={250}
+                      size={200}
                       // style={{ height: 'auto', maxWidth: '100%', width: '100%' }}
                       value={shalomQRCode}
                     />
@@ -150,7 +154,7 @@ export function ModalSendPayment({
                       href="https://link.ton.com.br/?id=ca341ec2-977a-4e0c-8041-52fcc021e7d2"
                     >
                       <Text color="blue" textDecoration="underline" mb="10px">
-                        Pagar no cartão (Participante)
+                        R$ 280 - Pagar no cartão (Participante)
                       </Text>
                     </Link>
                     <Link
@@ -158,7 +162,7 @@ export function ModalSendPayment({
                       href="https://link.ton.com.br/?id=215ec176-55f1-4ca0-838d-0ba653df3b06"
                     >
                       <Text color="blue" textDecoration="underline">
-                        Pagar no cartão (Servos)
+                        R$ 180,00 - Pagar no cartão (Servos)
                       </Text>
                     </Link>
                   </Box>
@@ -226,9 +230,21 @@ export function ModalSendPayment({
 
                 <Box>
                   <Text fontWeight="bold" align="center">
-                    INFORMAÇÕES
+                    DÚVIDAS OU INFORMAÇÕES
                   </Text>
-                  <Text>Secretaria PJJ: (88) 98862-4189</Text>
+                  <Text>
+                    Secretaria PJJ:{' '}
+                    <Link href="https://wa.me/5588988624189" target="_blank">
+                      <Text
+                        _hover={{ cursor: 'pointer' }}
+                        as="label"
+                        color="blue"
+                        textDecoration="underline"
+                      >
+                        (88) 98862-4189
+                      </Text>
+                    </Link>
+                  </Text>
                 </Box>
               </VStack>
             </VStack>
