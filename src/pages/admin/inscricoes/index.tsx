@@ -1,5 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { RiCheckboxCircleLine, RiCheckLine } from 'react-icons/ri';
+import {
+  RiCheckboxCircleFill,
+  RiCheckboxCircleLine,
+  RiTable2,
+} from 'react-icons/ri';
 import { toast } from 'react-toastify';
 
 import {
@@ -21,6 +25,7 @@ import {
   useBreakpointValue,
 } from '@chakra-ui/react';
 import dayjs from 'dayjs';
+import Link from 'next/link';
 
 import { ModalShowPayment } from '@/components/modals/ModalShowPayment';
 import { ModalShowRegistration } from '@/components/modals/ModalShowRegistration';
@@ -28,6 +33,7 @@ import { Sidebar } from '@/components/Sidebar';
 import { UserHeader } from '@/components/UserHeader';
 import { IParticipant } from '@/dtos/IParticipant';
 import { IRegistration } from '@/dtos/IRegistration';
+import { adminExportRegistrationsServices } from '@/services/adminExportRegistrationsServices';
 import { adminRegistrationsService } from '@/services/adminRegistrationsServices';
 import { translateRegistrationStatus } from '@/utils/translateRegistrationStatus';
 import { withSSRAuth } from '@/utils/withSSRAuth';
@@ -62,6 +68,10 @@ export default function Registrations() {
       });
   }
 
+  function handleExportRegistration() {
+    adminExportRegistrationsServices().export(EVENT_ID);
+  }
+
   useEffect(() => {
     getRegistrations();
   }, [getRegistrations]);
@@ -72,13 +82,7 @@ export default function Registrations() {
       return {
         key: registration.id,
         full_name: participant?.full_name,
-        phone_number: `(${participant?.phone_number.slice(
-          0,
-          2,
-        )}) ${participant?.phone_number.slice(
-          2,
-          3,
-        )} ${participant?.phone_number.slice(3)}`,
+        phone_number: participant.phone_number,
         age: participant?.birthdate
           ? dayjs(new Date()).diff(participant?.birthdate, 'years')
           : '-',
@@ -109,17 +113,15 @@ export default function Registrations() {
               Inscrições
             </Heading>
 
-            {/* <Link href="/users/create">
-              <Button
-                as="a"
-                size="sm"
-                fontSize="sm"
-                colorScheme="pink"
-                leftIcon={<Icon as={RiAddLine} fontSize="20" />}
-              >
-                Criar novo usuário
-              </Button>
-            </Link> */}
+            <Button
+              size="sm"
+              fontSize="sm"
+              colorScheme="green"
+              onClick={handleExportRegistration}
+              leftIcon={<Icon as={RiTable2} fontSize="20" />}
+            >
+              Baixar CSV
+            </Button>
           </Flex>
 
           <Table colorScheme="gray">
@@ -161,7 +163,11 @@ export default function Registrations() {
                         )}
 
                         <Tooltip
-                          label={data.is_approved ? 'Já aprovada' : 'Aprovar'}
+                          label={
+                            data.is_approved
+                              ? 'Inscrição Aprovada'
+                              : 'Aguardando aprovação'
+                          }
                           hasArrow
                         >
                           <Button
@@ -170,11 +176,21 @@ export default function Registrations() {
                             borderRadius="full"
                             width={10}
                             height={10}
-                            colorScheme="green"
-                            isDisabled={!!data.is_approved}
+                            colorScheme={data.is_approved ? 'green' : 'gray'}
+                            bgColor={
+                              data.is_approved ? 'green.500' : 'gray.300'
+                            }
+                            color="white"
                             onClick={() => handleConfirmRegistration(data.key)}
                           >
-                            <Icon as={RiCheckboxCircleLine} fontSize="20" />
+                            <Icon
+                              as={
+                                data.is_approved
+                                  ? RiCheckboxCircleFill
+                                  : RiCheckboxCircleLine
+                              }
+                              fontSize="20"
+                            />
                           </Button>
                         </Tooltip>
                       </HStack>
