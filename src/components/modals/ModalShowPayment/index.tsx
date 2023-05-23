@@ -1,8 +1,9 @@
 import { useRef } from 'react';
-import { RiEyeLine } from 'react-icons/ri';
+import { RiEyeLine, RiMoneyDollarCircleLine } from 'react-icons/ri';
 import { toast } from 'react-toastify';
 
 import {
+  Box,
   Button,
   Icon,
   Modal,
@@ -14,6 +15,7 @@ import {
   ModalOverlay,
   Stack,
   Text,
+  Tooltip,
   useDisclosure,
 } from '@chakra-ui/react';
 import Image from 'next/image';
@@ -24,7 +26,7 @@ import { generateImageUrl } from '@/utils/generateImageUrl';
 import { translateRegistrationStatus } from '@/utils/translateRegistrationStatus';
 
 interface IProps {
-  payment: IPayment;
+  payment?: IPayment;
   onSuccess?: () => void;
 }
 
@@ -33,71 +35,85 @@ export function ModalShowPayment({ payment, onSuccess }: IProps) {
   const finalRef = useRef(null);
 
   function handleUpdatePaymentStatus() {
-    adminPaymentsServices()
-      .update(payment.id)
-      .then(() => {
-        onSuccess && onSuccess();
-        onClose();
-        toast.success('Pagamento confirmado com sucesso');
-      })
-      .catch(() => {
-        toast.warn(
-          'Não foi possível atualizar o pagamento, tente novamente mais tarde',
-        );
-      });
+    if (payment) {
+      adminPaymentsServices()
+        .update(payment.id)
+        .then(() => {
+          onSuccess && onSuccess();
+          onClose();
+          toast.success('Pagamento confirmado com sucesso');
+        })
+        .catch(() => {
+          toast.warn(
+            'Não foi possível atualizar o pagamento, tente novamente mais tarde',
+          );
+        });
+    }
   }
 
   return (
     <>
-      <Button
-        size="sm"
-        fontSize="sm"
-        colorScheme="orange"
-        leftIcon={<Icon as={RiEyeLine} fontSize="16" />}
-        onClick={onOpen}
-      >
-        Pagamento
-      </Button>
+      <Tooltip label="Pagamento" hasArrow>
+        <Button
+          size="sm"
+          fontSize="sm"
+          borderRadius="full"
+          width={10}
+          height={10}
+          colorScheme="orange"
+          onClick={onOpen}
+        >
+          <Icon as={RiMoneyDollarCircleLine} fontSize="20" />
+        </Button>
+      </Tooltip>
       <Modal finalFocusRef={finalRef} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Comprovante de pagamento</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Stack direction="row">
-              <Text fontWeight="bold">Método de pagamento:</Text>
-              <Text>{payment?.payment_method || '-'}</Text>
-            </Stack>
+            {payment ? (
+              <Box>
+                <Stack direction="row">
+                  <Text fontWeight="bold">Método de pagamento:</Text>
+                  <Text>{payment?.payment_method || '-'}</Text>
+                </Stack>
 
-            <Stack direction="row">
-              <Text fontWeight="bold">Valor pago:</Text>
-              <Text>{payment.price}</Text>
-            </Stack>
+                <Stack direction="row">
+                  <Text fontWeight="bold">Valor pago:</Text>
+                  <Text>{payment.price}</Text>
+                </Stack>
 
-            <Stack direction="row">
-              <Text fontWeight="bold">Status de pagamento:</Text>
-              <Text>{translateRegistrationStatus(payment.status)}</Text>
-            </Stack>
+                <Stack direction="row">
+                  <Text fontWeight="bold">Status de pagamento:</Text>
+                  <Text>{translateRegistrationStatus(payment.status)}</Text>
+                </Stack>
 
-            <Stack direction="row">
-              <Text fontWeight="bold">Comprovante:</Text>
-            </Stack>
-            <Image
-              src={generateImageUrl(payment.file)}
-              alt="Comprovante de pagamento"
-              width={1000}
-              height={1000}
-            />
+                <Stack direction="row">
+                  <Text fontWeight="bold">Comprovante:</Text>
+                </Stack>
+                <Image
+                  src={generateImageUrl(payment.file)}
+                  alt="Comprovante de pagamento"
+                  width={1000}
+                  height={1000}
+                />
+              </Box>
+            ) : (
+              <Text>Comprovante de pagamento não encontrado</Text>
+            )}
           </ModalBody>
 
           <ModalFooter>
             <Stack direction="row">
               <Button
                 colorScheme="green"
-                isDisabled={payment.status === 'approved'}
+                isDisabled={payment?.status === 'approved'}
                 onClick={handleUpdatePaymentStatus}
               >
-                Aprovar
+                {payment?.status === 'approved'
+                  ? 'Pagamento confirmado'
+                  : 'Confirmar pagamento'}
               </Button>
               <Button onClick={onClose}>Fechar</Button>
             </Stack>
