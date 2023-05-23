@@ -150,7 +150,7 @@ export function ModalSendPayment({
                       href="https://link.ton.com.br/?id=ca341ec2-977a-4e0c-8041-52fcc021e7d2"
                     >
                       <Text color="blue" textDecoration="underline" mb="10px">
-                        Pagar no cartão (Normal)
+                        Pagar no cartão (Participante)
                       </Text>
                     </Link>
                     <Link
