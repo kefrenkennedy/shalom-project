@@ -1,9 +1,8 @@
-import { ReactNode, useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import { RiEyeLine } from 'react-icons/ri';
 
 import {
   Button,
-  Flex,
   Icon,
   Modal,
   ModalBody,
@@ -14,9 +13,12 @@ import {
   ModalOverlay,
   Stack,
   Text,
+  Tooltip,
   useDisclosure,
 } from '@chakra-ui/react';
+import dayjs from 'dayjs';
 
+import { IParticipant } from '@/dtos/IParticipant';
 import { IRegistration } from '@/dtos/IRegistration';
 import { translateRegistrationStatus } from '@/utils/translateRegistrationStatus';
 
@@ -28,18 +30,49 @@ export function ModalShowRegistration({ registration }: IProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const finalRef = useRef(null);
 
+  const dataFormatted = useMemo(() => {
+    const participant = registration?.user?.participant as IParticipant;
+    return {
+      event_title: registration.event?.title || '-',
+      full_name: participant?.full_name ?? '-',
+      birthdate: participant?.birthdate
+        ? dayjs(participant?.birthdate).format('DD/MM/YYYY')
+        : '-',
+      phone_number: participant.phone_number ?? '-',
+      document: participant
+        ? `${participant?.document_number} (${participant?.document_type})`
+        : '-',
+      guardian_name: participant?.guardian_name ?? '-',
+      guardian_phone_number: participant?.guardian_phone_number ?? '-',
+      prayer_group: participant?.prayer_group ?? '-',
+      community_type: participant?.community_type ?? '-',
+      pcd_description: participant?.pcd_description ?? '-',
+      allergy_description: participant?.allergy_description ?? '-',
+      transportation_mode: registration?.transportation_mode ?? '-',
+      event_source: registration?.event_source ?? '-',
+      accepted_the_terms: registration?.accepted_the_terms ? 'Sim' : 'Não',
+      status: registration.is_approved
+        ? 'Aprovada'
+        : translateRegistrationStatus(registration?.payment?.status),
+    };
+  }, [registration]);
+
   return (
     <>
-      <Button
-        size="sm"
-        fontSize="sm"
-        colorScheme="green"
-        bg="green.200"
-        leftIcon={<Icon as={RiEyeLine} fontSize="16" />}
-        onClick={onOpen}
-      >
-        Detalhes
-      </Button>
+      <Tooltip label="Detalhes" hasArrow>
+        <Button
+          size="sm"
+          fontSize="sm"
+          colorScheme="green"
+          bg="green.200"
+          width={10}
+          height={10}
+          borderRadius="full"
+          onClick={onOpen}
+        >
+          <Icon as={RiEyeLine} fontSize="20" />
+        </Button>
+      </Tooltip>
       <Modal finalFocusRef={finalRef} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
@@ -48,85 +81,81 @@ export function ModalShowRegistration({ registration }: IProps) {
           <ModalBody>
             <Stack direction="row">
               <Text fontWeight="bold">Evento:</Text>
-              <Text>{registration?.event?.title || '-'}</Text>
+              <Text>{dataFormatted.event_title}</Text>
             </Stack>
 
             <Stack direction="row">
               <Text fontWeight="bold">Nome:</Text>
-              <Text>{registration.full_name}</Text>
+              <Text>{dataFormatted.full_name}</Text>
             </Stack>
 
             <Stack direction="row">
-              <Text fontWeight="bold">Idade:</Text>
-              <Text>{registration.age}</Text>
+              <Text fontWeight="bold">Data de nascimento:</Text>
+              <Text>{dataFormatted.birthdate}</Text>
             </Stack>
 
             <Stack direction="row">
               <Text fontWeight="bold">Telefone:</Text>
-              <Text>{registration.phone_number}</Text>
+              <Text>{dataFormatted.phone_number}</Text>
             </Stack>
 
             <Stack direction="row">
               <Text fontWeight="bold">Documento:</Text>
-              <Text>
-                {registration.document_number} ({registration.document_type})
-              </Text>
+              <Text>{dataFormatted.document}</Text>
             </Stack>
 
-            {registration.guardian_name && (
+            {dataFormatted.guardian_name && (
               <>
                 <Stack direction="row">
                   <Text fontWeight="bold">Nome do responsável:</Text>
-                  <Text>{registration.guardian_name}</Text>
+                  <Text>{dataFormatted.guardian_name}</Text>
                 </Stack>
 
                 <Stack direction="row">
                   <Text fontWeight="bold">Telefone do responsável:</Text>
-                  <Text>{registration.guardian_phone_number || '-'}</Text>
+                  <Text>{dataFormatted.guardian_phone_number}</Text>
                 </Stack>
               </>
             )}
 
             <Stack direction="row">
               <Text fontWeight="bold">Nome do grupo de oração:</Text>
-              <Text>{registration.prayer_group || '-'}</Text>
+              <Text>{dataFormatted.prayer_group}</Text>
             </Stack>
 
             <Stack direction="row">
               <Text fontWeight="bold">Como ficou sabendo do evento:</Text>
-              <Text>{registration.event_source || '-'}</Text>
+              <Text>{dataFormatted.event_source}</Text>
             </Stack>
 
             <Stack direction="row">
               <Text fontWeight="bold">Tipo de comunidade:</Text>
-              <Text>{registration.community_type || '-'}</Text>
+              <Text>{dataFormatted.community_type}</Text>
             </Stack>
 
             <Stack direction="row">
               <Text fontWeight="bold">PCD:</Text>
-              <Text>{registration.pcd_description || '-'}</Text>
+              <Text>{dataFormatted.pcd_description}</Text>
             </Stack>
 
             <Stack direction="row">
               <Text fontWeight="bold">Alergias:</Text>
-              <Text>{registration.allergy_description || '-'}</Text>
+              <Text>{dataFormatted.allergy_description}</Text>
             </Stack>
 
             <Stack direction="row">
               <Text fontWeight="bold">Transpor para o evento:</Text>
-              <Text>{registration.transportation_mode}</Text>
+              <Text>{dataFormatted.transportation_mode}</Text>
             </Stack>
 
             <Stack direction="row">
               <Text fontWeight="bold">Aceitou os termos:</Text>
-              <Text>{registration.accepted_the_terms ? 'Sim' : 'Não'}</Text>
+              <Text>{dataFormatted.accepted_the_terms}</Text>
             </Stack>
 
             <Stack direction="row">
               <Text fontWeight="bold">Status de pagamento:</Text>
-              <Text>
-                {translateRegistrationStatus(registration?.payment?.status)}
-              </Text>
+              <Text>{dataFormatted.status}</Text>
             </Stack>
           </ModalBody>
 
