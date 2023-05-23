@@ -6,7 +6,6 @@ import {
   Box,
   Button,
   Flex,
-  FormErrorMessage,
   FormLabel,
   HStack,
   Image,
@@ -19,7 +18,6 @@ import {
   StepSeparator,
   StepStatus,
   Text,
-  useBreakpointValue,
   useSteps,
   VStack,
 } from '@chakra-ui/react';
@@ -36,8 +34,8 @@ import { Radio } from '@/components/forms/atomics/Radio';
 import { useAuth } from '@/hooks/auth';
 import { participantAddressesServices } from '@/services/participantAddressesServices';
 import { participantRegistrationsService } from '@/services/participantRegistrationsServices';
+import { registerUserParticipantsServices } from '@/services/registerUserParticipantsServices';
 import { usersService } from '@/services/usersServices';
-import { findFirstFieldValid } from '@/utils/findFirstFieldValid';
 
 type SignInFormData = {
   name: string;
@@ -49,7 +47,7 @@ type SignInFormData = {
   // event_id: string;
   // full_name: string;
   phone_number: string;
-  age: number;
+  birthdate: Date;
   document_number: string;
   document_type: string;
   guardian_name?: string;
@@ -61,6 +59,7 @@ type SignInFormData = {
   allergy_description?: string;
   transportation_mode: string;
   accepted_the_terms: boolean;
+  credential_name: string;
 
   street: string;
   street_number: string;
@@ -80,14 +79,10 @@ const FormSchema = z
 
     // full_name: z.string().min(5),
     phone_number: z.string().min(15, 'Telefone inválido'),
-    age: z.coerce
-      .number({
-        invalid_type_error: 'Idade inválida',
-        required_error: 'Campo obrigatório',
-      })
-      .int('Idade inválida')
-      .min(1, 'Idade inválida')
-      .max(99, 'Idade inválida'),
+    birthdate: z.coerce.date({
+      invalid_type_error: 'Data de nascimento inválida',
+      required_error: 'Data de nascimento obrigatório',
+    }),
     document_number: z.string().min(7, 'Documento inválido'),
     document_type: z.enum(['CPF', 'RG'], {
       invalid_type_error: 'Selecione uma opção',
@@ -121,6 +116,7 @@ const FormSchema = z
       .string()
       .optional()
       .transform((val) => (val === '' ? undefined : val)),
+    credential_name: z.string().min(5).max(18),
     transportation_mode: z.enum(['TRANSPORTE PRÓPRIO', 'ÔNIBUS'], {
       required_error: 'Campo obrigatório',
       invalid_type_error: 'Selecione uma opção',
@@ -188,19 +184,21 @@ export function RegistrationForm() {
       email,
       password,
       password_confirmation,
-      age,
+      birthdate,
       phone_number,
       document_number,
       document_type,
       guardian_name,
       guardian_phone_number,
-      transportation_mode,
       allergy_description,
       community_type,
       prayer_group,
-      event_source,
       pcd_description,
+
+      transportation_mode,
+      event_source,
       accepted_the_terms,
+      credential_name,
 
       // ADDRESS
       street,
@@ -218,6 +216,7 @@ export function RegistrationForm() {
         await signIn({ email, password });
       } catch (err) {
         try {
+          /*
           await usersService().create({
             email,
             name,
@@ -235,6 +234,33 @@ export function RegistrationForm() {
             city,
             state,
           });
+          */
+          registerUserParticipantsServices().create({
+            email,
+            name,
+            password,
+            password_confirmation,
+
+            street,
+            street_number,
+            complement,
+            zip_code,
+            district,
+            city,
+            state,
+
+            full_name: name,
+            phone_number,
+            birthdate,
+            document_number,
+            document_type,
+            guardian_name,
+            guardian_phone_number,
+            prayer_group,
+            community_type,
+            pcd_description,
+            allergy_description,
+          });
           //@ts-ignore
         } catch (err: AxiosError) {
           if (err.response?.status === 409) {
@@ -251,20 +277,10 @@ export function RegistrationForm() {
       .create(
         EVENT_ID, //TODO: PEGAR EVENTO DINAMICAMENTE
         {
-          full_name: name,
-          age,
-          phone_number,
-          document_number,
-          document_type,
-          guardian_name,
-          guardian_phone_number,
           transportation_mode,
-          allergy_description,
-          community_type,
-          prayer_group,
           event_source,
-          pcd_description,
           accepted_the_terms,
+          credential_name,
         },
       )
       .then(() => {
@@ -355,10 +371,10 @@ export function RegistrationForm() {
                 error={errors.name}
               />
               <Input
-                type="number"
-                label="SUA IDADE"
-                {...register('age')}
-                error={errors.age}
+                type="date"
+                label="SUA DATA DE NASCIMENTO"
+                {...register('birthdate')}
+                error={errors.birthdate}
               />
               <InputMasked
                 label="TELEFONE PARA CONTATO"
@@ -526,6 +542,12 @@ export function RegistrationForm() {
                 label="COMO VOCÊ FICOU SABENDO DO ACAMP'S?"
                 {...register('event_source')}
                 error={errors.event_source}
+              />
+
+              <Input
+                label="QUE NOME VOCÊ DESEJA QUE APAREÇA NA CREDENCIAL?"
+                {...register('credential_name')}
+                error={errors.credential_name}
               />
 
               <Flex mt="8" justify="flex-end">

@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from 'react';
-import { toast } from 'react-toastify';
 
 import {
   Box,
@@ -22,7 +21,6 @@ import { ModalShowRegistration } from '@/components/modals/ModalShowRegistration
 import { Sidebar } from '@/components/Sidebar';
 import { UserHeader } from '@/components/UserHeader';
 import { IRegistration } from '@/dtos/IRegistration';
-import { adminRegistrationsService } from '@/services/adminRegistrationsServices';
 import { participantRegistrationsService } from '@/services/participantRegistrationsServices';
 import { translateRegistrationStatus } from '@/utils/translateRegistrationStatus';
 import { withSSRAuth } from '@/utils/withSSRAuth';
