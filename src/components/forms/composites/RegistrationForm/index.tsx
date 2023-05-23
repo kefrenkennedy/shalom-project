@@ -235,7 +235,7 @@ export function RegistrationForm() {
             state,
           });
           */
-          registerUserParticipantsServices().create({
+          await registerUserParticipantsServices().create({
             email,
             name,
             password,
@@ -261,6 +261,8 @@ export function RegistrationForm() {
             pcd_description,
             allergy_description,
           });
+
+          await signIn({ email, password });
           //@ts-ignore
         } catch (err: AxiosError) {
           if (err.response?.status === 409) {
