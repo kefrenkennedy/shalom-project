@@ -22,7 +22,7 @@ import { Sidebar } from '@/components/Sidebar';
 import { UserHeader } from '@/components/UserHeader';
 import { IRegistration } from '@/dtos/IRegistration';
 import { participantRegistrationsService } from '@/services/participantRegistrationsServices';
-import { translateRegistrationStatus } from '@/utils/translateRegistrationStatus';
+import { translatePaymentStatus } from '@/utils/translatePaymentStatus';
 import { withSSRAuth } from '@/utils/withSSRAuth';
 
 export default function Registrations() {
@@ -67,7 +67,10 @@ export default function Registrations() {
           'DD/MM/YYYY',
         ),
         address: addressFormatted,
-        status: translateRegistrationStatus(registration?.payment?.status),
+        registration_status: registration.is_approved
+          ? 'Aprovada'
+          : 'Aguardando',
+        payment_status: translatePaymentStatus(registration?.payment?.status),
         registration: registration,
       };
     });
@@ -112,6 +115,7 @@ export default function Registrations() {
                 {isWideVersion && <Th>Local</Th>}
                 {isWideVersion && <Th>Início</Th>}
                 {isWideVersion && <Th>Fim</Th>}
+                {isWideVersion && <Th>Status</Th>}
                 {isWideVersion && <Th>Pagamento</Th>}
                 <Th>Opções</Th>
               </Tr>
@@ -127,7 +131,8 @@ export default function Registrations() {
                   {isWideVersion && <Td>{data.address}</Td>}
                   {isWideVersion && <Td>{data.event_start_date}</Td>}
                   {isWideVersion && <Td>{data.event_end_date}</Td>}
-                  {isWideVersion && <Td>{data.status}</Td>}
+                  {isWideVersion && <Td>{data.registration_status}</Td>}
+                  {isWideVersion && <Td>{data.payment_status}</Td>}
                   <Td>
                     <Box>
                       <HStack spacing="2">

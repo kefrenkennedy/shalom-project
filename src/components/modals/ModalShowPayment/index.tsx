@@ -23,7 +23,7 @@ import Image from 'next/image';
 import { IPayment } from '@/dtos/IPayment';
 import { adminPaymentsServices } from '@/services/adminPaymentsServices';
 import { generateImageUrl } from '@/utils/generateImageUrl';
-import { translateRegistrationStatus } from '@/utils/translateRegistrationStatus';
+import { translatePaymentStatus } from '@/utils/translatePaymentStatus';
 
 interface IProps {
   payment?: IPayment;
@@ -86,7 +86,7 @@ export function ModalShowPayment({ payment, onSuccess }: IProps) {
 
                 <Stack direction="row">
                   <Text fontWeight="bold">Status de pagamento:</Text>
-                  <Text>{translateRegistrationStatus(payment.status)}</Text>
+                  <Text>{translatePaymentStatus(payment.status)}</Text>
                 </Stack>
 
                 <Stack direction="row">

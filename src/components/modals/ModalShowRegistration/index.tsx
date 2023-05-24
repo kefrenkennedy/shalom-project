@@ -20,7 +20,7 @@ import dayjs from 'dayjs';
 
 import { IParticipant } from '@/dtos/IParticipant';
 import { IRegistration } from '@/dtos/IRegistration';
-import { translateRegistrationStatus } from '@/utils/translateRegistrationStatus';
+import { translatePaymentStatus } from '@/utils/translatePaymentStatus';
 
 interface IProps {
   registration: IRegistration;
@@ -51,9 +51,8 @@ export function ModalShowRegistration({ registration }: IProps) {
       transportation_mode: registration?.transportation_mode ?? '-',
       event_source: registration?.event_source ?? '-',
       accepted_the_terms: registration?.accepted_the_terms ? 'Sim' : 'Não',
-      status: registration.is_approved
-        ? 'Aprovada'
-        : translateRegistrationStatus(registration?.payment?.status),
+      status: registration.is_approved ? 'Aprovada' : 'Aguardando',
+      pagamento: translatePaymentStatus(registration?.payment?.status),
     };
   }, [registration]);
 

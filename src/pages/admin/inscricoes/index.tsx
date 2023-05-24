@@ -13,7 +13,6 @@ import {
   Heading,
   HStack,
   Icon,
-  Stack,
   Table,
   Tbody,
   Td,
@@ -25,7 +24,6 @@ import {
   useBreakpointValue,
 } from '@chakra-ui/react';
 import dayjs from 'dayjs';
-import Link from 'next/link';
 
 import { ModalShowPayment } from '@/components/modals/ModalShowPayment';
 import { ModalShowRegistration } from '@/components/modals/ModalShowRegistration';
@@ -35,7 +33,7 @@ import { IParticipant } from '@/dtos/IParticipant';
 import { IRegistration } from '@/dtos/IRegistration';
 import { adminExportRegistrationsServices } from '@/services/adminExportRegistrationsServices';
 import { adminRegistrationsService } from '@/services/adminRegistrationsServices';
-import { translateRegistrationStatus } from '@/utils/translateRegistrationStatus';
+import { translatePaymentStatus } from '@/utils/translatePaymentStatus';
 import { withSSRAuth } from '@/utils/withSSRAuth';
 
 export default function Registrations() {
@@ -86,9 +84,10 @@ export default function Registrations() {
         age: participant?.birthdate
           ? dayjs(new Date()).diff(participant?.birthdate, 'years')
           : '-',
-        status: registration.is_approved
+        payment_status: translatePaymentStatus(registration?.payment?.status),
+        registration_status: registration.is_approved
           ? 'Aprovada'
-          : translateRegistrationStatus(registration?.payment?.status),
+          : 'Aguardando',
         registration: registration,
         is_approved: registration.is_approved,
       };
@@ -131,6 +130,7 @@ export default function Registrations() {
                 {isWideVersion && <Th>Telefone</Th>}
                 {isWideVersion && <Th>Idade</Th>}
                 {isWideVersion && <Th>Status</Th>}
+                {isWideVersion && <Th>Pagamento</Th>}
                 <Th>Opções</Th>
               </Tr>
             </Thead>
@@ -144,7 +144,8 @@ export default function Registrations() {
                   </Td>
                   {isWideVersion && <Td>{data.phone_number}</Td>}
                   {isWideVersion && <Td>{data.age}</Td>}
-                  {isWideVersion && <Td>{data.status}</Td>}
+                  {isWideVersion && <Td>{data.registration_status}</Td>}
+                  {isWideVersion && <Td>{data.payment_status}</Td>}
 
                   <Td>
                     <Box>
