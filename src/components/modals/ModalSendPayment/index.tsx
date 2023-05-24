@@ -132,7 +132,7 @@ export function ModalSendPayment({
                     </Text>
                     <Box>
                       <Text>Participantes: R$ 252,00</Text>
-                      <Text>Servos: R$ 162,00</Text>
+                      <Text>Servos: R$ 180,00</Text>
                     </Box>
                     <Text mt="1rem">
                       <Text fontWeight="medium">Chave pix:</Text>{' '}
@@ -154,15 +154,15 @@ export function ModalSendPayment({
                       href="https://link.ton.com.br/?id=ca341ec2-977a-4e0c-8041-52fcc021e7d2"
                     >
                       <Text color="blue" textDecoration="underline" mb="10px">
-                        R$ 280 - Pagar no cartão (Participante)
+                        R$ 280,00 - Pagar no cartão (Participantes)
                       </Text>
                     </Link>
                     <Link
                       target="_blank"
-                      href="https://link.ton.com.br/?id=215ec176-55f1-4ca0-838d-0ba653df3b06"
+                      href="https://link.ton.com.br/?id=24cb042d-ce44-44aa-8e51-4aaa2757b698"
                     >
                       <Text color="blue" textDecoration="underline">
-                        R$ 180,00 - Pagar no cartão (Servos)
+                        R$ 200,00 - Pagar no cartão (Servos)
                       </Text>
                     </Link>
                   </Box>
