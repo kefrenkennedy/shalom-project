@@ -55,6 +55,7 @@ type SignInFormData = {
   community_type?: string;
   pcd_description?: string;
   allergy_description?: string;
+  medication_use_description?: string;
   transportation_mode: string;
   accepted_the_terms: boolean;
   credential_name: string;
@@ -114,13 +115,17 @@ const FormSchema = z
       .string()
       .optional()
       .transform((val) => (val === '' ? undefined : val)),
+    medication_use_description: z
+      .string()
+      .optional()
+      .transform((val) => (val === '' ? undefined : val)),
     credential_name: z
       .string()
       .min(5, 'Nome para credencial muito curto')
       .max(18, 'Nome para credencial muito grande'),
     transportation_mode: z.enum(['TRANSPORTE PRÓPRIO', 'ÔNIBUS'], {
-      required_error: 'Campo obrigatório',
-      invalid_type_error: 'Selecione uma opção',
+      required_error: 'Meio de Transporte obrigatório',
+      invalid_type_error: 'Selecione uma opção de transporte',
     }),
     accepted_the_terms: z
       .boolean({ required_error: 'Campo obrigatório' })
@@ -174,12 +179,6 @@ export function RegistrationForm() {
   }
 
   const handleRegister: SubmitHandler<SignInFormData> = async (data) => {
-    /*
-    // test submit
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    console.log(data);
-    */
-
     const {
       name,
       email,
@@ -191,10 +190,11 @@ export function RegistrationForm() {
       document_type,
       guardian_name,
       guardian_phone_number,
-      allergy_description,
       community_type,
       prayer_group,
       pcd_description,
+      allergy_description,
+      medication_use_description,
 
       transportation_mode,
       event_source,
@@ -217,25 +217,6 @@ export function RegistrationForm() {
         await signIn({ email, password });
       } catch (err) {
         try {
-          /*
-          await usersService().create({
-            email,
-            name,
-            password,
-            password_confirmation,
-          });
-          await signIn({ email, password });
-
-          await participantAddressesServices().create({
-            street,
-            street_number,
-            complement,
-            zip_code,
-            district,
-            city,
-            state,
-          });
-          */
           await registerUserParticipantsServices().create({
             email,
             name,
@@ -261,6 +242,7 @@ export function RegistrationForm() {
             community_type,
             pcd_description,
             allergy_description,
+            medication_use_description,
           });
 
           await signIn({ email, password });
@@ -370,6 +352,7 @@ export function RegistrationForm() {
             <Box minW={300} w={[300, 400, 500]}>
               <Input
                 label="NOME COMPLETO"
+                placeholder="Ex.: Fulano de Tal dos Santos"
                 {...register('name')}
                 error={errors.name}
               />
@@ -381,6 +364,7 @@ export function RegistrationForm() {
               />
               <InputMasked
                 label="TELEFONE PARA CONTATO"
+                placeholder="Ex.: (88) 99999-9999"
                 {...register('phone_number')}
                 error={errors.phone_number}
                 mask="(99) 99999-9999"
@@ -388,6 +372,7 @@ export function RegistrationForm() {
               <Input
                 type="number"
                 label="NÚMERO DO DOCUMENTO"
+                placeholder="123.456.789-10"
                 {...register('document_number')}
                 error={errors.document_number}
               />
@@ -402,12 +387,14 @@ export function RegistrationForm() {
               />
               <Input
                 label="SE MENOR DE IDADE, NOME DO RESPONSÁVEL"
+                placeholder="Ex.: Sicrano de Tal dos Santos"
                 {...register('guardian_name')}
                 error={errors.guardian_name}
               />
 
               <InputMasked
                 label="SE MENOR DE IDADE, NÚMERO DO RESPONSÁVEL"
+                placeholder="Ex.: (88) 99999-9999"
                 {...register('guardian_phone_number')}
                 error={errors.guardian_phone_number}
                 mask="(99) 99999-9999"
@@ -446,32 +433,43 @@ export function RegistrationForm() {
             <Box minW={300} w={[300, 400, 500]}>
               <Input
                 label="CEP"
+                placeholder="Ex.: 62000-000"
                 {...register('zip_code')}
                 error={errors.zip_code}
               />
               <Input
                 label="NOME DA RUA"
+                placeholder="Ex.: Rua X"
                 {...register('street')}
                 error={errors.street}
               />
               <Input
                 label="NÚMERO DA RUA"
+                placeholder="Ex.: 123"
                 {...register('street_number')}
                 error={errors.street_number}
               />
               <Input
                 label="COMPLEMENTO"
+                placeholder="Ex.: Apto 101, bloco 1"
                 {...register('complement')}
                 error={errors.complement}
               />
               <Input
                 label="BAIRRO"
+                placeholder="Ex.: Centro"
                 {...register('district')}
                 error={errors.district}
               />
-              <Input label="CIDADE" {...register('city')} error={errors.city} />
+              <Input
+                label="CIDADE"
+                placeholder="Ex.: Sobral"
+                {...register('city')}
+                error={errors.city}
+              />
               <Input
                 label="ESTADO"
+                placeholder="Ex.: CE"
                 {...register('state')}
                 error={errors.state}
               />
@@ -508,8 +506,14 @@ export function RegistrationForm() {
           {activeStep === 2 && (
             <Box minW={300} w={[300, 400, 500]}>
               <Input
+                label="QUE NOME VOCÊ DESEJA QUE APAREÇA NA CREDENCIAL?"
+                placeholder="Ex.: John Doe"
+                {...register('credential_name')}
+                error={errors.credential_name}
+              />
+              <Input
                 label="SE PARTICIPA DA OBRA SHALOM, NOME DO GRUPO DE ORAÇÃO"
-                placeholder="Agapiméni Kardiá"
+                placeholder="Ex.: Agapiméni Kardiá"
                 {...register('prayer_group')}
                 error={errors.prayer_group}
               />
@@ -528,7 +532,22 @@ export function RegistrationForm() {
               <Input
                 label="VOCÊ É ALÉRGICO A ALGUMA COMIDA OU REMÉDIO?"
                 {...register('allergy_description')}
+                placeholder="Se sim, qual?"
                 error={errors.allergy_description}
+              />
+
+              <Input
+                label="VOCÊ É PORTADOR DE ALGUMA DEFICIÊNCIA?"
+                placeholder="Se sim, qual?"
+                {...register('pcd_description')}
+                error={errors.pcd_description}
+              />
+
+              <Input
+                label="VOCÊ NECESSITA TOMAR ALGUM MEDICAMENTO CONTROLADO?"
+                placeholder="Se sim, qual?"
+                {...register('medication_use_description')}
+                error={errors.medication_use_description}
               />
 
               <Radio
@@ -543,14 +562,9 @@ export function RegistrationForm() {
 
               <Input
                 label="COMO VOCÊ FICOU SABENDO DO ACAMP'S?"
+                placeholder="Nos conte como..."
                 {...register('event_source')}
                 error={errors.event_source}
-              />
-
-              <Input
-                label="QUE NOME VOCÊ DESEJA QUE APAREÇA NA CREDENCIAL?"
-                {...register('credential_name')}
-                error={errors.credential_name}
               />
 
               <Flex mt="8" justify="flex-end">
@@ -586,6 +600,7 @@ export function RegistrationForm() {
             <Box minW={300} w={[300, 400, 500]}>
               <Input
                 type="email"
+                placeholder="johndoe@email.com"
                 label="DIGITE SEU E-MAIL PARA LOGIN"
                 {...register('email')}
                 error={errors.email}
