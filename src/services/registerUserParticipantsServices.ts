@@ -27,6 +27,7 @@ interface ICreateRequest {
   community_type?: string;
   pcd_description?: string;
   allergy_description?: string;
+  medication_use_description?: string;
 }
 
 export const registerUserParticipantsServices = () => ({
