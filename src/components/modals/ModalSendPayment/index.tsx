@@ -125,14 +125,14 @@ export function ModalSendPayment({
             <VStack>
               <Stack spacing="10" direction={['column', 'row']}>
                 <VStack spacing="5">
-                  <Text fontWeight="bold">INSCRIÇÃO ONLINE (1º Lote)</Text>
+                  <Text fontWeight="bold">INSCRIÇÃO ONLINE (2º Lote)</Text>
                   <Box mb="1rem">
                     <Text fontWeight="medium">
                       Page via PIX e ganhe 10% de desconto
                     </Text>
                     <Box>
-                      <Text>Participantes: R$ 252,00</Text>
-                      <Text>Servos: R$ 180,00</Text>
+                      <Text>Participantes: R$ 279,00</Text>
+                      <Text>Servos: R$ 198,00</Text>
                     </Box>
                     <Text mt="1rem">
                       <Text fontWeight="medium">Chave pix:</Text>{' '}
@@ -151,18 +151,18 @@ export function ModalSendPayment({
                     <Text fontWeight="medium">Pague em até 3X no cartão</Text>
                     <Link
                       target="_blank"
-                      href="https://link.ton.com.br/?id=ca341ec2-977a-4e0c-8041-52fcc021e7d2"
+                      href="https://link.ton.com.br/?id=bd1bb75c-a563-43f4-9812-6b8f515ae22c"
                     >
                       <Text color="blue" textDecoration="underline" mb="10px">
-                        R$ 280,00 - Pagar no cartão (Participantes)
+                        R$ 310,00 - Pagar no cartão (Participantes)
                       </Text>
                     </Link>
                     <Link
                       target="_blank"
-                      href="https://link.ton.com.br/?id=24cb042d-ce44-44aa-8e51-4aaa2757b698"
+                      href="https://link.ton.com.br/?id=abb65fbd-dad7-47cd-b865-3926807b3ba9"
                     >
                       <Text color="blue" textDecoration="underline">
-                        R$ 200,00 - Pagar no cartão (Servos)
+                        R$ 220,00 - Pagar no cartão (Servos)
                       </Text>
                     </Link>
                   </Box>

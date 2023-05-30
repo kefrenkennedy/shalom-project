@@ -8,9 +8,9 @@ import { RegistrationForm } from '@/components/forms/composites/RegistrationForm
 import { Header } from '@/components/Header';
 import { useAuth } from '@/hooks/auth';
 
-import acampsBeachImage from '../../public/assets/AcampsBeach.png';
-import acampsBeachFooterImage from '../../public/assets/AcampsBeachFooter.png';
-import lotesImage from '../../public/assets/Lotes.png';
+import acampsBeachFooterImage from '../../public/assets/acamps-beach-footer.png';
+import acampsBeachImage from '../../public/assets/acamps-beach-header.png';
+import lotesImage from '../../public/assets/lotes.png';
 
 export default function Home() {
   const { user } = useAuth();

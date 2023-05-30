@@ -310,7 +310,7 @@ export function RegistrationForm() {
   return (
     <Flex bg="white" direction="column" align="center" justify="center">
       <Image
-        src="/assets/FormularioDeInscrição.png"
+        src="/assets/formulario-inscricao.png"
         alt="Acamps Beach Formulario Logo"
         w={['10rem', '20rem']}
         m="2rem"

@@ -58,8 +58,8 @@ export function Footer() {
         </Flex>
 
         <Flex justifyContent="space-between" alignItems="center" w="12rem">
-          <Image src="/assets/icone1.png" alt="Logo Shalom" w="5rem" />
-          <Image src="/assets/icone2.png" alt="Juventude" w="5rem" />
+          <Image src="/assets/icone-shalom.png" alt="Logo Shalom" w="5rem" />
+          <Image src="/assets/icone-pjj.png" alt="Juventude" w="5rem" />
         </Flex>
       </Flex>
     </Box>

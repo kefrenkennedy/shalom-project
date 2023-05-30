@@ -37,7 +37,7 @@ export function Header() {
         <Flex width={['20', '35', '40']} height={['30', '25', '20']}>
           <Flex width="100%" height="100%" position="relative">
             <Image
-              src="/assets/icone1.png"
+              src="/assets/icone-shalom.png"
               alt="Logo Shalom"
               fill
               objectFit="cover"
