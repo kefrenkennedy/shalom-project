@@ -1,5 +1,7 @@
 import axios, { AxiosError } from 'axios';
-import { parseCookies } from 'nookies';
+import { destroyCookie, parseCookies } from 'nookies';
+
+import { AuthTokenError } from './errors/AuthTokenError';
 
 interface AxiosErrorResponse {
   status?: number;
@@ -19,26 +21,28 @@ export function setupAPIClient(ctx = undefined) {
     (response) => {
       return response;
     },
-    (error: AxiosError<AxiosErrorResponse>) => {
-      console.log('ERROR INTERCEPTOR:', error);
-
-      /*
+    async (error: AxiosError<AxiosErrorResponse>) => {
       if (error.response?.status === 401) {
+        // window.alert(JSON.stringify(error.response.data?.message, null, 2));
+        // console.log(JSON.stringify(error.response, null, 2));
         if (error.response?.data?.code?.includes('token')) {
           // renover token
+          console.log('ENTROU NO IF');
+
+          // const response = await axios.patch('/token/refresh');
+          // console.log(response.data);
         } else {
+          console.log('ENTROU NO ELSE');
           // deslogar usuário
 
           if (process.browser) {
-            destroyCookie(undefined, 'megacarioca.token');
-
+            // destroyCookie(undefined, 'shalomeventos.token', { path: '/' });
             // Router.reload();
           } else {
             return Promise.reject(new AuthTokenError());
           }
         }
       }
-      */
 
       return Promise.reject(error);
     },

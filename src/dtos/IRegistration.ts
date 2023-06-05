@@ -13,6 +13,8 @@ export interface IRegistration {
   is_approved: boolean;
   event?: IEvent;
   payment?: IPayment;
+  type: string;
+  has_participated_previously: boolean;
   user?: {
     email: string;
     participant: IParticipant;

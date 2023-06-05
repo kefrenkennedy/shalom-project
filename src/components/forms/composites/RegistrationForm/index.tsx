@@ -59,6 +59,8 @@ type SignInFormData = {
   transportation_mode: string;
   accepted_the_terms: boolean;
   credential_name: string;
+  type: string;
+  has_participated_previously: boolean;
 
   street: string;
   street_number: string;
@@ -133,6 +135,8 @@ const FormSchema = z
         message: 'Você deve aceitar os termos para finalizar',
         path: ['accepted_the_terms'],
       }),
+    type: z.enum(['SERVO', 'PARTICIPANTE']),
+    has_participated_previously: z.coerce.boolean(),
 
     street: z.string().nonempty('Rua obrigatória'),
     street_number: z.string().nonempty('Número da rua obrigatória'),
@@ -200,6 +204,8 @@ export function RegistrationForm() {
       event_source,
       accepted_the_terms,
       credential_name,
+      has_participated_previously,
+      type,
 
       // ADDRESS
       street,
@@ -266,6 +272,8 @@ export function RegistrationForm() {
           event_source,
           accepted_the_terms,
           credential_name,
+          has_participated_previously,
+          type,
         },
       )
       .then(() => {
@@ -348,6 +356,7 @@ export function RegistrationForm() {
         onSubmit={handleSubmit(handleRegister)}
       >
         <Stack spacing="4">
+          {/**Dados pessoais */}
           {activeStep === 0 && (
             <Box minW={300} w={[300, 400, 500]}>
               <Input
@@ -429,6 +438,7 @@ export function RegistrationForm() {
             </Box>
           )}
 
+          {/**Dados de endereço */}
           {activeStep === 1 && (
             <Box minW={300} w={[300, 400, 500]}>
               <Input
@@ -503,6 +513,7 @@ export function RegistrationForm() {
             </Box>
           )}
 
+          {/**Dados para evento */}
           {activeStep === 2 && (
             <Box minW={300} w={[300, 400, 500]}>
               <Input
@@ -526,6 +537,15 @@ export function RegistrationForm() {
                   { value: '', label: 'NÃO SOU' },
                   { value: 'VIDA', label: 'COM. VIDA' },
                   { value: 'ALIANÇA', label: 'COM. ALIANÇA' },
+                ]}
+              />
+              <Radio
+                label="VOCÊ DESEJA SE INSCREVER COMO?"
+                {...register('type')}
+                error={errors.type}
+                options={[
+                  { value: 'SERVO', label: 'SERVO' },
+                  { value: 'PARTICIPANTE', label: 'PARTICIPANTE' },
                 ]}
               />
 
@@ -567,6 +587,16 @@ export function RegistrationForm() {
                 error={errors.event_source}
               />
 
+              <Radio
+                label="VOCÊ JÁ PARTICIPOU DE ALGUM ACAMP'S?"
+                {...register('has_participated_previously')}
+                error={errors.has_participated_previously}
+                options={[
+                  { value: 'true', label: 'SIM' },
+                  { value: '', label: 'NÃO' },
+                ]}
+              />
+
               <Flex mt="8" justify="flex-end">
                 <HStack spacing="4">
                   <Button
@@ -596,6 +626,7 @@ export function RegistrationForm() {
             </Box>
           )}
 
+          {/**Dados de acesso */}
           {activeStep === 3 && (
             <Box minW={300} w={[300, 400, 500]}>
               <Input
