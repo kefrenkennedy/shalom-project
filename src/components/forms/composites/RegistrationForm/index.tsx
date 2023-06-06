@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { FieldErrors, SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
@@ -23,6 +23,7 @@ import {
 } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AxiosError } from 'axios';
+import { cpf } from 'cpf-cnpj-validator';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { z } from 'zod';
@@ -79,12 +80,27 @@ const FormSchema = z
     password_confirmation: z.string(),
 
     // full_name: z.string().min(5),
-    phone_number: z.string().min(15, 'Telefone inválido'),
-    birthdate: z.coerce.date({
-      invalid_type_error: 'Data de nascimento inválida',
-      required_error: 'Data de nascimento obrigatório',
-    }),
-    document_number: z.string().min(7, 'Documento inválido'),
+    phone_number: z
+      .string()
+      .min(15, 'Telefone inválido')
+      .transform((val) => val.replace(/_/g, ''))
+      .refine(
+        (value) => value.replace(/_/g, '').length === 15,
+        'Telefone inválido',
+      ),
+    birthdate: z.coerce
+      .date({
+        invalid_type_error: 'Data de nascimento inválida',
+        required_error: 'Data de nascimento obrigatório',
+      })
+      .refine(
+        (value) => new Date(value) instanceof Date,
+        'Data de nascimento inválida',
+      ),
+    document_number: z
+      .string()
+      .min(7, 'Documento inválido')
+      .transform((val) => val.replace(/_/g, '')),
     document_type: z.enum(['CPF', 'RG'], {
       invalid_type_error: 'Selecione um tipo de documento',
       required_error: 'Documento obrigatório',
@@ -96,7 +112,14 @@ const FormSchema = z
     guardian_phone_number: z
       .string()
       .optional()
-      .transform((val) => (val === '' ? undefined : val)),
+      .transform((val) => {
+        if (val === '' || !val) return undefined;
+        return val.replace(/_/g, '');
+      })
+      .refine((value) => {
+        if (!value) return true;
+        return value.replace(/_/g, '').length === 15;
+      }, 'Telefone inválido'),
     prayer_group: z
       .string()
       .optional()
@@ -131,10 +154,10 @@ const FormSchema = z
     }),
     accepted_the_terms: z
       .boolean({ required_error: 'Campo obrigatório' })
-      .refine((value) => value === true, {
-        message: 'Você deve aceitar os termos para finalizar',
-        path: ['accepted_the_terms'],
-      }),
+      .refine(
+        (value) => value === true,
+        'Você deve aceitar os termos para finalizar',
+      ),
     type: z.enum(['SERVO', 'PARTICIPANTE']),
     has_participated_previously: z.coerce.boolean(),
 
@@ -153,16 +176,25 @@ const FormSchema = z
   .refine((data) => data.password === data.password_confirmation, {
     message: 'Senhas devem ser iguais',
     path: ['password_confirmation'],
-  });
+  })
+  .refine(
+    (data) =>
+      data.document_type === 'CPF' ? cpf.isValid(data.document_number) : true,
+    {
+      message: 'CPF inválido',
+      path: ['document_number'],
+    },
+  );
 
 export function RegistrationForm() {
   const router = useRouter();
   const EVENT_ID = String(process.env.NEXT_PUBLIC_EVENT_ID);
 
   const { signIn, user } = useAuth();
-  const { register, handleSubmit, formState, reset } = useForm<SignInFormData>({
-    resolver: zodResolver(FormSchema),
-  });
+  const { register, handleSubmit, formState, reset, watch } =
+    useForm<SignInFormData>({
+      resolver: zodResolver(FormSchema),
+    });
 
   const { errors } = formState;
 
@@ -315,6 +347,8 @@ export function RegistrationForm() {
     count: steps.length,
   });
 
+  const documentType = watch('document_type');
+
   return (
     <Flex bg="white" direction="column" align="center" justify="center">
       <Image
@@ -357,370 +391,364 @@ export function RegistrationForm() {
       >
         <Stack spacing="4">
           {/**Dados pessoais */}
-          {activeStep === 0 && (
-            <Box minW={300} w={[300, 400, 500]}>
-              <Input
-                label="NOME COMPLETO"
-                placeholder="Ex.: Fulano de Tal dos Santos"
-                {...register('name')}
-                error={errors.name}
-              />
-              <Input
-                type="date"
-                label="SUA DATA DE NASCIMENTO"
-                {...register('birthdate')}
-                error={errors.birthdate}
-              />
-              <InputMasked
-                label="TELEFONE PARA CONTATO"
-                placeholder="Ex.: (88) 99999-9999"
-                {...register('phone_number')}
-                error={errors.phone_number}
-                mask="(99) 99999-9999"
-              />
-              <Input
-                type="number"
-                label="NÚMERO DO DOCUMENTO"
-                placeholder="123.456.789-10"
-                {...register('document_number')}
-                error={errors.document_number}
-              />
-              <Radio
-                label="TIPO DE DOCUMENTO"
-                {...register('document_type')}
-                error={errors.document_type}
-                options={[
-                  { value: 'CPF', label: 'CPF' },
-                  { value: 'RG', label: 'RG' },
-                ]}
-              />
-              <Input
-                label="SE MENOR DE IDADE, NOME DO RESPONSÁVEL"
-                placeholder="Ex.: Sicrano de Tal dos Santos"
-                {...register('guardian_name')}
-                error={errors.guardian_name}
-              />
+          <Box minW={300} w={[300, 400, 500]} hidden={!(activeStep === 0)}>
+            <Input
+              label="NOME COMPLETO"
+              placeholder="Ex.: Fulano de Tal dos Santos"
+              {...register('name')}
+              error={errors.name}
+            />
+            <Input
+              type="date"
+              label="SUA DATA DE NASCIMENTO"
+              {...register('birthdate')}
+              error={errors.birthdate}
+            />
+            <InputMasked
+              label="TELEFONE PARA CONTATO"
+              placeholder="Ex.: (88) 99999-9999"
+              {...register('phone_number')}
+              error={errors.phone_number}
+              mask="(99) 99999-9999"
+            />
+            <Radio
+              label="TIPO DE DOCUMENTO"
+              {...register('document_type')}
+              error={errors.document_type}
+              options={[
+                { value: 'CPF', label: 'CPF' },
+                { value: 'RG', label: 'RG' },
+              ]}
+            />
+            <InputMasked
+              // type="number"
+              label="NÚMERO DO DOCUMENTO"
+              placeholder="123.456.789-10"
+              {...register('document_number')}
+              error={errors.document_number}
+              mask={documentType === 'CPF' ? '999.999.999-99' : ''}
+            />
 
-              <InputMasked
-                label="SE MENOR DE IDADE, NÚMERO DO RESPONSÁVEL"
-                placeholder="Ex.: (88) 99999-9999"
-                {...register('guardian_phone_number')}
-                error={errors.guardian_phone_number}
-                mask="(99) 99999-9999"
-              />
+            <Input
+              label="SE MENOR DE IDADE, NOME DO RESPONSÁVEL"
+              placeholder="Ex.: Sicrano de Tal dos Santos"
+              {...register('guardian_name')}
+              error={errors.guardian_name}
+            />
 
-              <Flex mt="8" justify="flex-end">
-                <HStack spacing="4">
-                  <Button
-                    size="lg"
-                    isLoading={false}
-                    color="white"
-                    colorScheme="gray"
-                    bgColor="gray.300"
-                    borderRadius="full"
-                    onClick={goToPrevious}
-                  >
-                    VOLTAR
-                  </Button>
-                  <Button
-                    bgColor="green.200"
-                    color="gray.50"
-                    colorScheme="green"
-                    size="lg"
-                    isLoading={formState.isSubmitting}
-                    borderRadius="full"
-                    onClick={goToNext}
-                  >
-                    AVANÇAR
-                  </Button>
-                </HStack>
-              </Flex>
-            </Box>
-          )}
+            <InputMasked
+              label="SE MENOR DE IDADE, NÚMERO DO RESPONSÁVEL"
+              placeholder="Ex.: (88) 99999-9999"
+              {...register('guardian_phone_number')}
+              error={errors.guardian_phone_number}
+              mask="(99) 99999-9999"
+            />
+
+            <Flex mt="8" justify="flex-end">
+              <HStack spacing="4">
+                <Button
+                  size="lg"
+                  isLoading={false}
+                  color="white"
+                  colorScheme="gray"
+                  bgColor="gray.300"
+                  borderRadius="full"
+                  onClick={goToPrevious}
+                >
+                  VOLTAR
+                </Button>
+                <Button
+                  bgColor="green.200"
+                  color="gray.50"
+                  colorScheme="green"
+                  size="lg"
+                  isLoading={formState.isSubmitting}
+                  borderRadius="full"
+                  onClick={goToNext}
+                >
+                  AVANÇAR
+                </Button>
+              </HStack>
+            </Flex>
+          </Box>
 
           {/**Dados de endereço */}
-          {activeStep === 1 && (
-            <Box minW={300} w={[300, 400, 500]}>
-              <Input
-                label="CEP"
-                placeholder="Ex.: 62000-000"
-                {...register('zip_code')}
-                error={errors.zip_code}
-              />
-              <Input
-                label="NOME DA RUA"
-                placeholder="Ex.: Rua X"
-                {...register('street')}
-                error={errors.street}
-              />
-              <Input
-                label="NÚMERO DA RUA"
-                placeholder="Ex.: 123"
-                {...register('street_number')}
-                error={errors.street_number}
-              />
-              <Input
-                label="COMPLEMENTO"
-                placeholder="Ex.: Apto 101, bloco 1"
-                {...register('complement')}
-                error={errors.complement}
-              />
-              <Input
-                label="BAIRRO"
-                placeholder="Ex.: Centro"
-                {...register('district')}
-                error={errors.district}
-              />
-              <Input
-                label="CIDADE"
-                placeholder="Ex.: Sobral"
-                {...register('city')}
-                error={errors.city}
-              />
-              <Input
-                label="ESTADO"
-                placeholder="Ex.: CE"
-                {...register('state')}
-                error={errors.state}
-              />
+          <Box minW={300} w={[300, 400, 500]} hidden={!(activeStep === 1)}>
+            <Input
+              label="CEP"
+              placeholder="Ex.: 62000-000"
+              {...register('zip_code')}
+              error={errors.zip_code}
+            />
+            <Input
+              label="NOME DA RUA"
+              placeholder="Ex.: Rua X"
+              {...register('street')}
+              error={errors.street}
+            />
+            <Input
+              label="NÚMERO DA RUA"
+              placeholder="Ex.: 123"
+              {...register('street_number')}
+              error={errors.street_number}
+            />
+            <Input
+              label="COMPLEMENTO"
+              placeholder="Ex.: Apto 101, bloco 1"
+              {...register('complement')}
+              error={errors.complement}
+            />
+            <Input
+              label="BAIRRO"
+              placeholder="Ex.: Centro"
+              {...register('district')}
+              error={errors.district}
+            />
+            <Input
+              label="CIDADE"
+              placeholder="Ex.: Sobral"
+              {...register('city')}
+              error={errors.city}
+            />
+            <Input
+              label="ESTADO"
+              placeholder="Ex.: CE"
+              {...register('state')}
+              error={errors.state}
+            />
 
-              <Flex mt="8" justify="flex-end">
-                <HStack spacing="4">
-                  <Button
-                    size="lg"
-                    isLoading={false}
-                    color="white"
-                    colorScheme="gray"
-                    bgColor="gray.300"
-                    borderRadius="full"
-                    onClick={goToPrevious}
-                  >
-                    VOLTAR
-                  </Button>
-                  <Button
-                    colorScheme="green"
-                    bgColor="green.200"
-                    color="gray.50"
-                    size="lg"
-                    isLoading={formState.isSubmitting}
-                    borderRadius="full"
-                    onClick={goToNext}
-                  >
-                    AVANÇAR
-                  </Button>
-                </HStack>
-              </Flex>
-            </Box>
-          )}
+            <Flex mt="8" justify="flex-end">
+              <HStack spacing="4">
+                <Button
+                  size="lg"
+                  isLoading={false}
+                  color="white"
+                  colorScheme="gray"
+                  bgColor="gray.300"
+                  borderRadius="full"
+                  onClick={goToPrevious}
+                >
+                  VOLTAR
+                </Button>
+                <Button
+                  colorScheme="green"
+                  bgColor="green.200"
+                  color="gray.50"
+                  size="lg"
+                  isLoading={formState.isSubmitting}
+                  borderRadius="full"
+                  onClick={goToNext}
+                >
+                  AVANÇAR
+                </Button>
+              </HStack>
+            </Flex>
+          </Box>
 
           {/**Dados para evento */}
-          {activeStep === 2 && (
-            <Box minW={300} w={[300, 400, 500]}>
-              <Input
-                label="QUE NOME VOCÊ DESEJA QUE APAREÇA NA CREDENCIAL?"
-                placeholder="Ex.: John Doe"
-                {...register('credential_name')}
-                error={errors.credential_name}
-              />
-              <Input
-                label="SE PARTICIPA DA OBRA SHALOM, NOME DO GRUPO DE ORAÇÃO"
-                placeholder="Ex.: Agapiméni Kardiá"
-                {...register('prayer_group')}
-                error={errors.prayer_group}
-              />
+          <Box minW={300} w={[300, 400, 500]} hidden={!(activeStep === 2)}>
+            <Input
+              label="QUE NOME VOCÊ DESEJA QUE APAREÇA NA CREDENCIAL?"
+              placeholder="Ex.: John Doe"
+              {...register('credential_name')}
+              error={errors.credential_name}
+            />
+            <Input
+              label="SE PARTICIPA DA OBRA SHALOM, NOME DO GRUPO DE ORAÇÃO"
+              placeholder="Ex.: Agapiméni Kardiá"
+              {...register('prayer_group')}
+              error={errors.prayer_group}
+            />
 
-              <Radio
-                label="VOCÊ É MEMBRO DA COMUNIDADE VIDA OU ALIANÇA?"
-                {...register('community_type')}
-                error={errors.community_type}
-                options={[
-                  { value: '', label: 'NÃO SOU' },
-                  { value: 'VIDA', label: 'COM. VIDA' },
-                  { value: 'ALIANÇA', label: 'COM. ALIANÇA' },
-                ]}
-              />
-              <Radio
-                label="VOCÊ DESEJA SE INSCREVER COMO?"
-                {...register('type')}
-                error={errors.type}
-                options={[
-                  { value: 'SERVO', label: 'SERVO' },
-                  { value: 'PARTICIPANTE', label: 'PARTICIPANTE' },
-                ]}
-              />
+            <Radio
+              label="VOCÊ É MEMBRO DA COMUNIDADE VIDA OU ALIANÇA?"
+              {...register('community_type')}
+              error={errors.community_type}
+              options={[
+                { value: '', label: 'NÃO SOU' },
+                { value: 'VIDA', label: 'COM. VIDA' },
+                { value: 'ALIANÇA', label: 'COM. ALIANÇA' },
+              ]}
+            />
+            <Radio
+              label="VOCÊ DESEJA SE INSCREVER COMO?"
+              {...register('type')}
+              error={errors.type}
+              options={[
+                { value: 'SERVO', label: 'SERVO' },
+                { value: 'PARTICIPANTE', label: 'PARTICIPANTE' },
+              ]}
+            />
 
-              <Input
-                label="VOCÊ É ALÉRGICO A ALGUMA COMIDA OU REMÉDIO?"
-                {...register('allergy_description')}
-                placeholder="Se sim, qual?"
-                error={errors.allergy_description}
-              />
+            <Input
+              label="VOCÊ É ALÉRGICO A ALGUMA COMIDA OU REMÉDIO?"
+              {...register('allergy_description')}
+              placeholder="Se sim, qual?"
+              error={errors.allergy_description}
+            />
 
-              <Input
-                label="VOCÊ É PORTADOR DE ALGUMA DEFICIÊNCIA?"
-                placeholder="Se sim, qual?"
-                {...register('pcd_description')}
-                error={errors.pcd_description}
-              />
+            <Input
+              label="VOCÊ É PORTADOR DE ALGUMA DEFICIÊNCIA?"
+              placeholder="Se sim, qual?"
+              {...register('pcd_description')}
+              error={errors.pcd_description}
+            />
 
-              <Input
-                label="VOCÊ NECESSITA TOMAR ALGUM MEDICAMENTO CONTROLADO?"
-                placeholder="Se sim, qual?"
-                {...register('medication_use_description')}
-                error={errors.medication_use_description}
-              />
+            <Input
+              label="VOCÊ NECESSITA TOMAR ALGUM MEDICAMENTO CONTROLADO?"
+              placeholder="Se sim, qual?"
+              {...register('medication_use_description')}
+              error={errors.medication_use_description}
+            />
 
-              <Radio
-                label="VOCÊ IRÁ DE TRANSPORTE PRÓPRIO PARA O LOCAL DO EVENTO?"
-                {...register('transportation_mode')}
-                error={errors.transportation_mode}
-                options={[
-                  { value: 'TRANSPORTE PRÓPRIO', label: 'TRANSPORTE PRÓPRIO' },
-                  { value: 'ÔNIBUS', label: 'ÔNIBUS' },
-                ]}
-              />
+            <Radio
+              label="VOCÊ IRÁ DE TRANSPORTE PRÓPRIO PARA O LOCAL DO EVENTO?"
+              {...register('transportation_mode')}
+              error={errors.transportation_mode}
+              options={[
+                { value: 'TRANSPORTE PRÓPRIO', label: 'TRANSPORTE PRÓPRIO' },
+                { value: 'ÔNIBUS', label: 'ÔNIBUS' },
+              ]}
+            />
 
-              <Input
-                label="COMO VOCÊ FICOU SABENDO DO ACAMP'S?"
-                placeholder="Nos conte como..."
-                {...register('event_source')}
-                error={errors.event_source}
-              />
+            <Input
+              label="COMO VOCÊ FICOU SABENDO DO ACAMP'S?"
+              placeholder="Nos conte como..."
+              {...register('event_source')}
+              error={errors.event_source}
+            />
 
-              <Radio
-                label="VOCÊ JÁ PARTICIPOU DE ALGUM ACAMP'S?"
-                {...register('has_participated_previously')}
-                error={errors.has_participated_previously}
-                options={[
-                  { value: 'true', label: 'SIM' },
-                  { value: '', label: 'NÃO' },
-                ]}
-              />
+            <Radio
+              label="VOCÊ JÁ PARTICIPOU DE ALGUM ACAMP'S?"
+              {...register('has_participated_previously')}
+              error={errors.has_participated_previously}
+              options={[
+                { value: 'true', label: 'SIM' },
+                { value: '', label: 'NÃO' },
+              ]}
+            />
 
-              <Flex mt="8" justify="flex-end">
-                <HStack spacing="4">
-                  <Button
-                    size="lg"
-                    isLoading={false}
-                    color="white"
-                    colorScheme="gray"
-                    bgColor="gray.300"
-                    borderRadius="full"
-                    onClick={goToPrevious}
-                  >
-                    VOLTAR
-                  </Button>
-                  <Button
-                    colorScheme="green"
-                    bgColor="green.200"
-                    color="gray.50"
-                    size="lg"
-                    isLoading={formState.isSubmitting}
-                    borderRadius="full"
-                    onClick={goToNext}
-                  >
-                    AVANÇAR
-                  </Button>
-                </HStack>
-              </Flex>
-            </Box>
-          )}
+            <Flex mt="8" justify="flex-end">
+              <HStack spacing="4">
+                <Button
+                  size="lg"
+                  isLoading={false}
+                  color="white"
+                  colorScheme="gray"
+                  bgColor="gray.300"
+                  borderRadius="full"
+                  onClick={goToPrevious}
+                >
+                  VOLTAR
+                </Button>
+                <Button
+                  colorScheme="green"
+                  bgColor="green.200"
+                  color="gray.50"
+                  size="lg"
+                  isLoading={formState.isSubmitting}
+                  borderRadius="full"
+                  onClick={goToNext}
+                >
+                  AVANÇAR
+                </Button>
+              </HStack>
+            </Flex>
+          </Box>
 
           {/**Dados de acesso */}
-          {activeStep === 3 && (
-            <Box minW={300} w={[300, 400, 500]}>
-              <Input
-                type="email"
-                placeholder="johndoe@email.com"
-                label="DIGITE SEU E-MAIL PARA LOGIN"
-                {...register('email')}
-                error={errors.email}
-              />
-              <Input
-                type="password"
-                label="DIGITE UMA SENHA DE 8 DÍGITOS"
-                {...register('password')}
-                error={errors.password}
-              />
-              <Input
-                type="password"
-                label="DIGITE A SENHA NOVAMENTE"
-                {...register('password_confirmation')}
-                error={errors.password_confirmation}
-              />
+          <Box minW={300} w={[300, 400, 500]} hidden={!(activeStep === 3)}>
+            <Input
+              type="email"
+              placeholder="johndoe@email.com"
+              label="DIGITE SEU E-MAIL PARA LOGIN"
+              {...register('email')}
+              error={errors.email}
+            />
+            <Input
+              type="password"
+              label="DIGITE UMA SENHA DE 8 DÍGITOS"
+              {...register('password')}
+              error={errors.password}
+            />
+            <Input
+              type="password"
+              label="DIGITE A SENHA NOVAMENTE"
+              {...register('password_confirmation')}
+              error={errors.password_confirmation}
+            />
 
-              <FormLabel>DOCUMENTOS NECESSÁRIOS:</FormLabel>
-              <Text>
-                ATENÇÃO! Baixe, assine e nos envie esses documentos para validar
-                sua incrição.
+            <FormLabel>DOCUMENTOS NECESSÁRIOS:</FormLabel>
+            <Text>
+              ATENÇÃO! Baixe, assine e nos envie esses documentos para validar
+              sua incrição.
+            </Text>
+            <Link
+              target="_blank"
+              href="/documents/autorizacao_imagem_maior_sobral.pdf"
+            >
+              <Text color="blue" textDecoration="underline">
+                Termo de uso de imagem (maior)
               </Text>
-              <Link
-                target="_blank"
-                href="/documents/autorizacao_imagem_maior_sobral.pdf"
-              >
-                <Text color="blue" textDecoration="underline">
-                  Termo de uso de imagem (maior)
-                </Text>
-              </Link>
+            </Link>
 
-              <Link
-                target="_blank"
-                href="/documents/autorizacao_imagem_menor_sobral.pdf"
-              >
-                <Text color="blue" textDecoration="underline">
-                  Termo de uso de imagem (menor)
-                </Text>
-              </Link>
+            <Link
+              target="_blank"
+              href="/documents/autorizacao_imagem_menor_sobral.pdf"
+            >
+              <Text color="blue" textDecoration="underline">
+                Termo de uso de imagem (menor)
+              </Text>
+            </Link>
 
-              <Link
-                target="_blank"
-                href="/documents/termo_de_consentimento_menor_shalom.pdf"
-              >
-                <Text color="blue" textDecoration="underline">
-                  Termo de consentimento dos pais (menor)
-                </Text>
-              </Link>
+            <Link
+              target="_blank"
+              href="/documents/termo_de_consentimento_menor_shalom.pdf"
+            >
+              <Text color="blue" textDecoration="underline">
+                Termo de consentimento dos pais (menor)
+              </Text>
+            </Link>
 
-              <Checkbox
-                label="LI E ACEITO OS TERMOS E CONDIÇÕES DESCRITOS NOS DOCUMENTOS ACIMA"
-                {...register('accepted_the_terms')}
-                error={errors.accepted_the_terms}
-              />
+            <Checkbox
+              label="LI E ACEITO OS TERMOS E CONDIÇÕES DESCRITOS NOS DOCUMENTOS ACIMA"
+              {...register('accepted_the_terms')}
+              error={errors.accepted_the_terms}
+            />
 
-              {!!hasError && (
-                <Text color="red" fontWeight="bold">
-                  {hasError?.message || ''}
-                </Text>
-              )}
+            {!!hasError && (
+              <Text color="red" fontWeight="bold">
+                {hasError?.message || ''}
+              </Text>
+            )}
 
-              <Flex mt="8" justify="flex-end">
-                <HStack spacing="4">
-                  <Button
-                    size="lg"
-                    isLoading={false}
-                    color="white"
-                    colorScheme="gray"
-                    bgColor="gray.300"
-                    borderRadius="full"
-                    onClick={goToPrevious}
-                  >
-                    VOLTAR
-                  </Button>
-                  <Button
-                    type="submit"
-                    colorScheme="green"
-                    bgColor="green.200"
-                    color="gray.50"
-                    size="lg"
-                    isLoading={formState.isSubmitting}
-                    borderRadius="full"
-                  >
-                    FINALIZAR
-                  </Button>
-                </HStack>
-              </Flex>
-            </Box>
-          )}
+            <Flex mt="8" justify="flex-end">
+              <HStack spacing="4">
+                <Button
+                  size="lg"
+                  isLoading={false}
+                  color="white"
+                  colorScheme="gray"
+                  bgColor="gray.300"
+                  borderRadius="full"
+                  onClick={goToPrevious}
+                >
+                  VOLTAR
+                </Button>
+                <Button
+                  type="submit"
+                  colorScheme="green"
+                  bgColor="green.200"
+                  color="gray.50"
+                  size="lg"
+                  isLoading={formState.isSubmitting}
+                  borderRadius="full"
+                >
+                  FINALIZAR
+                </Button>
+              </HStack>
+            </Flex>
+          </Box>
         </Stack>
       </Flex>
     </Flex>
