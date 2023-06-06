@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { Box, Flex, Image, Text } from '@chakra-ui/react';
+import { GetStaticProps } from 'next';
 
 import { Carousel } from '@/components/Carousel';
 import { Footer } from '@/components/Footer';
@@ -61,3 +62,10 @@ export default function Home() {
     </Flex>
   );
 }
+
+export const getStaticProps: GetStaticProps = async () => {
+  return {
+    props: {},
+    revalidate: 60 * 60 * 24, // 24 hours
+  };
+};
