@@ -80,7 +80,7 @@ export default function Registrations() {
       return {
         key: registration.id,
         full_name: participant?.full_name,
-        phone_number: participant.phone_number,
+        type: registration?.type ?? '-',
         age: participant?.birthdate
           ? dayjs(new Date()).diff(participant?.birthdate, 'years')
           : '-',
@@ -90,6 +90,7 @@ export default function Registrations() {
           : 'Aguardando',
         registration: registration,
         is_approved: registration.is_approved,
+        created_at: dayjs(registration.created_at).format('DD/MM/YYYY HH:mm'),
       };
     });
   }, [registrations]);
@@ -127,10 +128,11 @@ export default function Registrations() {
             <Thead>
               <Tr>
                 <Th>Participante</Th>
-                {isWideVersion && <Th>Telefone</Th>}
                 {isWideVersion && <Th>Idade</Th>}
                 {isWideVersion && <Th>Status</Th>}
                 {isWideVersion && <Th>Pagamento</Th>}
+                {isWideVersion && <Th>Tipo</Th>}
+                {isWideVersion && <Th>Data</Th>}
                 <Th>Opções</Th>
               </Tr>
             </Thead>
@@ -142,10 +144,11 @@ export default function Registrations() {
                       <Text fontWeight="medium">{data.full_name}</Text>
                     </Box>
                   </Td>
-                  {isWideVersion && <Td>{data.phone_number}</Td>}
                   {isWideVersion && <Td>{data.age}</Td>}
                   {isWideVersion && <Td>{data.registration_status}</Td>}
                   {isWideVersion && <Td>{data.payment_status}</Td>}
+                  {isWideVersion && <Td>{data.type}</Td>}
+                  {isWideVersion && <Td>{data.created_at}</Td>}
 
                   <Td>
                     <Box>

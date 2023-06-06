@@ -1,3 +1,4 @@
+import { IAddress } from './IAddress';
 import { IEvent } from './IEvent';
 import { IParticipant } from './IParticipant';
 import { IPayment } from './IPayment';
@@ -18,5 +19,7 @@ export interface IRegistration {
   user?: {
     email: string;
     participant: IParticipant;
+    addresses: IAddress[];
   };
+  created_at: Date;
 }

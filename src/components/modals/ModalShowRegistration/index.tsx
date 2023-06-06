@@ -32,11 +32,44 @@ export function ModalShowRegistration({ registration }: IProps) {
 
   const dataFormatted = useMemo(() => {
     const participant = registration?.user?.participant as IParticipant;
+    const address =
+      registration?.user?.addresses && registration?.user?.addresses?.length > 0
+        ? registration?.user?.addresses[0]
+        : undefined;
+
+    let addressFormatted = '-';
+
+    if (address) {
+      const {
+        street,
+        street_number,
+        complement,
+        district,
+        city,
+        state,
+        zip_code,
+      } = address;
+
+      addressFormatted = `
+        ${street}, nº ${street_number} - ${complement}, ${district}, 
+        ${city} - ${state} CEP: ${zip_code}`;
+    }
+
+    const birthdateFormatted =
+      participant?.birthdate &&
+      dayjs(participant?.birthdate).format('DD/MM/YYYY');
+
+    const participantAge = dayjs(new Date()).diff(
+      participant?.birthdate,
+      'years',
+    );
+
     return {
       event_title: registration.event?.title || '-',
       full_name: participant?.full_name ?? '-',
+      email: registration?.user?.email ?? '-',
       birthdate: participant?.birthdate
-        ? dayjs(participant?.birthdate).format('DD/MM/YYYY')
+        ? `${birthdateFormatted} (${participantAge} anos)`
         : '-',
       phone_number: participant.phone_number ?? '-',
       document: participant
@@ -44,15 +77,23 @@ export function ModalShowRegistration({ registration }: IProps) {
         : '-',
       guardian_name: participant?.guardian_name ?? '-',
       guardian_phone_number: participant?.guardian_phone_number ?? '-',
+      address: addressFormatted,
       prayer_group: participant?.prayer_group ?? '-',
       community_type: participant?.community_type ?? '-',
       pcd_description: participant?.pcd_description ?? '-',
       allergy_description: participant?.allergy_description ?? '-',
+      medication_use_description:
+        participant?.medication_use_description ?? '-',
       transportation_mode: registration?.transportation_mode ?? '-',
       event_source: registration?.event_source ?? '-',
       accepted_the_terms: registration?.accepted_the_terms ? 'Sim' : 'Não',
-      status: registration.is_approved ? 'Aprovada' : 'Aguardando',
-      pagamento: translatePaymentStatus(registration?.payment?.status),
+      status: registration.is_approved ? 'Aprovada' : 'Aguardando aprovação',
+      payment_status: translatePaymentStatus(registration?.payment?.status),
+      type: registration?.type ?? '-',
+      has_participated_previously: registration?.has_participated_previously
+        ? 'Sim'
+        : 'Não',
+      created_at: dayjs(registration.created_at).format('DD/MM/YYYY HH:mm'),
     };
   }, [registration]);
 
@@ -78,14 +119,18 @@ export function ModalShowRegistration({ registration }: IProps) {
           <ModalHeader>Dados de inscrição</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Stack direction="row">
-              <Text fontWeight="bold">Evento:</Text>
-              <Text>{dataFormatted.event_title}</Text>
-            </Stack>
+            <Text fontWeight="bold" align="center">
+              DADOS PESSOAIS
+            </Text>
 
             <Stack direction="row">
               <Text fontWeight="bold">Nome:</Text>
               <Text>{dataFormatted.full_name}</Text>
+            </Stack>
+
+            <Stack direction="row">
+              <Text fontWeight="bold">E-mail:</Text>
+              <Text>{dataFormatted.email}</Text>
             </Stack>
 
             <Stack direction="row">
@@ -118,6 +163,20 @@ export function ModalShowRegistration({ registration }: IProps) {
             )}
 
             <Stack direction="row">
+              <Text fontWeight="bold">Endereço:</Text>
+              <Text>{dataFormatted.address}</Text>
+            </Stack>
+
+            <Text fontWeight="bold" align="center" mt="1rem">
+              DADOS PARA O EVENTO
+            </Text>
+
+            <Stack direction="row">
+              <Text fontWeight="bold">Evento:</Text>
+              <Text>{dataFormatted.event_title}</Text>
+            </Stack>
+
+            <Stack direction="row">
               <Text fontWeight="bold">Nome do grupo de oração:</Text>
               <Text>{dataFormatted.prayer_group}</Text>
             </Stack>
@@ -125,6 +184,11 @@ export function ModalShowRegistration({ registration }: IProps) {
             <Stack direction="row">
               <Text fontWeight="bold">Como ficou sabendo do evento:</Text>
               <Text>{dataFormatted.event_source}</Text>
+            </Stack>
+
+            <Stack direction="row">
+              <Text fontWeight="bold">{"Participou de outros ACAMP'S:"}</Text>
+              <Text>{dataFormatted.has_participated_previously}</Text>
             </Stack>
 
             <Stack direction="row">
@@ -143,7 +207,12 @@ export function ModalShowRegistration({ registration }: IProps) {
             </Stack>
 
             <Stack direction="row">
-              <Text fontWeight="bold">Transpor para o evento:</Text>
+              <Text fontWeight="bold">Uso de medicamentos:</Text>
+              <Text>{dataFormatted.medication_use_description}</Text>
+            </Stack>
+
+            <Stack direction="row">
+              <Text fontWeight="bold">Transporte para o evento:</Text>
               <Text>{dataFormatted.transportation_mode}</Text>
             </Stack>
 
@@ -153,8 +222,23 @@ export function ModalShowRegistration({ registration }: IProps) {
             </Stack>
 
             <Stack direction="row">
-              <Text fontWeight="bold">Status de pagamento:</Text>
+              <Text fontWeight="bold">Tipo de inscrição:</Text>
+              <Text>{dataFormatted.type}</Text>
+            </Stack>
+
+            <Stack direction="row">
+              <Text fontWeight="bold">Status da inscrição:</Text>
               <Text>{dataFormatted.status}</Text>
+            </Stack>
+
+            <Stack direction="row">
+              <Text fontWeight="bold">Status de pagamento:</Text>
+              <Text>{dataFormatted.payment_status}</Text>
+            </Stack>
+
+            <Stack direction="row">
+              <Text fontWeight="bold">Data de inscrição:</Text>
+              <Text>{dataFormatted.created_at}</Text>
             </Stack>
           </ModalBody>
 
