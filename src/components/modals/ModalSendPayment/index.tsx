@@ -131,8 +131,8 @@ export function ModalSendPayment({
                       Page via PIX e ganhe 10% de desconto
                     </Text>
                     <Box>
-                      <Text>Participantes: R$ 279,00</Text>
-                      <Text>Servos: R$ 198,00</Text>
+                      <Text>Participantes: R$ 315,00</Text>
+                      <Text>Servos: R$ 225,00</Text>
                     </Box>
                     <Text mt="1rem">
                       <Text fontWeight="medium">Chave pix:</Text>{' '}
@@ -151,18 +151,18 @@ export function ModalSendPayment({
                     <Text fontWeight="medium">Pague em até 3X no cartão</Text>
                     <Link
                       target="_blank"
-                      href="https://link.ton.com.br/?id=bd1bb75c-a563-43f4-9812-6b8f515ae22c"
+                      href="https://link.ton.com.br/?id=ea822021-1eec-43e6-b27a-5fd26b8f0142"
                     >
                       <Text color="blue" textDecoration="underline" mb="10px">
-                        R$ 310,00 - Pagar no cartão (Participantes)
+                        R$ 350,00 - Pagar no cartão (Participantes)
                       </Text>
                     </Link>
                     <Link
                       target="_blank"
-                      href="https://link.ton.com.br/?id=abb65fbd-dad7-47cd-b865-3926807b3ba9"
+                      href="https://link.ton.com.br/?id=503f932b-433b-4b19-8edf-03f0beaae5eb"
                     >
                       <Text color="blue" textDecoration="underline">
-                        R$ 220,00 - Pagar no cartão (Servos)
+                        R$ 250,00 - Pagar no cartão (Servos)
                       </Text>
                     </Link>
                   </Box>
