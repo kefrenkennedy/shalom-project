@@ -39,6 +39,6 @@ jobs:
           script: |
             export NVM_DIR=~/.nvm
             source ~/.nvm/nvm.sh
-            cd ~/app/tellar-v2-api
+            cd ~/apps/shalom-eventos-site
             npm install
             npx vercel --prod
