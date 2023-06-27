@@ -94,6 +94,7 @@ export function ModalShowRegistration({ registration }: IProps) {
         ? 'Sim'
         : 'Não',
       created_at: dayjs(registration.created_at).format('DD/MM/YYYY HH:mm'),
+      credential_name: registration.credential_name,
     };
   }, [registration]);
 
@@ -174,6 +175,11 @@ export function ModalShowRegistration({ registration }: IProps) {
             <Stack direction="row">
               <Text fontWeight="bold">Evento:</Text>
               <Text>{dataFormatted.event_title}</Text>
+            </Stack>
+
+            <Stack direction="row">
+              <Text fontWeight="bold">Nome da credencial:</Text>
+              <Text>{dataFormatted.credential_name}</Text>
             </Stack>
 
             <Stack direction="row">
