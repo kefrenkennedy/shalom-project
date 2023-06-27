@@ -24,6 +24,7 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AxiosError } from 'axios';
 import { cpf } from 'cpf-cnpj-validator';
+import dayjs from 'dayjs';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { z } from 'zod';
@@ -183,6 +184,26 @@ const FormSchema = z
     {
       message: 'CPF inválido',
       path: ['document_number'],
+    },
+  )
+  .refine(
+    (data) => {
+      const age = dayjs(new Date()).diff(data.birthdate, 'years');
+      return !(data.type === 'PARTICIPANTE' && age > 30);
+    },
+    {
+      message: 'Idade máxima de participante é de 30 anos',
+      path: ['birthdate'],
+    },
+  )
+  .refine(
+    (data) => {
+      const age = dayjs(new Date()).diff(data.birthdate, 'years');
+      return !(data.type === 'PARTICIPANTE' && age < 14);
+    },
+    {
+      message: 'Idade mínima de participante é de 14 anos',
+      path: ['birthdate'],
     },
   );
 
@@ -751,6 +772,10 @@ export function RegistrationForm() {
           </Box>
         </Stack>
       </Flex>
+      <Text mb="10" px="10" align="center">
+        <strong>ATENÇÃO:</strong> A idade Mínima para inscrição de participante
+        é de 14 anos e a Máxima de 30 anos.
+      </Text>
     </Flex>
   );
 }

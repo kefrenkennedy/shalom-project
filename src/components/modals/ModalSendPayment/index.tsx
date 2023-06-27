@@ -120,6 +120,9 @@ export function ModalSendPayment({
         <ModalOverlay />
         <ModalContent>
           <ModalHeader alignSelf="center">Comprovante de pagamento</ModalHeader>
+          <Text align="center" mb="5">
+            <strong>ATENÇÃO!</strong> Não fazemos reembolso.
+          </Text>
           <ModalCloseButton />
           <ModalBody>
             <VStack>
