@@ -18,12 +18,6 @@ jobs:
         with:
           node-version: 18.x
 
-      - name: Install Dependencies
-        run: npm install
-
-      - name: Build
-        run: npm run build
-
 
       - uses: appleboy/scp-action@v0.1.2
         with:
@@ -32,7 +26,7 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           key: ${{ secrets.SSH_KEY }}
           source: "., !node_modules"
-          target: "~/apps/shalom-eventos-api"
+          target: "~/apps/shalom-eventos-site"
 
       - name: Update API
         uses: appleboy/ssh-action@v0.1.10
@@ -44,8 +38,6 @@ jobs:
           script: |
             export NVM_DIR=~/.nvm
             source ~/.nvm/nvm.sh
-            cd ~/apps/shalom-eventos-api
+            cd ~/apps/shalom-eventos-site
             npm install
-            npx prisma migrate deploy
-            npx prisma generate
-            pm2 restart shalom-eventos-api
+            npx vercel --prod
