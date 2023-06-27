@@ -210,8 +210,8 @@ export default function Registrations() {
   );
 }
 
-export const getServerSideProps = withSSRAuth(async (ctx) => {
-  return {
-    props: {},
-  };
-});
+// export const getServerSideProps = withSSRAuth(async (ctx) => {
+//   return {
+//     props: {},
+//   };
+// });

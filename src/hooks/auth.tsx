@@ -25,6 +25,8 @@ interface IAuthProviderProps {
   children: ReactNode;
 }
 
+export const TOKEN_KEY = 'shalomeventos.token';
+
 export const AuthContext = createContext<IAuthContext>({} as IAuthContext);
 
 export function AuthProvider({ children }: IAuthProviderProps) {
@@ -35,7 +37,7 @@ export function AuthProvider({ children }: IAuthProviderProps) {
 
     const { token, user } = responseData;
 
-    setCookie(undefined, `shalomeventos.token`, token, {
+    setCookie(undefined, TOKEN_KEY, token, {
       maxAge: 60 * 60 * 24 * 30, // 30 days
       path: '/', // aplications path that have access to cookie
     });
@@ -52,7 +54,7 @@ export function AuthProvider({ children }: IAuthProviderProps) {
     setUser({} as IUser);
 
     console.log('começou');
-    destroyCookie(null, 'shalomeventos.token', {
+    destroyCookie(null, TOKEN_KEY, {
       path: '/',
     });
 
@@ -62,7 +64,7 @@ export function AuthProvider({ children }: IAuthProviderProps) {
   }, []);
 
   const updateUser = useCallback(() => {
-    const { 'shalomeventos.token': token } = parseCookies();
+    const { [TOKEN_KEY]: token } = parseCookies();
 
     if (token) {
       api

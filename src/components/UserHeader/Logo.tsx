@@ -4,7 +4,7 @@ import { useAuth } from '@/hooks/auth';
 
 export function Logo() {
   const { user } = useAuth();
-  const isAdmin = user.role === 'ADMINISTRATOR';
+  const isAdmin = user?.role === 'ADMINISTRATOR';
 
   return (
     <Flex direction="column">

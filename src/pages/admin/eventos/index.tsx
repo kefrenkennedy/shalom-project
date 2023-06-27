@@ -132,8 +132,8 @@ export default function Events() {
   );
 }
 
-export const getServerSideProps = withSSRAuth(async (ctx) => {
-  return {
-    props: {},
-  };
-});
+// export const getServerSideProps = withSSRAuth(async (ctx) => {
+//   return {
+//     props: {},
+//   };
+// });
