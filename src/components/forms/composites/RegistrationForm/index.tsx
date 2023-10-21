@@ -698,7 +698,16 @@ export function RegistrationForm() {
               {...register('password_confirmation')}
               error={errors.password_confirmation}
             />
+            <FormLabel>
+              ATENÇÃO! Se você é usuário já cadastrado e não lembra a senha
+              coloque a senha:
+              <Text as="span" color="red">
+                {' '}
+                12345678
+              </Text>
+            </FormLabel>
 
+            <br />
             <FormLabel>DOCUMENTOS NECESSÁRIOS:</FormLabel>
             <Text>
               ATENÇÃO! Baixe, assine e nos envie esses documentos para validar
