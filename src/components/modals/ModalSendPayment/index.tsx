@@ -130,9 +130,7 @@ export function ModalSendPayment({
                 <VStack spacing="5">
                   <Text fontWeight="bold">INSCRIÇÃO ONLINE (2º Lote)</Text>
                   <Box mb="1rem">
-                    <Text fontWeight="medium">
-                      Pix, dinheiro ou depósito:
-                    </Text>
+                    <Text fontWeight="medium">Pix, dinheiro ou depósito:</Text>
                     <Box>
                       <Text>Participantes: R$ 230,00</Text>
                       <Text>Servos: R$ 160,00</Text>
@@ -151,7 +149,9 @@ export function ModalSendPayment({
                     />
                   </Box>
                   <Box>
-                    <Text fontWeight="medium">Pague em até 3X no cartão (haverá cobrança de taxa)</Text>
+                    <Text fontWeight="medium">
+                      Pague em até 3X no cartão (haverá cobrança de taxa)
+                    </Text>
                     <Link
                       target="_blank"
                       href="https://link.ton.com.br/?id=dc4af763-31fa-4ae8-b0e1-43ed7c78b740"
