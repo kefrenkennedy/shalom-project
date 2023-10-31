@@ -131,11 +131,11 @@ export function ModalSendPayment({
                   <Text fontWeight="bold">INSCRIÇÃO ONLINE (2º Lote)</Text>
                   <Box mb="1rem">
                     <Text fontWeight="medium">
-                      Page via PIX e ganhe 10% de desconto
+                      Pix, dinheiro ou depósito:
                     </Text>
                     <Box>
-                      <Text>Participantes: R$ 315,00</Text>
-                      <Text>Servos: R$ 225,00</Text>
+                      <Text>Participantes: R$ 230,00</Text>
+                      <Text>Servos: R$ 160,00</Text>
                     </Box>
                     <Text mt="1rem">
                       <Text fontWeight="medium">Chave pix:</Text>{' '}
@@ -151,21 +151,21 @@ export function ModalSendPayment({
                     />
                   </Box>
                   <Box>
-                    <Text fontWeight="medium">Pague em até 3X no cartão</Text>
+                    <Text fontWeight="medium">Pague em até 3X no cartão (haverá cobrança de taxa)</Text>
                     <Link
                       target="_blank"
-                      href="https://link.ton.com.br/?id=ea822021-1eec-43e6-b27a-5fd26b8f0142"
+                      href="https://link.ton.com.br/?id=dc4af763-31fa-4ae8-b0e1-43ed7c78b740"
                     >
                       <Text color="blue" textDecoration="underline" mb="10px">
-                        R$ 350,00 - Pagar no cartão (Participantes)
+                        R$ 259,27 - Pagar no cartão (Participantes)
                       </Text>
                     </Link>
                     <Link
                       target="_blank"
-                      href="https://link.ton.com.br/?id=503f932b-433b-4b19-8edf-03f0beaae5eb"
+                      href="https://link.ton.com.br/?id=7b60aad0-317f-4081-93c2-171e1a461558"
                     >
                       <Text color="blue" textDecoration="underline">
-                        R$ 250,00 - Pagar no cartão (Servos)
+                        R$ 180,36 - Pagar no cartão (Servos)
                       </Text>
                     </Link>
                   </Box>
