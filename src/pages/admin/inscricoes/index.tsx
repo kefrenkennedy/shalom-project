@@ -76,7 +76,7 @@ export default function Registrations() {
 
   const registrationsFormatted = useMemo(() => {
     return registrations.map((registration) => {
-      const participant = registration?.user?.participant as IParticipant;
+      const participant = registration?.participant as IParticipant;
       return {
         key: registration.id,
         full_name: participant?.full_name,
