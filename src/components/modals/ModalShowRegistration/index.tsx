@@ -31,11 +31,17 @@ export function ModalShowRegistration({ registration }: IProps) {
   const finalRef = useRef(null);
 
   const dataFormatted = useMemo(() => {
-    const participant = registration?.user?.participant as IParticipant;
-    const address =
-      registration?.user?.addresses && registration?.user?.addresses?.length > 0
-        ? registration?.user?.addresses[0]
-        : undefined;
+    const participant = registration?.participant as IParticipant;
+    let address;
+
+    if (participant?.addresses && participant?.addresses?.length > 0) {
+      address = participant?.addresses[0];
+    } else if (
+      registration?.user?.addresses &&
+      registration?.user?.addresses?.length > 0
+    ) {
+      address = registration?.user?.addresses[0];
+    }
 
     let addressFormatted = '-';
 
