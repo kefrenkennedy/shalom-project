@@ -1,11 +1,11 @@
 import React from 'react';
 
-import { Box, Flex, Image, Text } from '@chakra-ui/react';
+import { Flex, Image, Text } from '@chakra-ui/react';
 import { GetStaticProps } from 'next';
 
 import { Carousel } from '@/components/Carousel';
 import { Footer } from '@/components/Footer';
-import { RegistrationForm } from '@/components/forms/composites/RegistrationForm';
+import { NewRegistrationForm } from '@/components/forms/composites/NewRegistrationForm';
 import { Header } from '@/components/Header';
 import { useAuth } from '@/hooks/auth';
 
@@ -40,23 +40,7 @@ export default function Home() {
 
       <Image src={lotesImage.src} alt="Acamps Beach Lotes" w="100%" />
 
-      {user.role === 'ADMINISTRATOR' ? (
-        <Flex align="center" justify="center" p="4rem">
-          <Box w={900}>
-            <Text
-              fontSize="3xl"
-              textAlign="center"
-              fontWeight="medium"
-              color="gray.500"
-            >
-              Você está loggado como administrador, mas apenas participantes
-              podem realizar a inscrição no evento
-            </Text>
-          </Box>
-        </Flex>
-      ) : (
-        <RegistrationForm />
-      )}
+      <NewRegistrationForm />
 
       <Footer />
     </Flex>

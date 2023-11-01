@@ -1,6 +1,9 @@
+import { IAddress } from './IAddress';
+import { IUser } from './IUser';
+
 export interface IParticipant {
   id: string;
-  user_id: string;
+  user_id?: string | null;
   full_name: string;
   phone_number: string;
   birthdate: Date;
@@ -14,4 +17,8 @@ export interface IParticipant {
   allergy_description?: string;
   medication_use_description?: string;
   created_at?: Date;
+  email: string;
+
+  addresses?: IAddress[];
+  user?: IUser;
 }
