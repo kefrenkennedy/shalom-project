@@ -619,7 +619,9 @@ export function NewRegistrationForm() {
             <br />
             <br />
             <Box>
-              <Text fontWeight="medium">Pague em até 3X no cartão (haverá cobrança de taxa)</Text>
+              <Text fontWeight="medium">
+                Pague em até 3X no cartão (haverá cobrança de taxa)
+              </Text>
               <Link
                 target="_blank"
                 href="https://link.ton.com.br/?id=dc4af763-31fa-4ae8-b0e1-43ed7c78b740"
