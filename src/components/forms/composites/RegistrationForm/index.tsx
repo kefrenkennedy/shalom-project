@@ -236,6 +236,7 @@ export function RegistrationForm() {
   }
 
   const handleRegister: SubmitHandler<SignInFormData> = async (data) => {
+    /*
     const {
       name,
       email,
@@ -342,6 +343,7 @@ export function RegistrationForm() {
           );
         }
       });
+      */
   };
 
   const steps = [
