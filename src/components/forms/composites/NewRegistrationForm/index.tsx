@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useMemo } from 'react';
 import { FieldErrors, SubmitHandler, useForm } from 'react-hook-form';
 import QRCode from 'react-qr-code';
 import { toast } from 'react-toastify';
@@ -40,39 +40,39 @@ import { shalomQRCode } from '@/utils/shalomQRcode';
 import { InputFile } from '../../atomics/InputFile';
 
 type SignInFormData = {
-  full_name: string; //
-  email: string; //
-  phone_number: string; //
-  birthdate: Date; //
-  document_type: string; //
-  document_number: string; //
-  guardian_name?: string; //
-  guardian_phone_number?: string; //
-  prayer_group?: string; //
-  community_type?: string; //
-  pcd_description?: string; //
-  allergy_description?: string; //
-  medication_use_description?: string; //
+  full_name: string;
+  email: string;
+  phone_number: string;
+  birthdate: Date;
+  document_type: string;
+  document_number: string;
+  guardian_name?: string;
+  guardian_phone_number?: string;
+  prayer_group?: string;
+  community_type?: string;
+  pcd_description?: string;
+  allergy_description?: string;
+  medication_use_description?: string;
 
-  street: string; //
-  street_number: string; //
-  complement: string; //
-  zip_code: string; //
-  district: string; //
-  city: string; //
-  state: string; //
+  street: string;
+  street_number: string;
+  complement: string;
+  zip_code: string;
+  district: string;
+  city: string;
+  state: string;
 
   // event_id: string;
-  event_source?: string; //
-  credential_name: string; //
-  transportation_mode: string; //
+  event_source?: string;
+  credential_name: string;
+  transportation_mode: string;
   accepted_the_terms: boolean;
-  has_participated_previously: boolean; //
-  type: string; //
+  has_participated_previously: boolean;
+  type: string;
 
-  payment_method: string; //
-  price: string; //
-  file: string; //
+  payment_method: string;
+  price: string;
+  file: string;
 };
 
 const FormSchema = z
@@ -216,7 +216,6 @@ const FormSchema = z
 export function NewRegistrationForm() {
   const EVENT_ID = String(process.env.NEXT_PUBLIC_EVENT_ID);
 
-  const formRef = useRef<HTMLFormElement>();
   const steps = [
     {
       title: 'Dados pessoais',
@@ -354,7 +353,6 @@ export function NewRegistrationForm() {
 
       <Flex
         as="form"
-        ref={formRef}
         // maxWidth={400}
         justifySelf="center"
         align="center"
