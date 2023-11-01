@@ -561,11 +561,11 @@ export function NewRegistrationForm() {
                 <Text fontWeight="bold">INSCRIÇÃO ONLINE (2º Lote)</Text>
                 <Box mb="1rem">
                   <Text fontWeight="medium">
-                    Page via PIX e ganhe 10% de desconto
+                    Pague via PIX, dinheiro ou depósito:
                   </Text>
                   <Box>
-                    <Text>Participantes: R$ 315,00</Text>
-                    <Text>Servos: R$ 225,00</Text>
+                    <Text>Participantes: R$ 230,00</Text>
+                    <Text>Servos: R$ 160,00</Text>
                   </Box>
                   <Text mt="1rem">
                     <Text fontWeight="medium">Chave pix:</Text>{' '}
@@ -619,13 +619,13 @@ export function NewRegistrationForm() {
             <br />
             <br />
             <Box>
-              <Text fontWeight="medium">Pague em até 3X no cartão</Text>
+              <Text fontWeight="medium">Pague em até 3X no cartão (haverá cobrança de taxa)</Text>
               <Link
                 target="_blank"
                 href="https://link.ton.com.br/?id=ea822021-1eec-43e6-b27a-5fd26b8f0142"
               >
                 <Text color="blue" textDecoration="underline" mb="10px">
-                  R$ 350,00 - Pagar no cartão (Participantes)
+                  R$ 259,27 - Pagar no cartão (Participantes)
                 </Text>
               </Link>
               <Link
@@ -633,7 +633,7 @@ export function NewRegistrationForm() {
                 href="https://link.ton.com.br/?id=503f932b-433b-4b19-8edf-03f0beaae5eb"
               >
                 <Text color="blue" textDecoration="underline">
-                  R$ 250,00 - Pagar no cartão (Servos)
+                  R$ 180,36 - Pagar no cartão (Servos)
                 </Text>
               </Link>
             </Box>
@@ -643,7 +643,7 @@ export function NewRegistrationForm() {
             <FormLabel>DOCUMENTOS NECESSÁRIOS:</FormLabel>
             <Text>
               ATENÇÃO! Baixe, assine e nos envie esses documentos para validar
-              sua incrição.
+              sua inscrição.
             </Text>
             <Link
               target="_blank"
@@ -689,7 +689,7 @@ export function NewRegistrationForm() {
       </Flex>
       <Text mb="10" px="10" align="center">
         <strong>ATENÇÃO:</strong> A idade Mínima para inscrição de participante
-        é de 14 anos e a Máxima de 30 anos.
+        é de 14 anos e a Máxima é de 30 anos.
       </Text>
     </Flex>
   );
