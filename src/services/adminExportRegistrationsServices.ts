@@ -1,25 +1,46 @@
+import dayjs from 'dayjs';
+
 import { api } from './apiClient';
 
 const PATH = '/registrations/export/event';
 
 export const adminExportRegistrationsServices = () => ({
   export: async (event_id: string) => {
-    const response = await api.get(PATH + `/${event_id}`, {
-      responseType: 'blob', // Especifica o tipo de resposta como blob (dados binários)
-    });
+    try {
+      const response = await api.get(PATH + `/${event_id}`, {
+        responseType: 'arraybuffer', // Specify the response type as arraybuffer (binary data)
+      });
 
-    // Cria um link temporário no documento
-    const url = window.URL.createObjectURL(new Blob([response.data]));
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', `inscricoes_${event_id}.csv`); // Define o nome do arquivo
-    document.body.appendChild(link);
+      // Create a blob from the arraybuffer response
+      const blob = new Blob([response.data], {
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      });
 
-    // Simula um clique no link para iniciar o download
-    link.click();
+      // Create a link element
+      const link = document.createElement('a');
 
-    // Limpa o objeto URL e remove o link temporário
-    window.URL.revokeObjectURL(url);
-    document.body.removeChild(link);
+      // Set the link's href to a URL created from the blob
+      link.href = window.URL.createObjectURL(blob);
+
+      const currentDatetime = dayjs(new Date()).format('DD-MM-YYYY_HH[h]mm');
+      // Set the download attribute to the specified file name
+      link.setAttribute(
+        'download',
+        `participantes-acamps-2024-1__${currentDatetime}.xlsx`,
+      );
+
+      // Append the link to the document body
+      document.body.appendChild(link);
+
+      // Simulate a click on the link to initiate the download
+      link.click();
+
+      // Revoke the object URL and remove the link element
+      window.URL.revokeObjectURL(link.href);
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error('Error exporting registrations:', error);
+      // Handle error as needed
+    }
   },
 });
