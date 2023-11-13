@@ -73,7 +73,8 @@ export function ModalShowRegistration({ registration }: IProps) {
     return {
       event_title: registration.event?.title || '-',
       full_name: participant?.full_name ?? '-',
-      email: registration?.user?.email ?? '-',
+      email:
+        registration.participant?.email ?? registration?.user?.email ?? '-',
       birthdate: participant?.birthdate
         ? `${birthdateFormatted} (${participantAge} anos)`
         : '-',
