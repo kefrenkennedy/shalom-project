@@ -558,7 +558,7 @@ export function NewRegistrationForm() {
           <Box minW={300} w={[300, 400, 600]} hidden={!(activeStep === 3)}>
             <Stack spacing="10" direction={['column', 'row']}>
               <VStack spacing="5">
-                <Text fontWeight="bold">INSCRIÇÃO ONLINE (2º Lote)</Text>
+                <Text fontWeight="bold">INSCRIÇÃO ONLINE (1º Lote)</Text>
                 <Box mb="1rem">
                   <Text fontWeight="medium">
                     Pague via PIX, dinheiro ou depósito:
