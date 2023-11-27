@@ -25,14 +25,17 @@ import {
 } from '@chakra-ui/react';
 import dayjs from 'dayjs';
 
+import { Select } from '@/components/forms/atomics/Select';
 import { ModalShowPayment } from '@/components/modals/ModalShowPayment';
 import { ModalShowRegistration } from '@/components/modals/ModalShowRegistration';
 import { Sidebar } from '@/components/Sidebar';
 import { UserHeader } from '@/components/UserHeader';
+import { IEvent } from '@/dtos/IEvent';
 import { IParticipant } from '@/dtos/IParticipant';
 import { IRegistration } from '@/dtos/IRegistration';
 import { adminExportRegistrationsServices } from '@/services/adminExportRegistrationsServices';
 import { adminRegistrationsService } from '@/services/adminRegistrationsServices';
+import { eventsServices } from '@/services/eventsServices';
 import { translatePaymentStatus } from '@/utils/translatePaymentStatus';
 import { withSSRAuth } from '@/utils/withSSRAuth';
 
@@ -42,17 +45,28 @@ export default function Registrations() {
     lg: true,
   });
 
+  const [events, setEvents] = useState<IEvent[]>([]);
+
+  const [selectedEvent, setSelectedEvent] = useState<string>('');
+
   const [registrations, setRegistrations] = useState<IRegistration[]>([]);
 
-  const EVENT_ID = String(process.env.NEXT_PUBLIC_EVENT_ID);
+  function getEvents() {
+    eventsServices()
+      .list()
+      .then((data) => {
+        setEvents(data.events);
+      });
+  }
 
   const getRegistrations = useCallback(() => {
+    if (!selectedEvent) return setRegistrations([]);
     adminRegistrationsService()
-      .list(EVENT_ID)
+      .list(selectedEvent)
       .then((data) => {
         setRegistrations(data.registrations);
       });
-  }, [EVENT_ID]);
+  }, [selectedEvent]);
 
   function handleConfirmRegistration(id: string) {
     adminRegistrationsService()
@@ -67,12 +81,25 @@ export default function Registrations() {
   }
 
   function handleExportRegistration() {
-    adminExportRegistrationsServices().export(EVENT_ID);
+    adminExportRegistrationsServices().export(selectedEvent);
   }
+
+  useEffect(() => {
+    getEvents();
+  }, []);
 
   useEffect(() => {
     getRegistrations();
   }, [getRegistrations]);
+
+  const eventsFormatted = useMemo(() => {
+    return events.map((event) => {
+      return {
+        value: event.id,
+        label: event.title,
+      };
+    });
+  }, [events]);
 
   const registrationsFormatted = useMemo(() => {
     return registrations.map((registration) => {
@@ -110,100 +137,119 @@ export default function Registrations() {
         >
           <Flex mb="8" justify="space-between" align="center">
             <Heading size="lg" fontWeight="medium" color="gray.500">
-              Inscrições
+              <Flex align="center" gap="6">
+                Inscrições
+                <Select
+                  name="select-event"
+                  title="Selecionar evento"
+                  placeholder="Selecionar evento"
+                  onChange={({ target: { value } }) => setSelectedEvent(value)}
+                  options={eventsFormatted}
+                />
+              </Flex>
             </Heading>
 
-            <Button
-              size="sm"
-              fontSize="sm"
-              colorScheme="green"
-              onClick={handleExportRegistration}
-              leftIcon={<Icon as={RiTable2} fontSize="20" />}
-            >
-              Baixar CSV
-            </Button>
+            {!!selectedEvent && (
+              <Button
+                size="sm"
+                fontSize="sm"
+                colorScheme="green"
+                onClick={handleExportRegistration}
+                leftIcon={<Icon as={RiTable2} fontSize="20" />}
+              >
+                Baixar CSV
+              </Button>
+            )}
           </Flex>
 
-          <Table colorScheme="gray">
-            <Thead>
-              <Tr>
-                <Th>Participante</Th>
-                {isWideVersion && <Th>Idade</Th>}
-                {isWideVersion && <Th>Status</Th>}
-                {isWideVersion && <Th>Pagamento</Th>}
-                {isWideVersion && <Th>Tipo</Th>}
-                {isWideVersion && <Th>Data</Th>}
-                <Th>Opções</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {registrationsFormatted?.map((data) => (
-                <Tr px="6" key={data.key}>
-                  <Td>
-                    <Box>
-                      <Text fontWeight="medium">{data.full_name}</Text>
-                    </Box>
-                  </Td>
-                  {isWideVersion && <Td>{data.age}</Td>}
-                  {isWideVersion && <Td>{data.registration_status}</Td>}
-                  {isWideVersion && <Td>{data.payment_status}</Td>}
-                  {isWideVersion && <Td>{data.type}</Td>}
-                  {isWideVersion && <Td>{data.created_at}</Td>}
-
-                  <Td>
-                    <Box>
-                      <HStack spacing="2">
-                        <ModalShowRegistration
-                          registration={data.registration}
-                        />
-
-                        {data.registration.payment && (
-                          <ModalShowPayment
-                            payment={data.registration.payment}
-                            onSuccess={() =>
-                              handleConfirmRegistration(data.key)
-                            }
-                          />
-                        )}
-
-                        <Tooltip
-                          label={
-                            data.is_approved
-                              ? 'Inscrição Aprovada'
-                              : 'Aguardando aprovação'
-                          }
-                          hasArrow
-                        >
-                          <Button
-                            size="sm"
-                            fontSize="sm"
-                            borderRadius="full"
-                            width={10}
-                            height={10}
-                            colorScheme={data.is_approved ? 'green' : 'gray'}
-                            bgColor={
-                              data.is_approved ? 'green.500' : 'gray.300'
-                            }
-                            color="white"
-                            onClick={() => handleConfirmRegistration(data.key)}
-                          >
-                            <Icon
-                              as={
-                                data.is_approved
-                                  ? RiCheckboxCircleFill
-                                  : RiCheckboxCircleLine
-                              }
-                              fontSize="20"
-                            />
-                          </Button>
-                        </Tooltip>
-                      </HStack>
-                    </Box>
-                  </Td>
+          {!selectedEvent ? (
+            <Text>
+              Selecione um evento acima para ver os dados correspondentes.
+            </Text>
+          ) : (
+            <Table colorScheme="gray">
+              <Thead>
+                <Tr>
+                  <Th>Participante</Th>
+                  {isWideVersion && <Th>Idade</Th>}
+                  {isWideVersion && <Th>Status</Th>}
+                  {isWideVersion && <Th>Pagamento</Th>}
+                  {isWideVersion && <Th>Tipo</Th>}
+                  {isWideVersion && <Th>Data</Th>}
+                  <Th>Opções</Th>
                 </Tr>
-              ))}
-            </Tbody>
-          </Table>
+              </Thead>
+              <Tbody>
+                {registrationsFormatted?.map((data) => (
+                  <Tr px="6" key={data.key}>
+                    <Td>
+                      <Box>
+                        <Text fontWeight="medium">{data.full_name}</Text>
+                      </Box>
+                    </Td>
+                    {isWideVersion && <Td>{data.age}</Td>}
+                    {isWideVersion && <Td>{data.registration_status}</Td>}
+                    {isWideVersion && <Td>{data.payment_status}</Td>}
+                    {isWideVersion && <Td>{data.type}</Td>}
+                    {isWideVersion && <Td>{data.created_at}</Td>}
+
+                    <Td>
+                      <Box>
+                        <HStack spacing="2">
+                          <ModalShowRegistration
+                            registration={data.registration}
+                          />
+
+                          {data.registration.payment && (
+                            <ModalShowPayment
+                              payment={data.registration.payment}
+                              onSuccess={() =>
+                                handleConfirmRegistration(data.key)
+                              }
+                            />
+                          )}
+
+                          <Tooltip
+                            label={
+                              data.is_approved
+                                ? 'Inscrição Aprovada'
+                                : 'Aguardando aprovação'
+                            }
+                            hasArrow
+                          >
+                            <Button
+                              size="sm"
+                              fontSize="sm"
+                              borderRadius="full"
+                              width={10}
+                              height={10}
+                              colorScheme={data.is_approved ? 'green' : 'gray'}
+                              bgColor={
+                                data.is_approved ? 'green.500' : 'gray.300'
+                              }
+                              color="white"
+                              onClick={() =>
+                                handleConfirmRegistration(data.key)
+                              }
+                            >
+                              <Icon
+                                as={
+                                  data.is_approved
+                                    ? RiCheckboxCircleFill
+                                    : RiCheckboxCircleLine
+                                }
+                                fontSize="20"
+                              />
+                            </Button>
+                          </Tooltip>
+                        </HStack>
+                      </Box>
+                    </Td>
+                  </Tr>
+                ))}
+              </Tbody>
+            </Table>
+          )}
         </Box>
       </Flex>
     </Box>
