@@ -558,14 +558,14 @@ export function NewRegistrationForm() {
           <Box minW={300} w={[300, 400, 600]} hidden={!(activeStep === 3)}>
             <Stack spacing="10" direction={['column', 'row']}>
               <VStack spacing="5">
-                <Text fontWeight="bold">INSCRIÇÃO ONLINE (2º Lote)</Text>
+                <Text fontWeight="bold">INSCRIÇÃO ONLINE (3º Lote)</Text>
                 <Box mb="1rem">
                   <Text fontWeight="medium">
                     Pague via PIX, dinheiro ou depósito:
                   </Text>
                   <Box>
-                    <Text>Participantes: R$ 230,00</Text>
-                    <Text>Servos: R$ 160,00</Text>
+                    <Text>Participantes: R$ 300,00</Text>
+                    <Text>Servos: R$ 220,00</Text>
                   </Box>
                   <Text mt="1rem">
                     <Text fontWeight="medium">Chave pix:</Text>{' '}
@@ -624,18 +624,18 @@ export function NewRegistrationForm() {
               </Text>
               <Link
                 target="_blank"
-                href="https://link.ton.com.br/?id=dc4af763-31fa-4ae8-b0e1-43ed7c78b740"
+                href="https://link.ton.com.br/?id=2b33cc91-9eeb-4c16-a400-450e302f7c4f"
               >
                 <Text color="blue" textDecoration="underline" mb="10px">
-                  R$ 259,27 - Pagar no cartão (Participantes)
+                  R$ 319,80 - Pagar no cartão (Participantes)
                 </Text>
               </Link>
               <Link
                 target="_blank"
-                href="https://link.ton.com.br/?id=7b60aad0-317f-4081-93c2-171e1a461558"
+                href="https://link.ton.com.br/?id=d67302ce-f1c7-43e6-a13d-9be794710263"
               >
                 <Text color="blue" textDecoration="underline">
-                  R$ 180,36 - Pagar no cartão (Servos)
+                  R$ 234,52 - Pagar no cartão (Servos)
                 </Text>
               </Link>
             </Box>
