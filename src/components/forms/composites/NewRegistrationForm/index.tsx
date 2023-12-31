@@ -689,6 +689,9 @@ export function NewRegistrationForm() {
         </Stack>
         {renderButtons()}
       </Flex>
+      <Text fontWeight="bold" fontSize="lg" align="center" color="red">
+        ATENÇÃO! Não fazemos reembolso
+      </Text>
       <Text mb="10" px="10" align="center">
         <strong>ATENÇÃO:</strong> A idade Mínima para inscrição de participante
         é de 14 anos e a Máxima é de 30 anos.
