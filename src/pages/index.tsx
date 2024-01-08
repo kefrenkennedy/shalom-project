@@ -40,7 +40,7 @@ export default function Home() {
 
       <Image src={lotesImage.src} alt="Acamps Beach Lotes" w="100%" />
 
-      <NewRegistrationForm />
+      {/* <NewRegistrationForm /> */}
 
       <Footer />
     </Flex>
