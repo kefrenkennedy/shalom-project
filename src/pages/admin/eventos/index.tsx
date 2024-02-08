@@ -27,6 +27,8 @@ import { IEvent } from '@/dtos/IEvent';
 import { eventsServices } from '@/services/eventsServices';
 import { withSSRAuth } from '@/utils/withSSRAuth';
 
+import { useRouter } from 'next/router';
+
 export default function Events() {
   const isWideVersion = useBreakpointValue({
     base: false,
@@ -34,6 +36,7 @@ export default function Events() {
   });
 
   const [events, setEvents] = useState<IEvent[]>([]);
+  const router = useRouter();
 
   function getEvents() {
     eventsServices()
@@ -45,6 +48,10 @@ export default function Events() {
 
   function comingSoonAlert() {
     toast.warn('Em breve');
+  }
+
+  function moveToCreateEvent() {
+    router.push("/admin/eventos/criar");
   }
 
   useEffect(() => {
@@ -76,7 +83,7 @@ export default function Events() {
               color="white"
               colorScheme="yellow"
               leftIcon={<Icon as={RiAddLine} fontSize="20" />}
-              onClick={comingSoonAlert}
+              onClick={moveToCreateEvent}
             >
               Novo evento
             </Button>
