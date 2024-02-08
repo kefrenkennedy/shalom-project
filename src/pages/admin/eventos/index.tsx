@@ -54,6 +54,11 @@ export default function Events() {
     router.push("/admin/eventos/criar");
   }
 
+  function moveToEditEvent(event: React.MouseEvent<HTMLButtonElement>) {
+    const id = event.currentTarget.dataset.eventid;
+    router.push(`/admin/eventos/editar?event_id=${id}`);
+  }
+
   useEffect(() => {
     getEvents();
   }, []);
@@ -122,7 +127,10 @@ export default function Events() {
                           colorScheme="green"
                           bg="green.200"
                           leftIcon={<Icon as={RiPencilLine} fontSize="16" />}
-                          onClick={comingSoonAlert}
+
+                          // Event id to the button attributes
+                          data-eventid={data.id}
+                          onClick={moveToEditEvent}
                         >
                           Editar
                         </Button>
