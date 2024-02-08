@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { RiAddLine, RiEyeLine } from 'react-icons/ri';
+import { RiAddLine, RiPencilLine } from 'react-icons/ri';
 import { toast } from 'react-toastify';
 
 import {
@@ -121,10 +121,10 @@ export default function Events() {
                           fontSize="sm"
                           colorScheme="green"
                           bg="green.200"
-                          leftIcon={<Icon as={RiEyeLine} fontSize="16" />}
+                          leftIcon={<Icon as={RiPencilLine} fontSize="16" />}
                           onClick={comingSoonAlert}
                         >
-                          Detalhes
+                          Editar
                         </Button>
                       </Stack>
                     </Box>
