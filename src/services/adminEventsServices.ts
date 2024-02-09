@@ -14,4 +14,8 @@ export const adminEventsServices = () => ({
     const response = await api.post(PATH, data);
     return response.data;
   },
+  update: async(id: string, data: ICreateRequest) => {
+    const response = await api.put(`PATH/${id}`, data);
+    return response.data;
+  }
 });
