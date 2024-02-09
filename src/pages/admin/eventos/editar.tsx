@@ -32,6 +32,9 @@ import { AddressForm } from '@/components/forms/composites/AddressForm';
 import { EventForm } from '@/components/forms/composites/EventForm';
 import { Sidebar } from '@/components/Sidebar';
 import { UserHeader } from '@/components/UserHeader';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { eventsServices } from '@/services/eventsServices';
 
 type EventFormData = {
   title: string;
@@ -78,6 +81,21 @@ const EventFormSchema = z
   });
 
 export default function CreateEvent() {
+
+  // Get the event data
+  const router = useRouter();
+  const {event_id} = router.query;
+
+  const [eventData, setEventData] = useState();
+
+  useEffect(() => {
+    if (event_id) {
+      eventsServices().show(String(event_id)).then(response => setEventData(response.event));
+    }
+  }, [event_id]);
+
+  //
+
   const { register, handleSubmit, formState } = useForm<EventFormData>({
     resolver: zodResolver(EventFormSchema),
   });
@@ -109,7 +127,7 @@ export default function CreateEvent() {
 
             <TabPanels>
               <TabPanel>
-                <EventForm />
+                <EventForm eventData={eventData}/>
               </TabPanel>
               <TabPanel>
                 <AddressForm />
