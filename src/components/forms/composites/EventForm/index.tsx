@@ -79,16 +79,17 @@ export function EventForm({eventData}: EventFormProps) {
     await new Promise((resolve) => setTimeout(resolve, 2000));
     console.log(data);
 
-    adminEventsServices()
-      .create(data)
-      .then(() => {
-        toast.success('Evento criado com sucesso');
-        router.push('/admin/eventos/editar');
-      })
-      .catch(() => {
-        toast.warn('Não foi possível criar o evento');
-      });
-  };
+      adminEventsServices()
+        .create(data)
+        .then(() => {
+          toast.success('Evento criado com sucesso!');
+          toast.info('Por favor clique em ✏️ editar para adicionar as informações restantes.');
+          router.push('/admin/eventos');
+        })
+        .catch(() => {
+          toast.warn('Não foi possível criar o evento');
+        });
+    }
 
   const minValidDate = dayjs(new Date()).format('YYYY-MM-DD');
 
