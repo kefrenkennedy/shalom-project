@@ -55,6 +55,7 @@ export default function Events() {
   }
 
   function moveToEditEvent(event: React.MouseEvent<HTMLButtonElement>) {
+    // Gets the event id from the button
     const id = event.currentTarget.dataset.eventid;
     router.push(`/admin/eventos/editar?event_id=${id}`);
   }
