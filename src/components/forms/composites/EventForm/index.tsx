@@ -17,13 +17,19 @@ import { z } from 'zod';
 
 import { Input } from '@/components/forms/atomics/Input';
 import { adminEventsServices } from '@/services/adminEventsServices';
+import { useEffect } from 'react';
 
 type EventFormData = {
   title: string;
   description: string;
   start_date: Date;
   end_date: Date;
+  event?: any;
 };
+
+interface EventFormProps {
+  eventData?: EventFormData;
+}
 
 const EventFormSchema = z
   .object({
@@ -48,12 +54,26 @@ const EventFormSchema = z
     path: ['start_date'],
   });
 
-export function EventForm() {
+
+
+export function EventForm({eventData}: EventFormProps) {
+  
   const router = useRouter();
-  const { register, handleSubmit, formState } = useForm<EventFormData>({
+  const { register, handleSubmit, formState, reset } = useForm<EventFormData>({
     resolver: zodResolver(EventFormSchema),
   });
   const { errors } = formState;
+
+  useEffect(() => {
+    if (eventData) {
+      reset({
+        title: eventData.title,
+        description: eventData.description,
+        end_date: dayjs(eventData.end_date).format('YYYY-MM-DD'),
+        start_date: dayjs(eventData.start_date).format('YYYY-MM-DD')
+      })
+    }
+  }, [eventData, reset])
 
   const handleCreateEvent: SubmitHandler<EventFormData> = async (data) => {
     await new Promise((resolve) => setTimeout(resolve, 2000));
