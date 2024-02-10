@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
@@ -11,19 +12,27 @@ import {
 } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { z } from 'zod';
+dayjs.extend(utc);
 
 import { Input } from '@/components/forms/atomics/Input';
+import { IEvent } from '@/dtos/IEvent';
 import { adminEventsServices } from '@/services/adminEventsServices';
 
 type EventFormData = {
   title: string;
   description: string;
-  start_date: Date;
-  end_date: Date;
+  start_date: Date | string;
+  end_date: Date | string;
+  event?: any;
 };
+
+interface Props {
+  event?: IEvent;
+}
 
 const EventFormSchema = z
   .object({
@@ -34,43 +43,68 @@ const EventFormSchema = z
         required_error: 'Data obrigatória',
         invalid_type_error: 'Data inválida',
       })
-      .min(new Date(), 'Data inválida'),
+      .refine(
+        (value) => new Date(value) instanceof Date,
+        'Data de nascimento inválida',
+      ),
 
     end_date: z.coerce
       .date({
         required_error: 'Data obrigatória',
         invalid_type_error: 'Data inválida',
       })
-      .min(new Date(), 'Data inválida'),
+      .refine(
+        (value) => new Date(value) instanceof Date,
+        'Data de nascimento inválida',
+      ),
   })
   .refine((obj) => obj.start_date <= obj.end_date, {
     message: 'Data de início deve ser menor ou igual à data de encerramento',
     path: ['start_date'],
   });
 
-export function EventForm() {
+export function EventForm({ event }: Props) {
+  const isUpdate = Boolean(event);
   const router = useRouter();
-  const { register, handleSubmit, formState } = useForm<EventFormData>({
+  const defaultValues = event
+    ? {
+        title: event.title,
+        description: event.description,
+        start_date: dayjs(event.start_date).utc().format('YYYY-MM-DD'),
+        end_date: dayjs(event.end_date).utc().format('YYYY-MM-DD'),
+      }
+    : undefined;
+  const { register, handleSubmit, formState, reset } = useForm<EventFormData>({
     resolver: zodResolver(EventFormSchema),
+    defaultValues,
   });
   const { errors } = formState;
 
-  const handleCreateEvent: SubmitHandler<EventFormData> = async (data) => {
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    console.log(data);
+  const handleSaveEvent: SubmitHandler<EventFormData> = async (data) => {
+    try {
+      await (isUpdate
+        ? adminEventsServices().update(event!.id, data)
+        : adminEventsServices().create(data));
 
-    adminEventsServices()
-      .create(data)
-      .then(() => {
-        toast.success('Evento criado com sucesso');
-        router.push('/admin/eventos/editar');
-      })
-      .catch(() => {
-        toast.warn('Não foi possível criar o evento');
-      });
+      toast.success(
+        `Evento ${isUpdate ? 'atualizado' : 'criado'} com sucesso!`,
+      );
+      if (!isUpdate) {
+        toast.info(
+          'Por favor clique em ✏️ editar para adicionar as informações restantes.',
+        );
+      }
+      router.push('/admin/eventos');
+    } catch (err) {
+      toast.warn(
+        `Não foi possível ${isUpdate ? 'atualizar' : 'criar'} o evento`,
+      );
+    }
   };
 
-  const minValidDate = dayjs(new Date()).format('YYYY-MM-DD');
+  const minValidDate = isUpdate
+    ? undefined
+    : dayjs(new Date()).format('YYYY-MM-DD');
 
   return (
     <Box
@@ -78,7 +112,7 @@ export function EventForm() {
       flex="1"
       borderRadius={8}
       p={['6', '8']}
-      onSubmit={handleSubmit(handleCreateEvent)}
+      onSubmit={handleSubmit(handleSaveEvent)}
     >
       <VStack spacing="8">
         <SimpleGrid minChildWidth="240px" spacing={['6', '8']} w="100%">
