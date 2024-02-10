@@ -19,24 +19,23 @@ import {
   useBreakpointValue,
 } from '@chakra-ui/react';
 import dayjs from 'dayjs';
-import Link from 'next/link';
+import utc from 'dayjs/plugin/utc';
+import { useRouter } from 'next/router';
+dayjs.extend(utc);
 
 import { Sidebar } from '@/components/Sidebar';
 import { UserHeader } from '@/components/UserHeader';
 import { IEvent } from '@/dtos/IEvent';
 import { eventsServices } from '@/services/eventsServices';
-import { withSSRAuth } from '@/utils/withSSRAuth';
-
-import { useRouter } from 'next/router';
 
 export default function Events() {
+  const router = useRouter();
   const isWideVersion = useBreakpointValue({
     base: false,
     lg: true,
   });
 
   const [events, setEvents] = useState<IEvent[]>([]);
-  const router = useRouter();
 
   function getEvents() {
     eventsServices()
@@ -46,18 +45,12 @@ export default function Events() {
       });
   }
 
-  function comingSoonAlert() {
-    toast.warn('Em breve');
-  }
-
   function moveToCreateEvent() {
-    router.push("/admin/eventos/criar");
+    router.push('/admin/eventos/criar');
   }
 
-  function moveToEditEvent(event: React.MouseEvent<HTMLButtonElement>) {
-    // Gets the event id from the button
-    const id = event.currentTarget.dataset.eventid;
-    router.push(`/admin/eventos/editar?event_id=${id}`);
+  function moveToEditEvent(eventId: string) {
+    router.push(`/admin/eventos/editar?event_id=${eventId}`);
   }
 
   useEffect(() => {
@@ -113,10 +106,10 @@ export default function Events() {
                     </Box>
                   </Td>
                   {isWideVersion && (
-                    <Td>{dayjs(data.start_date).format('DD/MM/YYYY')}</Td>
+                    <Td>{dayjs(data.start_date).utc().format('DD/MM/YYYY')}</Td>
                   )}
                   {isWideVersion && (
-                    <Td>{dayjs(data.end_date).format('DD/MM/YYYY')}</Td>
+                    <Td>{dayjs(data.end_date).utc().format('DD/MM/YYYY')}</Td>
                   )}
 
                   <Td>
@@ -128,10 +121,7 @@ export default function Events() {
                           colorScheme="green"
                           bg="green.200"
                           leftIcon={<Icon as={RiPencilLine} fontSize="16" />}
-
-                          // Event id to the button attributes
-                          data-eventid={data.id}
-                          onClick={moveToEditEvent}
+                          onClick={() => moveToEditEvent(data.id)}
                         >
                           Editar
                         </Button>
@@ -147,9 +137,3 @@ export default function Events() {
     </Box>
   );
 }
-
-// export const getServerSideProps = withSSRAuth(async (ctx) => {
-//   return {
-//     props: {},
-//   };
-// });
