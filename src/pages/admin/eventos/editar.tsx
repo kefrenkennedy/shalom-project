@@ -1,23 +1,18 @@
 import { useEffect, useState } from 'react';
-import { RiAddLine } from 'react-icons/ri';
 
 import {
   Box,
-  Button,
   Flex,
   Heading,
-  Icon,
-  SimpleGrid,
   Tab,
   TabList,
   TabPanel,
   TabPanels,
   Tabs,
-  VStack,
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 
-import { TicketCard } from '@/components/cards/TicketCard';
+import { TicketsContainer } from '@/components/containers/TicketsContainer';
 import { AddressForm } from '@/components/forms/composites/AddressForm';
 import { EventForm } from '@/components/forms/composites/EventForm';
 import { Sidebar } from '@/components/Sidebar';
@@ -53,7 +48,7 @@ export default function EditEvent() {
           <Tabs isFitted variant="soft-rounded" colorScheme="green" mt="10">
             <TabList>
               <Tab>Evento</Tab>
-              <Tab>Endereço</Tab>
+              {/* <Tab>Endereço</Tab> */}
               <Tab>Lotes</Tab>
             </TabList>
 
@@ -61,25 +56,11 @@ export default function EditEvent() {
               <TabPanel>
                 {eventData && <EventForm event={eventData} />}
               </TabPanel>
-              <TabPanel>
+              {/* <TabPanel>
                 <AddressForm />
-              </TabPanel>
+              </TabPanel> */}
               <TabPanel>
-                <VStack>
-                  <Box w="100%">
-                    <SimpleGrid
-                      spacing={4}
-                      templateColumns="repeat(auto-fill, minmax(200px, 1fr))"
-                      mt="2rem"
-                    >
-                      <TicketCard />
-
-                      <Button width="100%" height="100%">
-                        <Icon as={RiAddLine} fontSize="5rem" color="gray.600" />
-                      </Button>
-                    </SimpleGrid>
-                  </Box>
-                </VStack>
+                <TicketsContainer />
               </TabPanel>
             </TabPanels>
           </Tabs>
