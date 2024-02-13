@@ -28,6 +28,7 @@ import {
 } from '@chakra-ui/react';
 
 import { Select } from '@/components/forms/atomics/Select';
+import { ModalDeleteRegistration } from '@/components/modals/ModalDeleteRegistration';
 import { ModalShowPayment } from '@/components/modals/ModalShowPayment';
 import { ModalShowRegistration } from '@/components/modals/ModalShowRegistration';
 import { Sidebar } from '@/components/Sidebar';
@@ -278,6 +279,11 @@ export default function Registrations() {
                               />
                             </Button>
                           </Tooltip>
+
+                          <ModalDeleteRegistration
+                            registration={data.registration}
+                            onSuccess={getRegistrations}
+                          />
                         </HStack>
                       </Box>
                     </Td>

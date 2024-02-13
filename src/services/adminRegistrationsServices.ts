@@ -15,4 +15,8 @@ export const adminRegistrationsService = () => ({
     const response = await api.get(PATH, { params: { eventId, type } });
     return response.data;
   },
+  delete: async (id: string) => {
+    const response = await api.delete(PATH + `/${id}`);
+    return response.data;
+  },
 });

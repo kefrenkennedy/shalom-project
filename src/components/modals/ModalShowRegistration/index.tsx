@@ -120,7 +120,12 @@ export function ModalShowRegistration({ registration }: IProps) {
           <Icon as={RiEyeLine} fontSize="20" />
         </Button>
       </Tooltip>
-      <Modal finalFocusRef={finalRef} isOpen={isOpen} onClose={onClose}>
+      <Modal
+        finalFocusRef={finalRef}
+        isOpen={isOpen}
+        onClose={onClose}
+        size="3xl"
+      >
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Dados de inscrição</ModalHeader>
