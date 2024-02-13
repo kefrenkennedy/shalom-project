@@ -14,14 +14,14 @@ import {
   Tr,
   useBreakpointValue,
 } from '@chakra-ui/react';
-import dayjs from 'dayjs';
 
 import { ModalSendPayment } from '@/components/modals/ModalSendPayment';
 import { ModalShowRegistration } from '@/components/modals/ModalShowRegistration';
 import { Sidebar } from '@/components/Sidebar';
 import { UserHeader } from '@/components/UserHeader';
-import { IRegistration } from '@/dtos/IRegistration';
 import { participantRegistrationsService } from '@/services/participantRegistrationsServices';
+import { Registration } from '@/types/Registration';
+import { dayjs } from '@/utils/dayjs';
 import { translatePaymentStatus } from '@/utils/translatePaymentStatus';
 import { withSSRAuth } from '@/utils/withSSRAuth';
 
@@ -31,7 +31,7 @@ export default function Registrations() {
     lg: true,
   });
 
-  const [registrations, setRegistrations] = useState<IRegistration[]>([]);
+  const [registrations, setRegistrations] = useState<Registration[]>([]);
 
   function getRegistrations() {
     participantRegistrationsService()
@@ -54,20 +54,20 @@ export default function Registrations() {
         registration.event.addresses.length > 0
       ) {
         let address = registration.event.addresses[0];
-        addressFormatted = `${address.street}, nº ${address.street_number}, ${address.city} - ${address.state}`;
+        addressFormatted = `${address.street}, nº ${address.streetNumber}, ${address.city} - ${address.state}`;
       }
 
       return {
         key: registration.id,
         event_title: registration?.event?.title,
-        event_start_date: dayjs(registration?.event?.start_date).format(
-          'DD/MM/YYYY',
-        ),
-        event_end_date: dayjs(registration?.event?.end_date).format(
-          'DD/MM/YYYY',
-        ),
+        event_start_date: dayjs(registration?.event?.startDate)
+          .utc()
+          .format('DD/MM/YYYY'),
+        event_end_date: dayjs(registration?.event?.endDate)
+          .utc()
+          .format('DD/MM/YYYY'),
         address: addressFormatted,
-        registration_status: registration.is_approved
+        registration_status: registration.isApproved
           ? 'Aprovada'
           : 'Aguardando',
         payment_status: translatePaymentStatus(registration?.payment?.status),

@@ -20,13 +20,13 @@ import {
 } from '@chakra-ui/react';
 import Image from 'next/image';
 
-import { IPayment } from '@/dtos/IPayment';
 import { adminPaymentsServices } from '@/services/adminPaymentsServices';
+import { Payment } from '@/types/Payment';
 import { generateImageUrl } from '@/utils/generateImageUrl';
 import { translatePaymentStatus } from '@/utils/translatePaymentStatus';
 
 interface IProps {
-  payment?: IPayment;
+  payment?: Payment;
   onSuccess?: () => void;
 }
 
@@ -76,7 +76,7 @@ export function ModalShowPayment({ payment, onSuccess }: IProps) {
               <Box>
                 <Stack direction="row">
                   <Text fontWeight="bold">Método de pagamento:</Text>
-                  <Text>{payment?.payment_method || '-'}</Text>
+                  <Text>{payment?.paymentMethod || '-'}</Text>
                 </Stack>
 
                 <Stack direction="row">

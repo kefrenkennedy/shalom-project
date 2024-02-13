@@ -2,7 +2,7 @@ import decode from 'jwt-decode';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
-import { ITokenPayload } from '@/dtos/ITokenPayload';
+import { TokenPayload } from '@/types/Auth';
 
 import { TOKEN_KEY } from './hooks/auth';
 
@@ -46,7 +46,7 @@ export function middleware(request: NextRequest) {
         new URL('/participante/sign-in', request.url),
       );
   } else if (tokenCookie) {
-    const tokenDecoded = decode(tokenCookie.value) as ITokenPayload;
+    const tokenDecoded = decode(tokenCookie.value) as TokenPayload;
 
     const { role, exp } = tokenDecoded;
     const pathForRole = convertRoleToPath(role);

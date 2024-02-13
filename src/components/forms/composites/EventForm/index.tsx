@@ -11,34 +11,33 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { z } from 'zod';
-dayjs.extend(utc);
 
 import { Input } from '@/components/forms/atomics/Input';
-import { IEvent } from '@/dtos/IEvent';
 import { adminEventsServices } from '@/services/adminEventsServices';
+import { Event } from '@/types/Event';
+import { dayjs } from '@/utils/dayjs';
 
 type EventFormData = {
   title: string;
   description: string;
-  start_date: Date | string;
-  end_date: Date | string;
+  startDate: Date | string;
+  endDate: Date | string;
   event?: any;
 };
 
 interface Props {
-  event?: IEvent;
+  event?: Event;
 }
 
 const EventFormSchema = z
   .object({
     title: z.string().nonempty('Título obrigatório'),
     description: z.string().nonempty('Descrição obrigatória'),
-    start_date: z.coerce
+    startDate: z.coerce
       .date({
         required_error: 'Data obrigatória',
         invalid_type_error: 'Data inválida',
@@ -48,7 +47,7 @@ const EventFormSchema = z
         'Data de nascimento inválida',
       ),
 
-    end_date: z.coerce
+    endDate: z.coerce
       .date({
         required_error: 'Data obrigatória',
         invalid_type_error: 'Data inválida',
@@ -58,9 +57,9 @@ const EventFormSchema = z
         'Data de nascimento inválida',
       ),
   })
-  .refine((obj) => obj.start_date <= obj.end_date, {
+  .refine((obj) => obj.startDate <= obj.endDate, {
     message: 'Data de início deve ser menor ou igual à data de encerramento',
-    path: ['start_date'],
+    path: ['startDate'],
   });
 
 export function EventForm({ event }: Props) {
@@ -70,8 +69,8 @@ export function EventForm({ event }: Props) {
     ? {
         title: event.title,
         description: event.description,
-        start_date: dayjs(event.start_date).utc().format('YYYY-MM-DD'),
-        end_date: dayjs(event.end_date).utc().format('YYYY-MM-DD'),
+        startDate: dayjs(event.startDate).utc().format('YYYY-MM-DD'),
+        endDate: dayjs(event.endDate).utc().format('YYYY-MM-DD'),
       }
     : undefined;
   const { register, handleSubmit, formState, reset } = useForm<EventFormData>({
@@ -129,15 +128,15 @@ export function EventForm({ event }: Props) {
             type="date"
             label="Data de início"
             min={minValidDate}
-            {...register('start_date')}
-            error={errors.start_date}
+            {...register('startDate')}
+            error={errors.startDate}
           />
           <Input
             type="date"
             min={minValidDate}
             label="Data de encerramento"
-            {...register('end_date')}
-            error={errors.end_date}
+            {...register('endDate')}
+            error={errors.endDate}
           />
         </SimpleGrid>
       </VStack>

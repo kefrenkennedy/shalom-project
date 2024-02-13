@@ -1,9 +1,9 @@
-export interface IAddress {
+export interface Address {
   id: string;
   street: string;
-  street_number: string;
+  streetNumber: string;
   complement: string;
-  zip_code: string;
+  zipCode: string;
   district: string;
   city: string;
   state: string;

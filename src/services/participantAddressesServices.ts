@@ -4,9 +4,9 @@ const PATH = '/addresses/participant';
 
 interface ICreateRequest {
   street: string;
-  street_number: string;
+  streetNumber: string;
   complement?: string;
-  zip_code: string;
+  zipCode: string;
   district: string;
   city: string;
   state: string;

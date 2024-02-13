@@ -9,9 +9,9 @@ import { NewRegistrationForm } from '@/components/forms/composites/NewRegistrati
 import { Header } from '@/components/Header';
 import { useAuth } from '@/hooks/auth';
 
-import acampsBeachFooterImage from '../../public/assets/acamps-beach-footer.png';
+import acampsBeachFooterImage from '../../public/assets/acamps-beach-footer.webp';
 import acampsBeachImage from '../../public/assets/acamps-beach-header.png';
-import lotesImage from '../../public/assets/lotes.png';
+import lotesImage from '../../public/assets/lotes.webp';
 
 export default function Home() {
   const { user } = useAuth();
@@ -40,7 +40,7 @@ export default function Home() {
 
       <Image src={lotesImage.src} alt="Acamps Beach Lotes" w="100%" />
 
-      {/* <NewRegistrationForm /> */}
+      <NewRegistrationForm />
 
       <Footer />
     </Flex>

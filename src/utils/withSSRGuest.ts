@@ -6,7 +6,7 @@ import {
 } from 'next';
 import { parseCookies } from 'nookies';
 
-import { ITokenPayload } from '@/dtos/ITokenPayload';
+import { TokenPayload } from '@/types/Auth';
 
 /**
  * Função que garante que uma página pública (login, por exemplo) não pode
@@ -27,7 +27,7 @@ export function withSSRGuest<P>(
 
     const token = cookies['shalomeventos.token'];
     if (token) {
-      const decoded = jwt.decode(token) as ITokenPayload;
+      const decoded = jwt.decode(token) as TokenPayload;
 
       let rootRoute = 'participante';
       if (decoded?.role === 'ADMINISTRATOR') rootRoute = 'admin';

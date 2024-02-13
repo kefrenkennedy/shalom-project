@@ -24,7 +24,6 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AxiosError } from 'axios';
 import { cpf } from 'cpf-cnpj-validator';
-import dayjs from 'dayjs';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { z } from 'zod';
@@ -36,6 +35,7 @@ import { Radio } from '@/components/forms/atomics/Radio';
 import { useAuth } from '@/hooks/auth';
 import { participantRegistrationsService } from '@/services/participantRegistrationsServices';
 import { registerUserParticipantsServices } from '@/services/registerUserParticipantsServices';
+import { dayjs } from '@/utils/dayjs';
 
 type SignInFormData = {
   name: string;

@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { RiAddLine, RiPencilLine } from 'react-icons/ri';
-import { toast } from 'react-toastify';
 
 import {
   Box,
@@ -18,15 +17,13 @@ import {
   Tr,
   useBreakpointValue,
 } from '@chakra-ui/react';
-import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
 import { useRouter } from 'next/router';
-dayjs.extend(utc);
 
 import { Sidebar } from '@/components/Sidebar';
 import { UserHeader } from '@/components/UserHeader';
-import { IEvent } from '@/dtos/IEvent';
 import { eventsServices } from '@/services/eventsServices';
+import { Event } from '@/types/Event';
+import { dayjs } from '@/utils/dayjs';
 
 export default function Events() {
   const router = useRouter();
@@ -35,7 +32,7 @@ export default function Events() {
     lg: true,
   });
 
-  const [events, setEvents] = useState<IEvent[]>([]);
+  const [events, setEvents] = useState<Event[]>([]);
 
   function getEvents() {
     eventsServices()
@@ -50,7 +47,7 @@ export default function Events() {
   }
 
   function moveToEditEvent(eventId: string) {
-    router.push(`/admin/eventos/editar?event_id=${eventId}`);
+    router.push(`/admin/eventos/editar?eventId=${eventId}`);
   }
 
   useEffect(() => {
@@ -106,10 +103,10 @@ export default function Events() {
                     </Box>
                   </Td>
                   {isWideVersion && (
-                    <Td>{dayjs(data.start_date).utc().format('DD/MM/YYYY')}</Td>
+                    <Td>{dayjs(data.startDate).utc().format('DD/MM/YYYY')}</Td>
                   )}
                   {isWideVersion && (
-                    <Td>{dayjs(data.end_date).utc().format('DD/MM/YYYY')}</Td>
+                    <Td>{dayjs(data.endDate).utc().format('DD/MM/YYYY')}</Td>
                   )}
 
                   <Td>

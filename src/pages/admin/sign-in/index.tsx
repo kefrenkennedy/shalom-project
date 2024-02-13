@@ -8,7 +8,6 @@ import { useRouter } from 'next/router';
 import * as yup from 'yup';
 
 import { useAuth } from '@/hooks/auth';
-import { withSSRGuest } from '@/utils/withSSRGuest';
 
 import { Input } from '../../../components/forms/atomics/Input';
 
@@ -102,9 +101,3 @@ export default function SignIn() {
     </Flex>
   );
 }
-
-// export const getServerSideProps = withSSRGuest(async (ctx) => {
-//   return {
-//     props: {},
-//   };
-// });

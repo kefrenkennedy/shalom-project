@@ -1,23 +1,23 @@
-import { ICreateRegistrationDTO } from '@/dtos/ICreateRegistrationDTO';
-import { IRegistration } from '@/dtos/IRegistration';
+import { CreateRegistration } from '@/types/Registration';
+import { Registration } from '@/types/Registration';
 
 import { api } from './apiClient';
 
 const PATH = '/registrations';
 
-interface IRequest extends ICreateRegistrationDTO {}
+interface Request extends CreateRegistration {}
 
-interface IListResponse {
-  registrations: IRegistration[];
+interface ListResponse {
+  registrations: Registration[];
 }
 
 export const participantRegistrationsService = () => ({
-  create: async (event_id: string, data: IRequest) => {
-    const response = await api.post(PATH + `/event/${event_id}`, data);
+  create: async (eventId: string, data: Request) => {
+    const response = await api.post(PATH + `/event/${eventId}`, data);
     return response.data;
   },
   list: async () => {
-    const response = await api.get<IListResponse>(PATH + `/my`);
+    const response = await api.get<ListResponse>(PATH + `/my`);
     return response.data;
   },
 });

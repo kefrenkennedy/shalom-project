@@ -13,7 +13,10 @@ import {
   Heading,
   HStack,
   Icon,
+  Tab,
   Table,
+  TabList,
+  Tabs,
   Tbody,
   Td,
   Text,
@@ -23,21 +26,20 @@ import {
   Tr,
   useBreakpointValue,
 } from '@chakra-ui/react';
-import dayjs from 'dayjs';
 
 import { Select } from '@/components/forms/atomics/Select';
 import { ModalShowPayment } from '@/components/modals/ModalShowPayment';
 import { ModalShowRegistration } from '@/components/modals/ModalShowRegistration';
 import { Sidebar } from '@/components/Sidebar';
 import { UserHeader } from '@/components/UserHeader';
-import { IEvent } from '@/dtos/IEvent';
-import { IParticipant } from '@/dtos/IParticipant';
-import { IRegistration } from '@/dtos/IRegistration';
 import { adminExportRegistrationsServices } from '@/services/adminExportRegistrationsServices';
 import { adminRegistrationsService } from '@/services/adminRegistrationsServices';
 import { eventsServices } from '@/services/eventsServices';
+import { Event } from '@/types/Event';
+import { Participant } from '@/types/Participant';
+import { Registration } from '@/types/Registration';
+import { dayjs } from '@/utils/dayjs';
 import { translatePaymentStatus } from '@/utils/translatePaymentStatus';
-import { withSSRAuth } from '@/utils/withSSRAuth';
 
 export default function Registrations() {
   const isWideVersion = useBreakpointValue({
@@ -45,11 +47,12 @@ export default function Registrations() {
     lg: true,
   });
 
-  const [events, setEvents] = useState<IEvent[]>([]);
+  const [events, setEvents] = useState<Event[]>([]);
 
   const [selectedEvent, setSelectedEvent] = useState<string>('');
+  const [participantType, setParticipantType] = useState<string>();
 
-  const [registrations, setRegistrations] = useState<IRegistration[]>([]);
+  const [registrations, setRegistrations] = useState<Registration[]>([]);
 
   function getEvents() {
     eventsServices()
@@ -62,11 +65,14 @@ export default function Registrations() {
   const getRegistrations = useCallback(() => {
     if (!selectedEvent) return setRegistrations([]);
     adminRegistrationsService()
-      .list(selectedEvent)
+      .list({
+        eventId: selectedEvent,
+        type: participantType,
+      })
       .then((data) => {
         setRegistrations(data.registrations);
       });
-  }, [selectedEvent]);
+  }, [selectedEvent, participantType]);
 
   function handleConfirmRegistration(id: string) {
     adminRegistrationsService()
@@ -81,7 +87,10 @@ export default function Registrations() {
   }
 
   function handleExportRegistration() {
-    adminExportRegistrationsServices().export(selectedEvent);
+    adminExportRegistrationsServices().export({
+      eventId: selectedEvent,
+      type: participantType,
+    });
   }
 
   useEffect(() => {
@@ -103,21 +112,21 @@ export default function Registrations() {
 
   const registrationsFormatted = useMemo(() => {
     return registrations.map((registration) => {
-      const participant = registration?.participant as IParticipant;
+      const participant = registration?.participant as Participant;
       return {
         key: registration.id,
-        full_name: participant?.full_name,
+        full_name: participant?.fullName,
         type: registration?.type ?? '-',
         age: participant?.birthdate
           ? dayjs(new Date()).diff(participant?.birthdate, 'years')
           : '-',
         payment_status: translatePaymentStatus(registration?.payment?.status),
-        registration_status: registration.is_approved
+        registration_status: registration.isApproved
           ? 'Aprovada'
           : 'Aguardando',
         registration: registration,
-        is_approved: registration.is_approved,
-        created_at: dayjs(registration.created_at).format('DD/MM/YYYY HH:mm'),
+        is_approved: registration.isApproved,
+        created_at: dayjs(registration.createdAt).format('DD/MM/YYYY HH:mm'),
       };
     });
   }, [registrations]);
@@ -146,6 +155,33 @@ export default function Registrations() {
                   onChange={({ target: { value } }) => setSelectedEvent(value)}
                   options={eventsFormatted}
                 />
+                {!!selectedEvent && (
+                  <Tabs variant="unstyled">
+                    <TabList>
+                      <Tab
+                        _selected={{ color: 'white', bg: 'blue.500' }}
+                        borderRadius={5}
+                        onClick={() => setParticipantType(undefined)}
+                      >
+                        Todos
+                      </Tab>
+                      <Tab
+                        _selected={{ color: 'white', bg: 'green.400' }}
+                        borderRadius={5}
+                        onClick={() => setParticipantType('PARTICIPANTE')}
+                      >
+                        Participantes
+                      </Tab>
+                      <Tab
+                        _selected={{ color: 'white', bg: 'yellow.400' }}
+                        borderRadius={5}
+                        onClick={() => setParticipantType('SERVO')}
+                      >
+                        Servos
+                      </Tab>
+                    </TabList>
+                  </Tabs>
+                )}
               </Flex>
             </Heading>
 
@@ -157,7 +193,7 @@ export default function Registrations() {
                 onClick={handleExportRegistration}
                 leftIcon={<Icon as={RiTable2} fontSize="20" />}
               >
-                Baixar CSV
+                Baixar Planilha
               </Button>
             )}
           </Flex>
@@ -255,9 +291,3 @@ export default function Registrations() {
     </Box>
   );
 }
-
-// export const getServerSideProps = withSSRAuth(async (ctx) => {
-//   return {
-//     props: {},
-//   };
-// });

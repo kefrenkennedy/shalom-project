@@ -6,8 +6,8 @@ import {
 } from 'next';
 import { destroyCookie, parseCookies } from 'nookies';
 
-import { ITokenPayload } from '@/dtos/ITokenPayload';
 import { AuthTokenError } from '@/services/errors/AuthTokenError';
+import { TokenPayload } from '@/types/Auth';
 
 /**
  * Função que garante que uma página privada (como a Dashboard) não pode
@@ -36,7 +36,7 @@ export function withSSRAuth<P>(
       };
     }
 
-    const decoded = jwt.decode(token) as ITokenPayload;
+    const decoded = jwt.decode(token) as TokenPayload;
 
     let rootRoute = 'participante';
     if (decoded?.role === 'ADMINISTRATOR') rootRoute = 'admin';

@@ -21,17 +21,17 @@ import { eventsServices } from '@/services/eventsServices';
 
 export default function EditEvent() {
   const router = useRouter();
-  const { event_id } = router.query;
+  const { eventId } = router.query;
 
   const [eventData, setEventData] = useState();
 
   useEffect(() => {
-    if (event_id) {
+    if (eventId) {
       eventsServices()
-        .show(String(event_id))
+        .show(String(eventId))
         .then((response) => setEventData(response.event));
     }
-  }, [event_id]);
+  }, [eventId]);
 
   return (
     <Box>

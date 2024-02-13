@@ -1,13 +1,17 @@
-import dayjs from 'dayjs';
+import { RegistrationFilter } from '@/types/Registration';
+import { dayjs } from '@/utils/dayjs';
 
 import { api } from './apiClient';
 
-const PATH = '/registrations/export/event';
+interface ExportRequest extends RegistrationFilter {}
+
+const PATH = '/registrations/export';
 
 export const adminExportRegistrationsServices = () => ({
-  export: async (event_id: string) => {
+  export: async ({ eventId, type }: ExportRequest) => {
     try {
-      const response = await api.get(PATH + `/${event_id}`, {
+      const response = await api.get(PATH, {
+        params: { eventId, type },
         responseType: 'arraybuffer', // Specify the response type as arraybuffer (binary data)
       });
 
@@ -26,7 +30,7 @@ export const adminExportRegistrationsServices = () => ({
       // Set the download attribute to the specified file name
       link.setAttribute(
         'download',
-        `participantes-acamps-2024-1__${currentDatetime}.xlsx`,
+        `participantes-acamps-2024-2__${currentDatetime}.xlsx`,
       );
 
       // Append the link to the document body

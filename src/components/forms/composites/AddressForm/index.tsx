@@ -16,9 +16,9 @@ import { Input } from '@/components/forms/atomics/Input';
 
 type AddressFormData = {
   street: string;
-  street_number: string;
+  streetNumber: string;
   complement: string;
-  zip_code: string;
+  zipCode: string;
   district: string;
   city: string;
   state: string;
@@ -26,9 +26,9 @@ type AddressFormData = {
 
 const FormSchema = z.object({
   street: z.string().nonempty('Rua obrigatória'),
-  street_number: z.string().nonempty('Número da rua obrigatória'),
+  streetNumber: z.string().nonempty('Número da rua obrigatória'),
   complement: z.string(),
-  zip_code: z
+  zipCode: z
     .string()
     .regex(/^\d{5}-\d{3}$/)
     .nonempty('CEP obrigatório'),
@@ -65,8 +65,8 @@ export function AddressForm() {
           />
           <Input
             label="Número da rua"
-            {...register('street_number')}
-            error={errors.street_number}
+            {...register('streetNumber')}
+            error={errors.streetNumber}
           />
         </SimpleGrid>
 

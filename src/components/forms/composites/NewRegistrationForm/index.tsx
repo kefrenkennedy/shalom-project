@@ -25,7 +25,6 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AxiosError } from 'axios';
 import { cpf } from 'cpf-cnpj-validator';
-import dayjs from 'dayjs';
 import Link from 'next/link';
 import { z } from 'zod';
 
@@ -34,6 +33,7 @@ import { Input } from '@/components/forms/atomics/Input';
 import { InputMasked } from '@/components/forms/atomics/InputMasked';
 import { Radio } from '@/components/forms/atomics/Radio';
 import { registerUserParticipantsServices } from '@/services/registerUserParticipantsServices';
+import { dayjs } from '@/utils/dayjs';
 import { jsonToFormData } from '@/utils/jsonToFormData';
 import { shalomQRCode } from '@/utils/shalomQRcode';
 
@@ -322,7 +322,13 @@ export function NewRegistrationForm() {
   }
 
   return (
-    <Flex bg="white" direction="column" align="center" justify="center">
+    <Flex
+      bg="white"
+      direction="column"
+      align="center"
+      justify="center"
+      id="inscricao"
+    >
       <Image
         src="/assets/formulario-inscricao.png"
         alt="Acamps Beach Formulario Logo"
@@ -558,13 +564,13 @@ export function NewRegistrationForm() {
           <Box minW={300} w={[300, 400, 600]} hidden={!(activeStep === 3)}>
             <Stack spacing="10" direction={['column', 'row']}>
               <VStack spacing="5">
-                <Text fontWeight="bold">INSCRIÇÃO ONLINE (3º Lote)</Text>
+                <Text fontWeight="bold">INSCRIÇÃO ONLINE (1º Lote)</Text>
                 <Box mb="1rem">
                   <Text fontWeight="medium">
                     Pague via PIX, dinheiro ou depósito:
                   </Text>
                   <Box>
-                    <Text>Participantes: R$ 300,00</Text>
+                    <Text>Participantes: R$ 320,00</Text>
                     <Text>Servos: R$ 220,00</Text>
                   </Box>
                   <Text mt="1rem">
@@ -603,10 +609,10 @@ export function NewRegistrationForm() {
                   options={[
                     { value: 'PIX', label: 'PIX' },
                     { value: 'DINHEIRO', label: 'Dinheiro' },
-                    {
-                      value: 'CARTÃO DE DÉBITO',
-                      label: 'Cartão de débito',
-                    },
+                    // {
+                    //   value: 'CARTÃO DE DÉBITO',
+                    //   label: 'Cartão de débito',
+                    // },
                     {
                       value: 'CARTÃO DE CRÉDITO',
                       label: 'Cartão de crédito',
@@ -618,7 +624,7 @@ export function NewRegistrationForm() {
 
             <br />
             <br />
-            <Box>
+            {/* <Box>
               <Text fontWeight="medium">
                 Pague em até 3X no cartão (haverá cobrança de taxa)
               </Text>
@@ -638,7 +644,7 @@ export function NewRegistrationForm() {
                   R$ 234,52 - Pagar no cartão (Servos)
                 </Text>
               </Link>
-            </Box>
+            </Box> */}
             <br />
             <br />
 

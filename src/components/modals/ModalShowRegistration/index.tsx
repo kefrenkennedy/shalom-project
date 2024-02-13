@@ -16,14 +16,14 @@ import {
   Tooltip,
   useDisclosure,
 } from '@chakra-ui/react';
-import dayjs from 'dayjs';
 
-import { IParticipant } from '@/dtos/IParticipant';
-import { IRegistration } from '@/dtos/IRegistration';
+import { Participant } from '@/types/Participant';
+import { Registration } from '@/types/Registration';
+import { dayjs } from '@/utils/dayjs';
 import { translatePaymentStatus } from '@/utils/translatePaymentStatus';
 
 interface IProps {
-  registration: IRegistration;
+  registration: Registration;
 }
 
 export function ModalShowRegistration({ registration }: IProps) {
@@ -31,7 +31,7 @@ export function ModalShowRegistration({ registration }: IProps) {
   const finalRef = useRef(null);
 
   const dataFormatted = useMemo(() => {
-    const participant = registration?.participant as IParticipant;
+    const participant = registration?.participant as Participant;
     let address;
 
     if (participant?.addresses && participant?.addresses?.length > 0) {
@@ -48,12 +48,12 @@ export function ModalShowRegistration({ registration }: IProps) {
     if (address) {
       const {
         street,
-        street_number,
+        streetNumber: street_number,
         complement,
         district,
         city,
         state,
-        zip_code,
+        zipCode: zip_code,
       } = address;
 
       addressFormatted = `
@@ -72,36 +72,35 @@ export function ModalShowRegistration({ registration }: IProps) {
 
     return {
       event_title: registration.event?.title || '-',
-      full_name: participant?.full_name ?? '-',
+      full_name: participant?.fullName ?? '-',
       email:
         registration.participant?.email ?? registration?.user?.email ?? '-',
       birthdate: participant?.birthdate
         ? `${birthdateFormatted} (${participantAge} anos)`
         : '-',
-      phone_number: participant.phone_number ?? '-',
+      phone_number: participant.phoneNumber ?? '-',
       document: participant
-        ? `${participant?.document_number} (${participant?.document_type})`
+        ? `${participant?.documentNumber} (${participant?.documentType})`
         : '-',
-      guardian_name: participant?.guardian_name ?? '-',
-      guardian_phone_number: participant?.guardian_phone_number ?? '-',
+      guardian_name: participant?.guardianName ?? '-',
+      guardian_phone_number: participant?.guardianPhoneNumber ?? '-',
       address: addressFormatted,
-      prayer_group: participant?.prayer_group ?? '-',
+      prayer_group: participant?.prayerGroup ?? '-',
       community_type: participant?.community_type ?? '-',
-      pcd_description: participant?.pcd_description ?? '-',
-      allergy_description: participant?.allergy_description ?? '-',
-      medication_use_description:
-        participant?.medication_use_description ?? '-',
-      transportation_mode: registration?.transportation_mode ?? '-',
-      event_source: registration?.event_source ?? '-',
-      accepted_the_terms: registration?.accepted_the_terms ? 'Sim' : 'Não',
-      status: registration.is_approved ? 'Aprovada' : 'Aguardando aprovação',
+      pcd_description: participant?.pcdDescription ?? '-',
+      allergy_description: participant?.allergyDescription ?? '-',
+      medication_use_description: participant?.medicationUseDescription ?? '-',
+      transportation_mode: registration?.transportationMode ?? '-',
+      event_source: registration?.eventSource ?? '-',
+      accepted_the_terms: registration?.acceptedTheTerms ? 'Sim' : 'Não',
+      status: registration.isApproved ? 'Aprovada' : 'Aguardando aprovação',
       payment_status: translatePaymentStatus(registration?.payment?.status),
       type: registration?.type ?? '-',
-      has_participated_previously: registration?.has_participated_previously
+      has_participated_previously: registration?.hasParticipatedPreviously
         ? 'Sim'
         : 'Não',
-      created_at: dayjs(registration.created_at).format('DD/MM/YYYY HH:mm'),
-      credential_name: registration.credential_name,
+      created_at: dayjs(registration.createdAt).format('DD/MM/YYYY HH:mm'),
+      credential_name: registration.credentialName,
     };
   }, [registration]);
 

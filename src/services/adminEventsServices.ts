@@ -5,8 +5,8 @@ const PATH = '/events';
 interface CreateRequest {
   title: string;
   description: string;
-  start_date: Date | string;
-  end_date: Date | string;
+  startDate: Date | string;
+  endDate: Date | string;
 }
 
 interface UpdateRequest extends Partial<CreateRequest> {}

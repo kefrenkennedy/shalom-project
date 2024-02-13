@@ -1,10 +1,10 @@
-import { ICreateUserDTO } from '@/dtos/ICreateUserDTO';
+import { CreateUser } from '@/types/Auth';
 
 import { api } from './apiClient';
 
 const PATH = '/users';
 
-interface IRequest extends ICreateUserDTO {}
+interface IRequest extends CreateUser {}
 
 export const usersService = () => ({
   create: async (data: IRequest) => {

@@ -8,20 +8,15 @@ import { useAuth } from '@/hooks/auth';
 
 export function Header() {
   const router = useRouter();
-  const { user } = useAuth();
-
-  const mainButtonText = useMemo(() => {
-    if (user?.id) return `Olá, ${user.name.split(' ')[0]}`;
-
-    return 'Login';
-  }, [user]);
 
   function handleActionButton() {
-    router.push('/participante/sign-in');
+    document?.querySelector('#inscricao')?.scrollIntoView({
+      behavior: 'smooth',
+    });
   }
 
   return (
-    <Box bgColor="orange.500">
+    <Box bgColor="#FF8200">
       <Flex
         as="header"
         w="100%"
@@ -53,7 +48,7 @@ export function Header() {
           size={['md', 'lg']}
           onClick={handleActionButton}
         >
-          {mainButtonText}
+          INSCREVA-SE
         </Button>
         {/* <Box cursor="pointer">Sobre o Evento</Box> */}
         {/* <Box cursor="pointer">Contatos</Box> */}
