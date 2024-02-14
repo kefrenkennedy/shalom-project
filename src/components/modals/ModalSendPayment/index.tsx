@@ -42,10 +42,10 @@ interface Props {
 interface SendPaymentFormData {
   paymentMethod: string;
   price: string;
-  file: string;
+  file: File[];
 }
 
-const signInFormSchema = Yup.object().shape({
+const paymentFormSchema = Yup.object().shape({
   paymentMethod: Yup.string().required('Método de pagamento obrigatório'),
   price: Yup.string().required('Preço obrigatório'),
   file: Yup.mixed()
@@ -67,7 +67,7 @@ export function ModalSendPayment({
 
   const { register, handleSubmit, formState, trigger } =
     useForm<SendPaymentFormData>({
-      resolver: yupResolver(signInFormSchema),
+      resolver: yupResolver(paymentFormSchema),
     });
   const { errors } = formState;
 
@@ -185,7 +185,11 @@ export function ModalSendPayment({
                     <InputFile
                       label="Imagem do comprovante"
                       {...register('file')}
-                      error={errors.file}
+                      error={
+                        errors.file && errors?.file?.length
+                          ? errors.file[0]
+                          : undefined
+                      }
                     />
                     <Input
                       type="number"
