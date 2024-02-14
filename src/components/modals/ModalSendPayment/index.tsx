@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { FieldError, SubmitHandler, useForm } from 'react-hook-form';
 import { RiMoneyDollarCircleLine } from 'react-icons/ri';
 import QRCode from 'react-qr-code';
 import { toast } from 'react-toastify';
@@ -57,6 +57,8 @@ const paymentFormSchema = Yup.object().shape({
     }),
 });
 
+type PaymentFormSchemaType = Yup.InferType<typeof paymentFormSchema>;
+
 export function ModalSendPayment({
   registrationId,
   disableButton = false,
@@ -66,15 +68,16 @@ export function ModalSendPayment({
   const finalRef = useRef(null);
 
   const { register, handleSubmit, formState, trigger } =
-    useForm<SendPaymentFormData>({
+    useForm<PaymentFormSchemaType>({
       resolver: yupResolver(paymentFormSchema),
     });
   const { errors } = formState;
 
-  const handleSendPayment: SubmitHandler<SendPaymentFormData> = async (
+  const handleSendPayment: SubmitHandler<PaymentFormSchemaType> = async (
     data,
   ) => {
-    const { paymentMethod, price, file } = data;
+    const { paymentMethod, price } = data;
+    const file = data.file as File[];
     const formData = new FormData();
 
     formData.append('file', file['0']);
@@ -185,11 +188,7 @@ export function ModalSendPayment({
                     <InputFile
                       label="Imagem do comprovante"
                       {...register('file')}
-                      error={
-                        errors.file && errors?.file?.length
-                          ? errors.file[0]
-                          : undefined
-                      }
+                      error={errors.file as FieldError | undefined}
                     />
                     <Input
                       type="number"
