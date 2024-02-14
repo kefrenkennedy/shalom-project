@@ -40,46 +40,46 @@ import { shalomQRCode } from '@/utils/shalomQRcode';
 import { InputFile } from '../../atomics/InputFile';
 
 type SignInFormData = {
-  full_name: string;
+  fullName: string;
   email: string;
-  phone_number: string;
+  phoneNumber: string;
   birthdate: Date;
-  document_type: string;
-  document_number: string;
-  guardian_name?: string;
-  guardian_phone_number?: string;
-  prayer_group?: string;
-  community_type?: string;
-  pcd_description?: string;
-  allergy_description?: string;
-  medication_use_description?: string;
+  documentType: string;
+  documentNumber: string;
+  guardianName?: string;
+  guardianPhoneNumber?: string;
+  prayerGroup?: string;
+  communityType?: string;
+  pcdDescription?: string;
+  allergyDescription?: string;
+  medicationUseDescription?: string;
 
   street: string;
-  street_number: string;
+  streetNumber: string;
   complement: string;
-  zip_code: string;
+  zipCode: string;
   district: string;
   city: string;
   state: string;
 
   // event_id: string;
-  event_source?: string;
-  credential_name: string;
-  transportation_mode: string;
-  accepted_the_terms: boolean;
-  has_participated_previously: boolean;
+  eventSource?: string;
+  credentialName: string;
+  transportationMode: string;
+  acceptedTheTerms: boolean;
+  hasParticipatedPreviously: boolean;
   type: string;
 
-  payment_method: string;
+  paymentMethod: string;
   price: string;
   file: string;
 };
 
 const FormSchema = z
   .object({
-    full_name: z.string().min(5, 'Nome muito curto'),
+    fullName: z.string().min(5, 'Nome muito curto'),
     email: z.string().email('E-mail inválido'),
-    phone_number: z
+    phoneNumber: z
       .string()
       .min(15, 'Telefone inválido')
       .transform((val) => val.replace(/_/g, ''))
@@ -96,19 +96,19 @@ const FormSchema = z
         (value) => new Date(value) instanceof Date,
         'Data de nascimento inválida',
       ),
-    document_type: z.enum(['CPF', 'RG'], {
+    documentType: z.enum(['CPF', 'RG'], {
       invalid_type_error: 'Selecione um tipo de documento',
       required_error: 'Documento obrigatório',
     }),
-    document_number: z
+    documentNumber: z
       .string()
       .min(7, 'Documento inválido')
       .transform((val) => val.replace(/_/g, '')),
-    guardian_name: z
+    guardianName: z
       .string()
       .optional()
       .transform((val) => (val === '' ? undefined : val)),
-    guardian_phone_number: z
+    guardianPhoneNumber: z
       .string()
       .optional()
       .transform((val) => {
@@ -119,31 +119,31 @@ const FormSchema = z
         if (!value) return true;
         return value.replace(/_/g, '').length === 15;
       }, 'Telefone inválido'),
-    prayer_group: z
+    prayerGroup: z
       .string()
       .optional()
       .transform((val) => (val === '' ? undefined : val)),
-    community_type: z
+    communityType: z
       .enum(['VIDA', 'ALIANÇA', ''])
       .optional()
       .transform((val) => (val === '' ? undefined : val)),
-    pcd_description: z
+    pcdDescription: z
       .string()
       .optional()
       .transform((val) => (val === '' ? undefined : val)),
-    allergy_description: z
+    allergyDescription: z
       .string()
       .optional()
       .transform((val) => (val === '' ? undefined : val)),
-    medication_use_description: z
+    medicationUseDescription: z
       .string()
       .optional()
       .transform((val) => (val === '' ? undefined : val)),
 
     street: z.string().nonempty('Rua obrigatória'),
-    street_number: z.string().nonempty('Número da rua obrigatória'),
+    streetNumber: z.string().nonempty('Número da rua obrigatória'),
     complement: z.string(),
-    zip_code: z
+    zipCode: z
       .string()
       // .regex(/^\d{5}-\d{3}$/, 'CEP inválido')
       .nonempty('CEP obrigatório'),
@@ -151,28 +151,28 @@ const FormSchema = z
     city: z.string().nonempty('Cidade obrigatória'),
     state: z.string().nonempty('Estado obrigatória'),
 
-    credential_name: z
+    credentialName: z
       .string()
       .min(5, 'Nome para credencial muito curto')
       .max(18, 'Nome para credencial muito grande'),
-    event_source: z
+    eventSource: z
       .string()
       .optional()
       .transform((val) => (val === '' ? undefined : val)),
-    transportation_mode: z.enum(['TRANSPORTE PRÓPRIO', 'ÔNIBUS'], {
+    transportationMode: z.enum(['TRANSPORTE PRÓPRIO', 'ÔNIBUS'], {
       required_error: 'Meio de Transporte obrigatório',
       invalid_type_error: 'Selecione uma opção de transporte',
     }),
     type: z.enum(['SERVO', 'PARTICIPANTE']),
-    has_participated_previously: z.coerce.boolean(),
-    accepted_the_terms: z
+    hasParticipatedPreviously: z.coerce.boolean(),
+    acceptedTheTerms: z
       .boolean({ required_error: 'Campo obrigatório' })
       .refine(
         (value) => value === true,
         'Você deve aceitar os termos para finalizar',
       ),
 
-    payment_method: z.string().nonempty('Método de pagamento obrigatório'),
+    paymentMethod: z.string().nonempty('Método de pagamento obrigatório'),
     price: z.string().nonempty('Preço obrigatório'),
     file: z
       .any()
@@ -186,10 +186,10 @@ const FormSchema = z
   .strict()
   .refine(
     (data) =>
-      data.document_type === 'CPF' ? cpf.isValid(data.document_number) : true,
+      data.documentType === 'CPF' ? cpf.isValid(data.documentNumber) : true,
     {
       message: 'CPF inválido',
-      path: ['document_number'],
+      path: ['documentNumber'],
     },
   )
   .refine(
@@ -245,7 +245,7 @@ export function NewRegistrationForm() {
       resolver: zodResolver(FormSchema),
     });
   const { errors } = formState;
-  const documentType = watch('document_type');
+  const documentType = watch('documentType');
 
   const hasError = useMemo(() => {
     for (const key in errors) {
@@ -261,7 +261,7 @@ export function NewRegistrationForm() {
     console.log('data', data);
     const formData = jsonToFormData({
       ...data,
-      event_id: EVENT_ID,
+      eventId: EVENT_ID,
     });
 
     registerUserParticipantsServices()
@@ -373,8 +373,8 @@ export function NewRegistrationForm() {
             <Input
               label="NOME COMPLETO"
               placeholder="Ex.: Mária de Santana dos Santos"
-              {...register('full_name')}
-              error={errors.full_name}
+              {...register('fullName')}
+              error={errors.fullName}
             />
             <Input
               type="email"
@@ -386,8 +386,8 @@ export function NewRegistrationForm() {
             <InputMasked
               label="TELEFONE PARA CONTATO"
               placeholder="Ex.: (88) 99999-9999"
-              {...register('phone_number')}
-              error={errors.phone_number}
+              {...register('phoneNumber')}
+              error={errors.phoneNumber}
               mask="(99) 99999-9999"
             />
             <Input
@@ -398,8 +398,8 @@ export function NewRegistrationForm() {
             />
             <Radio
               label="TIPO DE DOCUMENTO"
-              {...register('document_type')}
-              error={errors.document_type}
+              {...register('documentType')}
+              error={errors.documentType}
               options={[
                 { value: 'CPF', label: 'CPF' },
                 { value: 'RG', label: 'RG' },
@@ -409,23 +409,23 @@ export function NewRegistrationForm() {
               // type="number"
               label="NÚMERO DO DOCUMENTO"
               placeholder="123.456.789-10"
-              {...register('document_number')}
-              error={errors.document_number}
+              {...register('documentNumber')}
+              error={errors.documentNumber}
               mask={documentType === 'CPF' ? '999.999.999-99' : ''}
             />
 
             <Input
               label="SE MENOR DE IDADE, NOME DO RESPONSÁVEL"
               placeholder="Ex.: Ana Santana dos Santos"
-              {...register('guardian_name')}
-              error={errors.guardian_name}
+              {...register('guardianName')}
+              error={errors.guardianName}
             />
 
             <InputMasked
               label="SE MENOR DE IDADE, NÚMERO DO RESPONSÁVEL"
               placeholder="Ex.: (88) 99999-9999"
-              {...register('guardian_phone_number')}
-              error={errors.guardian_phone_number}
+              {...register('guardianPhoneNumber')}
+              error={errors.guardianPhoneNumber}
               mask="(99) 99999-9999"
             />
           </Box>
@@ -435,8 +435,8 @@ export function NewRegistrationForm() {
             <Input
               label="CEP"
               placeholder="Ex.: 62000-000"
-              {...register('zip_code')}
-              error={errors.zip_code}
+              {...register('zipCode')}
+              error={errors.zipCode}
             />
             <Input
               label="NOME DA RUA"
@@ -447,8 +447,8 @@ export function NewRegistrationForm() {
             <Input
               label="NÚMERO DA RESIDENCIA"
               placeholder="Ex.: 123"
-              {...register('street_number')}
-              error={errors.street_number}
+              {...register('streetNumber')}
+              error={errors.streetNumber}
             />
             <Input
               label="COMPLEMENTO"
@@ -481,20 +481,20 @@ export function NewRegistrationForm() {
             <Input
               label="QUE NOME VOCÊ DESEJA QUE APAREÇA NA CREDENCIAL?"
               placeholder="Ex.: Maria das Graças"
-              {...register('credential_name')}
-              error={errors.credential_name}
+              {...register('credentialName')}
+              error={errors.credentialName}
             />
             <Input
               label="SE PARTICIPA DA OBRA SHALOM, NOME DO GRUPO DE ORAÇÃO"
               placeholder="Ex.: Agapiméni Kardiá"
-              {...register('prayer_group')}
-              error={errors.prayer_group}
+              {...register('prayerGroup')}
+              error={errors.prayerGroup}
             />
 
             <Radio
               label="VOCÊ É MEMBRO DA COMUNIDADE VIDA OU ALIANÇA?"
-              {...register('community_type')}
-              error={errors.community_type}
+              {...register('communityType')}
+              error={errors.communityType}
               options={[
                 { value: '', label: 'NÃO SOU' },
                 { value: 'VIDA', label: 'COM. VIDA' },
@@ -513,29 +513,29 @@ export function NewRegistrationForm() {
 
             <Input
               label="VOCÊ É ALÉRGICO A ALGUMA COMIDA OU REMÉDIO?"
-              {...register('allergy_description')}
+              {...register('allergyDescription')}
               placeholder="Se sim, qual?"
-              error={errors.allergy_description}
+              error={errors.allergyDescription}
             />
 
             <Input
               label="VOCÊ É PORTADOR DE ALGUMA DEFICIÊNCIA?"
               placeholder="Se sim, qual?"
-              {...register('pcd_description')}
-              error={errors.pcd_description}
+              {...register('pcdDescription')}
+              error={errors.pcdDescription}
             />
 
             <Input
               label="VOCÊ NECESSITA TOMAR ALGUM MEDICAMENTO CONTROLADO?"
               placeholder="Se sim, qual?"
-              {...register('medication_use_description')}
-              error={errors.medication_use_description}
+              {...register('medicationUseDescription')}
+              error={errors.medicationUseDescription}
             />
 
             <Radio
               label="VOCÊ IRÁ DE TRANSPORTE PRÓPRIO PARA O LOCAL DO EVENTO?"
-              {...register('transportation_mode')}
-              error={errors.transportation_mode}
+              {...register('transportationMode')}
+              error={errors.transportationMode}
               options={[
                 { value: 'TRANSPORTE PRÓPRIO', label: 'TRANSPORTE PRÓPRIO' },
                 { value: 'ÔNIBUS', label: 'ÔNIBUS' },
@@ -545,14 +545,14 @@ export function NewRegistrationForm() {
             <Input
               label="COMO VOCÊ FICOU SABENDO DO ACAMP'S?"
               placeholder="Nos conte como..."
-              {...register('event_source')}
-              error={errors.event_source}
+              {...register('eventSource')}
+              error={errors.eventSource}
             />
 
             <Radio
               label="VOCÊ JÁ PARTICIPOU DE ALGUM ACAMP'S?"
-              {...register('has_participated_previously')}
-              error={errors.has_participated_previously}
+              {...register('hasParticipatedPreviously')}
+              error={errors.hasParticipatedPreviously}
               options={[
                 { value: 'true', label: 'SIM' },
                 { value: '', label: 'NÃO' },
@@ -604,8 +604,8 @@ export function NewRegistrationForm() {
                 />
                 <Radio
                   label="Meio de pagamento"
-                  {...register('payment_method')}
-                  error={errors.payment_method}
+                  {...register('paymentMethod')}
+                  error={errors.paymentMethod}
                   options={[
                     { value: 'PIX', label: 'PIX' },
                     { value: 'DINHEIRO', label: 'Dinheiro' },
@@ -682,8 +682,8 @@ export function NewRegistrationForm() {
 
             <Checkbox
               label="LI E ACEITO OS TERMOS E CONDIÇÕES DESCRITOS NOS DOCUMENTOS ACIMA"
-              {...register('accepted_the_terms')}
-              error={errors.accepted_the_terms}
+              {...register('acceptedTheTerms')}
+              error={errors.acceptedTheTerms}
             />
 
             {!!hasError && (

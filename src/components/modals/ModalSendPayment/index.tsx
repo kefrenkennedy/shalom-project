@@ -33,20 +33,20 @@ import { Radio } from '@/components/forms/atomics/Radio';
 import { participantPaymentsServices } from '@/services/participantPaymentsServices';
 import { shalomQRCode } from '@/utils/shalomQRcode';
 
-interface IProps {
+interface Props {
   registrationId: string;
   disableButton: boolean;
   onSuccess?: () => void;
 }
 
-interface ISendPaymentFormData {
-  payment_method: string;
+interface SendPaymentFormData {
+  paymentMethod: string;
   price: string;
   file: string;
 }
 
 const signInFormSchema = Yup.object().shape({
-  payment_method: Yup.string().required('Método de pagamento obrigatório'),
+  paymentMethod: Yup.string().required('Método de pagamento obrigatório'),
   price: Yup.string().required('Preço obrigatório'),
   file: Yup.mixed()
     .required('O arquivo é obrigatório')
@@ -61,24 +61,24 @@ export function ModalSendPayment({
   registrationId,
   disableButton = false,
   onSuccess,
-}: IProps) {
+}: Props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const finalRef = useRef(null);
 
   const { register, handleSubmit, formState, trigger } =
-    useForm<ISendPaymentFormData>({
+    useForm<SendPaymentFormData>({
       resolver: yupResolver(signInFormSchema),
     });
   const { errors } = formState;
 
-  const handleSendPayment: SubmitHandler<ISendPaymentFormData> = async (
+  const handleSendPayment: SubmitHandler<SendPaymentFormData> = async (
     data,
   ) => {
-    const { payment_method, price, file } = data;
+    const { paymentMethod, price, file } = data;
     const formData = new FormData();
 
     formData.append('file', file['0']);
-    formData.append('payment_method', payment_method);
+    formData.append('paymentMethod', paymentMethod);
     formData.append('price', price);
 
     participantPaymentsServices()
@@ -197,8 +197,8 @@ export function ModalSendPayment({
                     />
                     <Radio
                       label="Meio de pagamento"
-                      {...register('payment_method')}
-                      error={errors.payment_method}
+                      {...register('paymentMethod')}
+                      error={errors.paymentMethod}
                       options={[
                         { value: 'PIX', label: 'PIX' },
                         { value: 'DINHEIRO', label: 'Dinheiro' },
