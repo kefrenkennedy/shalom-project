@@ -78,12 +78,13 @@ export function ModalDeleteRegistration({ registration, onSuccess }: IProps) {
             <Text align="initial">
               Tem certeza que deseja apagar a inscrição de{' '}
               <Text as="span" fontWeight="bold">
-                {fullName} em {date}
+                {fullName}
               </Text>{' '}
               realizada em{' '}
               <Text as="span" fontWeight="bold">
                 {date}
               </Text>
+              ?
             </Text>
           </ModalBody>
 
