@@ -60,7 +60,7 @@ export default function EditEvent() {
                 <AddressForm />
               </TabPanel> */}
               <TabPanel>
-                <TicketsContainer />
+                <TicketsContainer eventId={String(eventId)} />
               </TabPanel>
             </TabPanels>
           </Tabs>

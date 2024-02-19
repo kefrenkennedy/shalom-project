@@ -1,12 +1,26 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { RiAddLine } from 'react-icons/ri';
 
 import { Box, Button, Icon, SimpleGrid, VStack } from '@chakra-ui/react';
 
 import { TicketCard } from '@/components/cards/TicketCard';
+import { ticketsServices } from '@/services/ticketsServices';
+import { Ticket } from '@/types/Tickets';
 
-export function TicketsContainer() {
-  const [tickets, setTickets] = useState([]);
+interface Props {
+  eventId: string;
+}
+
+export function TicketsContainer({ eventId }: Props) {
+  const [tickets, setTickets] = useState<Ticket[]>([]);
+
+  useEffect(() => {
+    if (eventId) {
+      ticketsServices()
+        .list({ eventId })
+        .then((response) => setTickets(response.tickets));
+    }
+  }, [eventId]);
 
   return (
     <VStack>
@@ -16,7 +30,9 @@ export function TicketsContainer() {
           templateColumns="repeat(auto-fill, minmax(200px, 1fr))"
           mt="2rem"
         >
-          <TicketCard />
+          {tickets.map((ticket) => (
+            <TicketCard key={ticket.id} ticket={ticket} />
+          ))}
 
           <Button width="100%" height="100%">
             <Icon as={RiAddLine} fontSize="5rem" color="gray.600" />

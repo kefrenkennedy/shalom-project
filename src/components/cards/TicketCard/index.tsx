@@ -9,15 +9,35 @@ import {
   Text,
 } from '@chakra-ui/react';
 
-export function TicketCard() {
+import { Ticket } from '@/types/Tickets';
+import { dayjs } from '@/utils/dayjs';
+import { numberToCurrency } from '@/utils/numberToCurrency';
+
+interface Props {
+  ticket: Ticket;
+}
+
+export function TicketCard({ ticket }: Props) {
+  const nullDate = '--/--/----';
+
+  const startDate = ticket.startsAt
+    ? dayjs(ticket.startsAt).format('DD/MM/YYYY')
+    : nullDate;
+
+  const endDate = ticket.expiresAt
+    ? dayjs(ticket.expiresAt).format('DD/MM/YYYY')
+    : nullDate;
+
   return (
     <Card size="sm">
       <CardHeader>
-        <Heading size="md">1º Lote</Heading>
+        <Heading size="md">{ticket.title}</Heading>
       </CardHeader>
       <CardBody>
-        <Text>Preço: R$ 100,00</Text>
-        <Text>Expiração: 12/02/2020</Text>
+        <Text>Preço: {numberToCurrency(ticket.price)}</Text>
+        <br />
+        <Text>Início: {startDate}</Text>
+        <Text>Expiração: {endDate}</Text>
       </CardBody>
       <CardFooter justify="flex-end">
         <Stack spacing="2" direction="row">
