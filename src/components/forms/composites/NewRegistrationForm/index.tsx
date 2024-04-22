@@ -35,6 +35,7 @@ import { Radio } from '@/components/forms/atomics/Radio';
 import { registerUserParticipantsServices } from '@/services/registerUserParticipantsServices';
 import { dayjs } from '@/utils/dayjs';
 import { jsonToFormData } from '@/utils/jsonToFormData';
+import { numberToCurrency } from '@/utils/numberToCurrency';
 import { shalomQRCode } from '@/utils/shalomQRcode';
 
 import { InputFile } from '../../atomics/InputFile';
@@ -74,6 +75,27 @@ type SignInFormData = {
   price: string;
   file: string;
 };
+
+const tickets = [
+  {
+    title: '2º Lote',
+    price: 350,
+    external_payment_price: 373.09,
+    external_payment_url:
+      'https://link.ton.com.br/?id=b123e17c-f857-4cba-985c-f92d95591866',
+    starts_at: dayjs('2024-04-01'),
+    expires_at: dayjs('2024-06-07'),
+  },
+  {
+    title: '3º Lote',
+    price: 380,
+    external_payment_price: 383.09,
+    external_payment_url:
+      'https://link.ton.com.br/?id=b123e17c-f857-4cba-985c-f92d95591866', // trocar pelo link certo
+    starts_at: dayjs('2024-06-08'),
+    expires_at: dayjs('2024-07-08'),
+  },
+];
 
 const FormSchema = z
   .object({
@@ -258,7 +280,6 @@ export function NewRegistrationForm() {
   }, [errors]);
 
   const handleRegister: SubmitHandler<SignInFormData> = (data) => {
-    console.log('data', data);
     const formData = jsonToFormData({
       ...data,
       eventId: EVENT_ID,
@@ -285,42 +306,9 @@ export function NewRegistrationForm() {
       });
   };
 
-  function renderButtons() {
-    const isLastStep = activeStep === steps.length - 1;
-    console.log('activeStep', activeStep);
-    console.log('steps.length', steps.length);
-    return (
-      <Flex mt="8" justify="flex-end">
-        <HStack spacing="4">
-          <Button
-            size="lg"
-            isLoading={false}
-            color="white"
-            colorScheme="gray"
-            bgColor="gray.300"
-            borderRadius="full"
-            onClick={goToPrevious}
-          >
-            VOLTAR
-          </Button>
-          <Button
-            type={isLastStep ? 'submit' : 'button'}
-            bgColor="green.200"
-            color="gray.50"
-            colorScheme="green"
-            size="lg"
-            isLoading={formState.isSubmitting}
-            disabled={formState.isSubmitting}
-            borderRadius="full"
-            onClick={isLastStep ? undefined : goToNext}
-          >
-            {isLastStep ? 'FINALIZAR' : 'AVANÇAR'}
-          </Button>
-        </HStack>
-      </Flex>
-    );
-  }
+  const validTicket = getValidTicket();
 
+  if (!validTicket) return null;
   return (
     <Flex
       bg="white"
@@ -564,13 +552,17 @@ export function NewRegistrationForm() {
           <Box minW={300} w={[300, 400, 600]} hidden={!(activeStep === 3)}>
             <Stack spacing="10" direction={['column', 'row']}>
               <VStack spacing="5">
-                <Text fontWeight="bold">INSCRIÇÃO ONLINE (1º Lote)</Text>
+                <Text fontWeight="bold">
+                  INSCRIÇÃO ONLINE ({validTicket?.title})
+                </Text>
                 <Box mb="1rem">
                   <Text fontWeight="medium">
                     Pague via PIX, dinheiro ou depósito:
                   </Text>
                   <Box>
-                    <Text>Participantes: R$ 320,00</Text>
+                    <Text>
+                      Participantes: {numberToCurrency(validTicket?.price)}
+                    </Text>
                     <Text>Servos: R$ 220,00</Text>
                   </Box>
                   <Text mt="1rem">
@@ -624,16 +616,14 @@ export function NewRegistrationForm() {
 
             <br />
             <br />
-            {/* <Box>
+            <Box>
               <Text fontWeight="medium">
                 Pague em até 3X no cartão (haverá cobrança de taxa)
               </Text>
-              <Link
-                target="_blank"
-                href="https://link.ton.com.br/?id=2b33cc91-9eeb-4c16-a400-450e302f7c4f"
-              >
+              <Link target="_blank" href={validTicket?.external_payment_url}>
                 <Text color="blue" textDecoration="underline" mb="10px">
-                  R$ 319,80 - Pagar no cartão (Participantes)
+                  {numberToCurrency(validTicket?.external_payment_price)} -
+                  Pagar no cartão (Participantes)
                 </Text>
               </Link>
               <Link
@@ -644,7 +634,7 @@ export function NewRegistrationForm() {
                   R$ 234,52 - Pagar no cartão (Servos)
                 </Text>
               </Link>
-            </Box> */}
+            </Box>
             <br />
             <br />
 
@@ -704,4 +694,51 @@ export function NewRegistrationForm() {
       </Text>
     </Flex>
   );
+
+  function renderButtons() {
+    const isLastStep = activeStep === steps.length - 1;
+    return (
+      <Flex mt="8" justify="flex-end">
+        <HStack spacing="4">
+          <Button
+            size="lg"
+            isLoading={false}
+            color="white"
+            colorScheme="gray"
+            bgColor="gray.300"
+            borderRadius="full"
+            onClick={goToPrevious}
+          >
+            VOLTAR
+          </Button>
+          <Button
+            type={isLastStep ? 'submit' : 'button'}
+            bgColor="green.200"
+            color="gray.50"
+            colorScheme="green"
+            size="lg"
+            isLoading={formState.isSubmitting}
+            disabled={formState.isSubmitting}
+            borderRadius="full"
+            onClick={isLastStep ? undefined : goToNext}
+          >
+            {isLastStep ? 'FINALIZAR' : 'AVANÇAR'}
+          </Button>
+        </HStack>
+      </Flex>
+    );
+  }
+
+  function getValidTicket() {
+    const currentDate = dayjs().startOf('day');
+
+    const validTicket = tickets.find((ticket) =>
+      currentDate.isBetween(
+        dayjs(ticket.starts_at).startOf('day'),
+        dayjs(ticket.expires_at).endOf('day'),
+      ),
+    );
+
+    return validTicket || null;
+  }
 }
