@@ -78,18 +78,27 @@ type SignInFormData = {
 
 const tickets = [
   {
+    title: '1º Lote (Promoção)',
+    price: 320,
+    external_payment_price: 341.12,
+    external_payment_url:
+      'https://link.ton.com.br/?id=b577687c-8229-41c4-b618-57e03f55f3db',
+    starts_at: dayjs('2024-05-03'),
+    expires_at: dayjs('2024-05-10'),
+  },
+  {
     title: '2º Lote',
     price: 350,
     external_payment_price: 373.09,
     external_payment_url:
       'https://link.ton.com.br/?id=b123e17c-f857-4cba-985c-f92d95591866',
-    starts_at: dayjs('2024-04-01'),
+    starts_at: dayjs('2024-05-10'),
     expires_at: dayjs('2024-06-07'),
   },
   {
     title: '3º Lote',
     price: 380,
-    external_payment_price: 383.09,
+    external_payment_price: 393.09,
     external_payment_url:
       'https://link.ton.com.br/?id=b123e17c-f857-4cba-985c-f92d95591866', // trocar pelo link certo
     starts_at: dayjs('2024-06-08'),
