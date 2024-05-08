@@ -84,7 +84,7 @@ const tickets = [
     external_payment_url:
       'https://link.ton.com.br/?id=b577687c-8229-41c4-b618-57e03f55f3db',
     starts_at: dayjs('2024-05-03'),
-    expires_at: dayjs('2024-05-10'),
+    expires_at: dayjs('2024-05-07'),
   },
   {
     title: '2º Lote',
@@ -92,7 +92,7 @@ const tickets = [
     external_payment_price: 373.09,
     external_payment_url:
       'https://link.ton.com.br/?id=b123e17c-f857-4cba-985c-f92d95591866',
-    starts_at: dayjs('2024-05-10'),
+    starts_at: dayjs('2024-05-07'),
     expires_at: dayjs('2024-06-07'),
   },
   {
@@ -298,7 +298,7 @@ export function NewRegistrationForm() {
       .create(formData)
       .then(() => {
         toast.success('Inscrição realizada com sucesso');
-        reset();
+        // reset();
       })
       .catch((err: AxiosError) => {
         if (err.response?.status === 409) {
