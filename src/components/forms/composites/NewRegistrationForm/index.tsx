@@ -98,11 +98,10 @@ const tickets = [
   {
     title: '3º Lote',
     price: 380,
-    external_payment_price: 393.09,
-    external_payment_url:
-      'https://link.ton.com.br/?id=b123e17c-f857-4cba-985c-f92d95591866', // trocar pelo link certo
+    external_payment_price: 405.08,
+    external_payment_url: 'https://pag.getnet.com.br/CupkFNUtb', // trocar pelo link certo
     starts_at: dayjs('2024-06-08'),
-    expires_at: dayjs('2024-07-08'),
+    expires_at: dayjs('2024-06-12'),
   },
 ];
 
