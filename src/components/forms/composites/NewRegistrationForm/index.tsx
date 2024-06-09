@@ -19,6 +19,7 @@ import {
   StepSeparator,
   StepStatus,
   Text,
+  useDisclosure,
   useSteps,
   VStack,
 } from '@chakra-ui/react';
@@ -32,6 +33,7 @@ import { Checkbox } from '@/components/forms/atomics/Checkbox';
 import { Input } from '@/components/forms/atomics/Input';
 import { InputMasked } from '@/components/forms/atomics/InputMasked';
 import { Radio } from '@/components/forms/atomics/Radio';
+import { ModalRegistrationConfirmed } from '@/components/modals/ModalRegistrationConfirmed';
 import { registerUserParticipantsServices } from '@/services/registerUserParticipantsServices';
 import { dayjs } from '@/utils/dayjs';
 import { jsonToFormData } from '@/utils/jsonToFormData';
@@ -39,6 +41,8 @@ import { numberToCurrency } from '@/utils/numberToCurrency';
 import { shalomQRCode } from '@/utils/shalomQRcode';
 
 import { InputFile } from '../../atomics/InputFile';
+
+type ParticipantType = 'SERVO' | 'PARTICIPANTE';
 
 type SignInFormData = {
   fullName: string;
@@ -245,6 +249,7 @@ const FormSchema = z
 
 export function NewRegistrationForm() {
   const EVENT_ID = String(process.env.NEXT_PUBLIC_EVENT_ID);
+  const modalConfirmed = useDisclosure();
 
   const steps = [
     {
@@ -276,6 +281,7 @@ export function NewRegistrationForm() {
     });
   const { errors } = formState;
   const documentType = watch('documentType');
+  const typeValue = watch('type');
 
   const hasError = useMemo(() => {
     for (const key in errors) {
@@ -296,8 +302,9 @@ export function NewRegistrationForm() {
     registerUserParticipantsServices()
       .create(formData)
       .then(() => {
+        reset();
         toast.success('Inscrição realizada com sucesso');
-        // reset();
+        modalConfirmed.onOpen();
       })
       .catch((err: AxiosError) => {
         if (err.response?.status === 409) {
@@ -570,8 +577,8 @@ export function NewRegistrationForm() {
                   <Box>
                     <Text>
                       Participantes: {numberToCurrency(validTicket?.price)}
+                      <Text>Servos: R$ 220,00</Text>
                     </Text>
-                    <Text>Servos: R$ 220,00</Text>
                   </Box>
                   <Text mt="1rem">
                     <Text fontWeight="medium">Chave pix:</Text>{' '}
@@ -638,9 +645,8 @@ export function NewRegistrationForm() {
                 target="_blank"
                 href="https://link.ton.com.br/?id=d67302ce-f1c7-43e6-a13d-9be794710263"
               >
-                <Text color="blue" textDecoration="underline">
-                  R$ 234,52 - Pagar no cartão (Servos)
-                </Text>
+                R$ 234,52 - Pagar no cartão (Servos)
+                <Text color="blue" textDecoration="underline"></Text>
               </Link>
             </Box>
             <br />
@@ -700,6 +706,13 @@ export function NewRegistrationForm() {
         <strong>ATENÇÃO:</strong> A idade Mínima para inscrição de participante
         é de 14 anos e a Máxima é de 30 anos.
       </Text>
+
+      <ModalRegistrationConfirmed
+        isOpen={modalConfirmed.isOpen}
+        onClose={modalConfirmed.onClose}
+        onOpen={modalConfirmed.onOpen}
+        type={typeValue as ParticipantType}
+      />
     </Flex>
   );
 
