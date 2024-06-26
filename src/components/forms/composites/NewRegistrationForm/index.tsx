@@ -643,10 +643,11 @@ export function NewRegistrationForm() {
               </Link>
               <Link
                 target="_blank"
-                href="https://link.ton.com.br/?id=d67302ce-f1c7-43e6-a13d-9be794710263"
+                href={'https://pag.getnet.com.br/-8WrJsZuE'}
               >
-                R$ 234,52 - Pagar no cartão (Servos)
-                <Text color="blue" textDecoration="underline"></Text>
+                <Text color="blue" textDecoration="underline">
+                  R$ 234,52 - Pagar no cartão (Servos)
+                </Text>
               </Link>
             </Box>
             <br />

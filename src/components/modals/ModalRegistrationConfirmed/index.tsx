@@ -57,11 +57,19 @@ export function ModalRegistrationConfirmed({
             <Stack direction="row" width="100%" justify="space-between">
               <Button onClick={onClose}>Fechar</Button>
               <Button
-                onClick={handleOpenLink}
+                onClick={handleOpenParticipantLink}
                 colorScheme="green"
                 leftIcon={<RiWhatsappLine />}
               >
-                Entrar no Grupo
+                Participantes
+              </Button>
+              <Button
+                onClick={handleOpenServantLink}
+                colorScheme="yellow"
+                color="white"
+                leftIcon={<RiWhatsappLine />}
+              >
+                Servos
               </Button>
             </Stack>
           </ModalFooter>
@@ -70,10 +78,13 @@ export function ModalRegistrationConfirmed({
     </>
   );
 
-  function handleOpenLink() {
-    const servantUrl = 'https://chat.whatsapp.com/JxOldQVBSnlH9xsnceoa16';
+  function handleOpenParticipantLink() {
     const participantUrl = 'https://chat.whatsapp.com/E86yx3zd5Ue8X7EdBvWfsD';
-    const finalUrl = type === 'PARTICIPANTE' ? participantUrl : servantUrl;
-    window.open(finalUrl, '_blank');
+    window.open(participantUrl, '_blank');
+  }
+
+  function handleOpenServantLink() {
+    const servantUrl = 'https://chat.whatsapp.com/JxOldQVBSnlH9xsnceoa16';
+    window.open(servantUrl, '_blank');
   }
 }
