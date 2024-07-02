@@ -103,7 +103,7 @@ const tickets = [
     title: '3º Lote',
     price: 380,
     external_payment_price: 405.08,
-    external_payment_url: 'https://pag.getnet.com.br/CupkFNUtb', // trocar pelo link certo
+    external_payment_url: 'https://pag.getnet.com.br/01WUuO0nt',
     starts_at: dayjs('2024-06-07'),
     expires_at: dayjs('2024-07-12'),
   },
@@ -643,7 +643,7 @@ export function NewRegistrationForm() {
               </Link>
               <Link
                 target="_blank"
-                href={'https://pag.getnet.com.br/-8WrJsZuE'}
+                href={'https://pag.getnet.com.br/dojHiEQsiE'}
               >
                 <Text color="blue" textDecoration="underline">
                   R$ 234,52 - Pagar no cartão (Servos)
