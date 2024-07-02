@@ -633,7 +633,7 @@ export function NewRegistrationForm() {
             <br />
             <Box>
               <Text fontWeight="medium">
-                Pague em até 3X no cartão (haverá cobrança de taxa)
+                Pague em até 2X no cartão (haverá cobrança de taxa)
               </Text>
               <Link target="_blank" href={validTicket?.external_payment_url}>
                 <Text color="blue" textDecoration="underline" mb="10px">
