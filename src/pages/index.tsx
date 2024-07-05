@@ -38,7 +38,7 @@ export default function Home() {
         mt="30px"
       />
 
-      <Image src={lotesImage.src} alt="Acamps Beach Lotes" w="100%" />
+      {/* <Image src={lotesImage.src} alt="Acamps Beach Lotes" w="100%" /> */}
 
       <NewRegistrationForm />
 
