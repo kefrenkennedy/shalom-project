@@ -105,7 +105,7 @@ const tickets = [
     external_payment_price: 405.08,
     external_payment_url: 'https://pag.getnet.com.br/01WUuO0nt',
     starts_at: dayjs('2024-06-07'),
-    expires_at: dayjs('2024-07-12'),
+    expires_at: dayjs('2024-07-03'),
   },
 ];
 
