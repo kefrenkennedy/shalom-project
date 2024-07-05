@@ -323,7 +323,22 @@ export function NewRegistrationForm() {
 
   const validTicket = getValidTicket();
 
-  if (!validTicket) return null;
+  if (!validTicket)
+    return (
+      <Flex
+        bg="white"
+        direction="column"
+        align="center"
+        justify="center"
+        id="inscricao"
+        height={200}
+      >
+        <Text fontWeight="bold" fontSize={30} color="yellow.500">
+          ⚠️ INSCRIÇÕES ENCERRADAS!!! 😢
+        </Text>
+      </Flex>
+    );
+
   return (
     <Flex
       bg="white"
